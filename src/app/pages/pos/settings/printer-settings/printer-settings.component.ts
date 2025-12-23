@@ -48,6 +48,10 @@ export class PrinterSettingsComponent implements OnInit {
       barcodeLabelShowProductName: [true],
       barcodeLabelShowVariationName: [true],
       barcodeLabelShowPrice: [true],
+      barcodeLabelShowSkuAndVariant: [false],
+      barcodeLabelUseSalePrice: [true],
+      barcodeLabelShowBarcodeAndVariant: [false],
+      barcodeLabelUseBarcodeOrSku: ['barcode'], // 'barcode' or 'sku'
       barcodeLabelShowShopName: [true],
       barcodeLabelShowBarcodeCode: [true],
       barcodeWidth: [2.5],

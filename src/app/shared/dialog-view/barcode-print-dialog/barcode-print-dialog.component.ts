@@ -3,6 +3,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import JsBarcode from 'jsbarcode';
 import { PrinterSettingsService } from '../../../services/common/printer-settings.service';
+import { ShopInformationService } from '../../../services/common/shop-information.service';
+import { ShopInformation } from '../../../interfaces/common/shop-information.interface';
 
 export interface BarcodePrintData {
   products: any[];
@@ -17,10 +19,7 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
   selectedProducts: any[] = [];
   printCount: number = 1;
   showPrice: boolean = true;
-  shopInformation: any = {
-    currency: '৳',
-    siteName: 'Shop'
-  };
+  shopInformation: ShopInformation | null = null;
   barcodeDataUrls: Map<string, string> = new Map(); // For preview (canvas images)
   barcodeSvgs: Map<string, string> = new Map(); // For print (SVG strings)
   selectedVariationByProduct: Record<string, string> = {};
@@ -30,6 +29,10 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
     showProductName: true,
     showVariationName: true,
     showPrice: true,
+    showSkuAndVariant: false,
+    showBarcodeAndVariant: false,
+    useBarcodeOrSku: 'barcode', // 'barcode' or 'sku'
+    useSalePrice: true,
     showShopName: true,
     showBarcodeCode: true,
     barcodeWidth: 2.5,
@@ -37,17 +40,38 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
   };
   
   private subDataOne: Subscription;
+  private subShopInfo: Subscription;
 
   constructor(
     public dialogRef: MatDialogRef<BarcodePrintDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: BarcodePrintData,
-    private printerSettingsService: PrinterSettingsService
+    private printerSettingsService: PrinterSettingsService,
+    private shopInformationService: ShopInformationService,
   ) {
     this.selectedProducts = data.products || [];
   }
 
   ngOnInit(): void {
+    this.loadShopInformation();
     this.loadBarcodeSettings();
+  }
+
+  private loadShopInformation(): void {
+    this.subShopInfo = this.shopInformationService
+      .getShopInformation('siteName websiteName currency')
+      .subscribe({
+        next: (res) => {
+          if (res?.success && res.data) {
+            this.shopInformation = res.data;
+          } else {
+            this.shopInformation = { currency: '৳' } as any;
+          }
+        },
+        error: (err) => {
+          console.error('Error loading shop information for barcode dialog:', err);
+          this.shopInformation = { currency: '৳' } as any;
+        }
+      });
   }
 
   loadBarcodeSettings(): void {
@@ -58,11 +82,18 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
             showProductName: res.data.barcodeLabelShowProductName !== undefined ? res.data.barcodeLabelShowProductName : true,
             showVariationName: res.data.barcodeLabelShowVariationName !== undefined ? res.data.barcodeLabelShowVariationName : true,
             showPrice: res.data.barcodeLabelShowPrice !== undefined ? res.data.barcodeLabelShowPrice : true,
+            // Default to TRUE so SKU & Variant shows by default if not configured
+            showSkuAndVariant: res.data.barcodeLabelShowSkuAndVariant !== undefined ? res.data.barcodeLabelShowSkuAndVariant : true,
+            showBarcodeAndVariant: res.data.barcodeLabelShowBarcodeAndVariant !== undefined ? res.data.barcodeLabelShowBarcodeAndVariant : false,
+            useBarcodeOrSku: res.data.barcodeLabelUseBarcodeOrSku || 'barcode', // 'barcode' or 'sku'
+            useSalePrice: res.data.barcodeLabelUseSalePrice !== undefined ? res.data.barcodeLabelUseSalePrice : true,
             showShopName: res.data.barcodeLabelShowShopName !== undefined ? res.data.barcodeLabelShowShopName : true,
             showBarcodeCode: res.data.barcodeLabelShowBarcodeCode !== undefined ? res.data.barcodeLabelShowBarcodeCode : true,
             barcodeWidth: res.data.barcodeWidth || 2.5,
             barcodeHeight: res.data.barcodeHeight || 60
           };
+          console.log(this.barcodeSettings);
+          
           // Update showPrice checkbox based on settings
           this.showPrice = this.barcodeSettings.showPrice;
           // Regenerate barcodes with new settings
@@ -100,17 +131,49 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
     if (!product) {
       return '';
     }
+    const useBarcodeOrSku = this.barcodeSettings?.useBarcodeOrSku || 'barcode';
     const variation = this.getSelectedVariation(product);
+    
     if (variation) {
-      if (variation.barcode) return variation.barcode;
-      if (variation.sku) return variation.sku;
+      if (useBarcodeOrSku === 'sku') {
+        // Prefer SKU over barcode
+        if (variation.sku) return variation.sku;
+        if (variation.barcode) return variation.barcode;
+      } else {
+        // Prefer barcode over SKU (default)
+        if (variation.barcode) return variation.barcode;
+        if (variation.sku) return variation.sku;
+      }
     }
-    if (product.barcode) return product.barcode;
-    if (product.sku) return product.sku;
-    const variationBarcode =
-      product.variationList?.find((v: any) => v?.barcode)?.barcode ||
-      product.variationList?.find((v: any) => v?.sku)?.sku;
-    return variationBarcode || '';
+    
+    if (useBarcodeOrSku === 'sku') {
+      // Prefer SKU over barcode
+      if (product.sku) return product.sku;
+      if (product.productId) return product.productId;
+      if (product.barcode) return product.barcode;
+    } else {
+      // Prefer barcode over SKU (default)
+      if (product.barcode) return product.barcode;
+      if (product.sku) return product.sku;
+      if (product.productId) return product.productId;
+    }
+    
+    // Fallback: check variation list
+    if (product.variationList?.length) {
+      if (useBarcodeOrSku === 'sku') {
+        const variationSku = product.variationList.find((v: any) => v?.sku)?.sku;
+        if (variationSku) return variationSku;
+        const variationBarcode = product.variationList.find((v: any) => v?.barcode)?.barcode;
+        if (variationBarcode) return variationBarcode;
+      } else {
+        const variationBarcode = product.variationList.find((v: any) => v?.barcode)?.barcode;
+        if (variationBarcode) return variationBarcode;
+        const variationSku = product.variationList.find((v: any) => v?.sku)?.sku;
+        if (variationSku) return variationSku;
+      }
+    }
+    
+    return '';
   }
 
   getDisplayBarcode(product: any): string {
@@ -120,9 +183,27 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
   private getPriceValue(product: any): number {
     const variation = this.getSelectedVariation(product);
     if (variation) {
+      if (this.barcodeSettings?.useSalePrice) {
+        // Prefer sale price, then regular/price
+        return variation.salePrice ?? variation.regularPrice ?? variation.price ?? 0;
+      }
+      // Prefer regular price, then price, then sale price
+      return variation.regularPrice ?? variation.price ?? variation.salePrice ?? 0;
+    }
+    if (this.barcodeSettings?.useSalePrice) {
+      return product.salePrice ?? product.regularPrice ?? product.price ?? 0;
+    }
+    return product.regularPrice ?? product.price ?? product.salePrice ?? 0;
+  }
+
+  private getVariationPrice(variation: any, product: any): number {
+    if (!variation) {
+      return this.getPriceValue(product);
+    }
+    if (this.barcodeSettings?.useSalePrice) {
       return variation.salePrice ?? variation.regularPrice ?? variation.price ?? 0;
     }
-    return product.salePrice ?? product.price ?? 0;
+    return variation.regularPrice ?? variation.price ?? variation.salePrice ?? 0;
   }
 
   generateBarcodes(): void {
@@ -237,8 +318,17 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
 
   getVariationBarcode(variation: any): string {
     if (!variation) return '';
-    if (variation.barcode) return variation.barcode;
-    if (variation.sku) return variation.sku;
+    const useBarcodeOrSku = this.barcodeSettings?.useBarcodeOrSku || 'barcode';
+    
+    if (useBarcodeOrSku === 'sku') {
+      // Prefer SKU over barcode
+      if (variation.sku) return variation.sku;
+      if (variation.barcode) return variation.barcode;
+    } else {
+      // Prefer barcode over SKU (default)
+      if (variation.barcode) return variation.barcode;
+      if (variation.sku) return variation.sku;
+    }
     return '';
   }
 
@@ -263,7 +353,10 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const shopName = this.shopInformation?.websiteName || this.shopInformation?.websiteName || 'Shop';
+    const shopName =
+      this.shopInformation?.siteName ||
+      this.shopInformation?.websiteName ||
+      'Shop';
     const currency = this.shopInformation?.currency || '৳';
 
     printWindow.document.write(`
@@ -327,7 +420,7 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
             width: 1.5in;
             height: 1in;
             border: none;
-            padding: 2mm;
+            padding: 1.5mm;
             margin: 0 auto;
             text-align: center;
             page-break-inside: avoid;
@@ -349,7 +442,7 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
             text-overflow: ellipsis;
             white-space: nowrap;
             max-width: 100%;
-            line-height: 1.3;
+            line-height: 1.1;
             flex-shrink: 0;
             color: #000;
             -webkit-print-color-adjust: exact !important;
@@ -366,7 +459,7 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
             text-overflow: ellipsis;
             white-space: nowrap;
             max-width: 100%;
-            line-height: 1.3;
+            line-height: 1.1;
             flex-shrink: 0;
             font-weight: 600;
             -webkit-print-color-adjust: exact !important;
@@ -381,7 +474,7 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
             height: auto;
             max-height: 50px;
             min-height: 40px;
-            margin: 2px 0;
+            margin: 1px 0;
             object-fit: contain;
             flex-shrink: 1;
             -webkit-print-color-adjust: exact !important;
@@ -389,7 +482,7 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
           }
           .barcode-svg {
             display: block;
-            margin: 2px auto;
+            margin: 1px auto;
           }
           .barcode-svg svg {
             width: 100%;
@@ -414,7 +507,7 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
             font-weight: bold;
             margin-top: 1px;
             color: #000;
-            line-height: 1.3;
+            line-height: 1.2;
             flex-shrink: 0;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -426,7 +519,7 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
             font-size: 8px;
             color: #000;
             margin-top: 1px;
-            line-height: 1.3;
+            line-height: 1.2;
             flex-shrink: 0;
             font-weight: 600;
             -webkit-print-color-adjust: exact !important;
@@ -464,14 +557,49 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
             if (barcodeSvg && barcodeValue) {
               const productName = (product.name || 'Product').substring(0, 30);
               const variationName = variation.name || '';
-              const price = this.showPrice ? (variation.salePrice || variation.regularPrice || 0) : null;
+              const price = this.showPrice ? this.getVariationPrice(variation, product) : null;
           
               html += `
                 <div class="barcode-container">
                   ${this.barcodeSettings.showProductName ? `<div class="product-name">${this.escapeHtml(productName)}</div>` : ''}
-                  ${this.barcodeSettings.showVariationName && variationName ? `<div class="variation-name">${this.escapeHtml(variationName)}</div>` : ''}
+                  ${
+                    this.barcodeSettings.showSkuAndVariant
+                      ? (() => {
+                          const displaySku =
+                            (variation && (variation as any).sku) ||
+                            (product && (product as any).sku) ||
+                            (product && (product as any).productId) ||
+                            '';
+                          const hasSku = !!displaySku;
+                          const hasVar = !!variationName;
+                          const line =
+                            (hasSku ? `${displaySku}` : '') +
+                            (hasSku && hasVar ? ' / ' : '') +
+                            (hasVar ? ` ${variationName}` : '');
+                          return line
+                            ? `<div class="variation-name">${this.escapeHtml(line)}</div>`
+                            : '';
+                        })()
+                      : ''
+                  }
                   <div class="barcode-svg">${barcodeSvg}</div>
-                  ${this.barcodeSettings.showBarcodeCode ? `<div class="barcode-text">${this.escapeHtml(barcodeValue)}</div>` : ''}
+                  ${
+                    this.barcodeSettings.showBarcodeAndVariant
+                      ? (() => {
+                          const hasBarcode = !!barcodeValue;
+                          const hasVar = !!variationName;
+                          const line =
+                            (hasBarcode ? `${barcodeValue}` : '') +
+                            (hasBarcode && hasVar ? ' / ' : '') +
+                            (hasVar ? ` ${variationName}` : '');
+                          return line
+                            ? `<div class="variation-name">${this.escapeHtml(line)}</div>`
+                            : '';
+                        })()
+                      : this.barcodeSettings.showBarcodeCode
+                      ? `<div class="barcode-text">${this.escapeHtml(barcodeValue)}</div>`
+                      : ''
+                  }
        
                   ${this.barcodeSettings.showPrice && price !== null ? `<div class="price-info">${currency} ${price.toFixed(2)}</div>` : ''}
                   ${this.barcodeSettings.showShopName ? `<div class="shop-name">${this.escapeHtml(shopName)}</div>` : ''}
@@ -487,12 +615,27 @@ export class BarcodePrintDialogComponent implements OnInit, OnDestroy {
           if (barcodeSvg && barcodeValue) {
             const productName = (product.name || 'Product').substring(0, 30);
             const price = this.showPrice ? this.getPriceValue(product) : null;
+            const displaySku =
+              (product && (product as any).sku) ||
+              (product && (product as any).productId) ||
+              '';
           
             html += `
               <div class="barcode-container">
                 ${this.barcodeSettings.showProductName ? `<div class="product-name">${this.escapeHtml(productName)}</div>` : ''}
+                ${
+                  this.barcodeSettings.showSkuAndVariant && displaySku
+                    ? `<div class="variation-name">${this.escapeHtml(`${displaySku}`)}</div>`
+                    : ''
+                }
                 <div class="barcode-svg">${barcodeSvg}</div>
-                ${this.barcodeSettings.showBarcodeCode ? `<div class="barcode-text">${this.escapeHtml(barcodeValue)}</div>` : ''}
+                ${
+                  this.barcodeSettings.showBarcodeAndVariant
+                    ? `<div class="variation-name">${this.escapeHtml(barcodeValue)}</div>`
+                    : this.barcodeSettings.showBarcodeCode
+                    ? `<div class="barcode-text">${this.escapeHtml(barcodeValue)}</div>`
+                    : ''
+                }
 
                 ${this.barcodeSettings.showPrice && price !== null ? `<div class="price-info">${currency} ${price.toFixed(2)}</div>` : ''}
                 ${this.barcodeSettings.showShopName ? `<div class="shop-name">${this.escapeHtml(shopName)}</div>` : ''}

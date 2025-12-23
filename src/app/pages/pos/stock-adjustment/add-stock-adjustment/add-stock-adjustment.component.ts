@@ -32,8 +32,10 @@ export class AddStockAdjustmentComponent implements OnInit, OnDestroy {
   // Products
   products: Product[] = [];
   searchProducts: Product[] = [];
+  searchResultsWithVariations: any[] = []; // Flattened results including variations
   productSearchQuery: string = '';
   selectedProduct: Product = null;
+  selectedVariation: any = null; // Selected variation if product has variations
 
   // Branches
   branches: any[] = [];
@@ -95,6 +97,13 @@ export class AddStockAdjustmentComponent implements OnInit, OnDestroy {
       sku: 1,
       salePrice: 1,
       purchasePrice: 1,
+      costPrice: 1,
+      variation: 1,
+      isVariation: 1,
+      variation2:1,
+      variationList:1,
+      variation2Options:1,
+      variationOptions1:1,
       quantity: 1,
       status: 1,
       images: 1,
@@ -150,12 +159,14 @@ export class AddStockAdjustmentComponent implements OnInit, OnDestroy {
     this.productSearchQuery = query;
     if (!query || query.trim().length < 1) {
       this.searchProducts = [];
+      this.searchResultsWithVariations = [];
       return;
     }
     const searchTerm = query.toLowerCase().trim();
     console.log('Searching for:', searchTerm, 'in', this.products.length, 'products');
+    
+    // Filter products that match
     this.searchProducts = this.products.filter(p => {
-      // Use getProductName utility to get full product name (includes colors, sizes, model, etc.)
       const productName = this.utilsService.getProductName(p)?.toLowerCase() || '';
       const name = p.name?.toLowerCase() || '';
       const sku = p.sku?.toLowerCase() || '';
@@ -164,22 +175,83 @@ export class AddStockAdjustmentComponent implements OnInit, OnDestroy {
       const productKeyword = Array.isArray(p.productKeyword)
         ? p.productKeyword.map(k => k?.toLowerCase() || '').join(' ')
         : '';
-      const matches = productName.includes(searchTerm) ||
+      return productName.includes(searchTerm) ||
              name.includes(searchTerm) ||
              sku.includes(searchTerm) ||
              parentSku.includes(searchTerm) ||
              barcode.includes(searchTerm) ||
              productKeyword.includes(searchTerm);
-      return matches;
     }).slice(0, 10);
-    console.log('Search results:', this.searchProducts.length);
+
+    // Create flattened results with variations as separate items
+    this.searchResultsWithVariations = [];
+    this.searchProducts.forEach(product => {
+      if (product.isVariation && product.variationList && product.variationList.length > 0) {
+        // Add each variation as a separate item
+        product.variationList.forEach((variation: any) => {
+          // Also check if search term matches variation name, SKU, or barcode
+          const variationName = variation.name?.toLowerCase() || '';
+          const variationSku = variation.sku?.toLowerCase() || '';
+          const variationBarcode = variation.barcode?.toLowerCase() || '';
+          const matchesVariation = variationName.includes(searchTerm) ||
+                                   variationSku.includes(searchTerm) ||
+                                   variationBarcode.includes(searchTerm);
+
+          // Include if product matches OR variation matches
+          if (matchesVariation || this.searchProducts.includes(product)) {
+            this.searchResultsWithVariations.push({
+              product: product,
+              variation: variation,
+              isVariation: true,
+              displayName: `${product.name} - ${variation.name || 'Variation'}`,
+              stock: variation.quantity || 0,
+              sku: variation.sku || product.sku,
+              barcode: variation.barcode || product.barcode
+            });
+          }
+        });
+      } else {
+        // Add non-variation product
+        this.searchResultsWithVariations.push({
+          product: product,
+          variation: null,
+          isVariation: false,
+          displayName: this.utilsService.getProductName(product),
+          stock: product.quantity || 0,
+          sku: product.sku,
+          barcode: product.barcode
+        });
+      }
+    });
+    
+    console.log('Search results:', this.searchProducts.length, 'products,', this.searchResultsWithVariations.length, 'items (with variations)');
   }
 
   onSelectProduct(product: Product) {
     this.selectedProduct = product;
+    this.selectedVariation = null;
     this.dataForm.patchValue({ product: product._id });
     this.productSearchQuery = this.utilsService.getProductName(product) || product.name || '';
     this.searchProducts = [];
+    this.searchResultsWithVariations = [];
+  }
+
+  onSelectSearchItem(item: any) {
+    // Direct selection from search results (already has variation selected if applicable)
+    if (item.isVariation && item.variation) {
+      this.selectedProduct = item.product;
+      this.selectedVariation = item.variation;
+      // Store variation ID in a custom way - you may need to adjust backend to accept variation
+      this.dataForm.patchValue({ product: item.product._id });
+      this.productSearchQuery = item.displayName;
+    } else {
+      this.selectedProduct = item.product;
+      this.selectedVariation = null;
+      this.dataForm.patchValue({ product: item.product._id });
+      this.productSearchQuery = item.displayName;
+    }
+    this.searchProducts = [];
+    this.searchResultsWithVariations = [];
   }
 
   private getAdjustmentById() {
@@ -241,7 +313,12 @@ export class AddStockAdjustmentComponent implements OnInit, OnDestroy {
   private addAdjustment() {
     this.isLoading = true;
     const formData = { ...this.dataForm.value };
-    
+
+    // Add variation ID if variation is selected
+    if (this.selectedVariation && this.selectedVariation._id) {
+      formData.variation = this.selectedVariation._id;
+    }
+
     // Convert empty string to null for branch field
     if (formData.branch === '' || formData.branch === undefined) {
       formData.branch = null;
@@ -272,7 +349,12 @@ export class AddStockAdjustmentComponent implements OnInit, OnDestroy {
   private updateAdjustment() {
     this.isLoading = true;
     const formData = { ...this.dataForm.value };
-    
+
+    // Add variation ID if variation is selected
+    if (this.selectedVariation && this.selectedVariation._id) {
+      formData.variation = this.selectedVariation._id;
+    }
+
     // Convert empty string to null for branch field
     if (formData.branch === '' || formData.branch === undefined) {
       formData.branch = null;

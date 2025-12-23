@@ -41,32 +41,54 @@
           <ng-container *ngIf="product?.variationList?.length">
             <div class="barcode-item" *ngFor="let variation of product.variationList">
               <div class="product-name" *ngIf="barcodeSettings.showProductName">{{ (product.name || 'Product').substring(0, 30) }}</div>
-              <div class="variation-name" *ngIf="barcodeSettings.showVariationName">{{ variation.name }}</div>
+              <!-- <div class="variation-name" *ngIf="barcodeSettings.showVariationName">{{ variation.name }}</div> -->
+              <div class="variation-name" *ngIf="barcodeSettings.showSkuAndVariant">
+                <span *ngIf="variation.sku || product.sku || product.productId">
+                 {{ variation.sku || product.sku || product.productId }}
+                </span>
+                <span *ngIf="(variation.sku || product.sku || product.productId) && variation.name"> / </span>
+                <span *ngIf="variation.name">{{ variation.name }}</span>
+              </div>
               <div class="barcode-image-container" *ngIf="getVariationBarcode(variation)">
                 <img [src]="barcodeDataUrls.get(product._id + ':' + variation._id)" alt="Barcode" class="barcode-img" />
               </div>
-              <div class="barcode-text" *ngIf="barcodeSettings.showBarcodeCode && getVariationBarcode(variation)">
+              <div class="barcode-text" *ngIf="barcodeSettings.showBarcodeCode && getVariationBarcode(variation) && !barcodeSettings.showBarcodeAndVariant">
                 {{ getVariationBarcode(variation) }}
+              </div>
+              <div class="variation-name" *ngIf="barcodeSettings.showBarcodeAndVariant && getVariationBarcode(variation)">
+                <span>{{ getVariationBarcode(variation) }}</span>
+                <span *ngIf="getVariationBarcode(variation) && variation.name"> / </span>
+                <span *ngIf="variation.name">{{ variation.name }}</span>
               </div>
               <div class="price-info" *ngIf="barcodeSettings.showPrice && showPrice">
                 {{ shopInformation?.currency || '৳' }} {{ (variation.salePrice || variation.regularPrice || 0).toFixed(2) }}
               </div>
-              <div class="shop-name" *ngIf="barcodeSettings.showShopName">{{ shopInformation?.websiteName || 'Shop' }}</div>
+              <div class="shop-name" *ngIf="barcodeSettings.showShopName">
+                {{ shopInformation?.siteName || shopInformation?.websiteName || 'Shop' }}
+              </div>
             </div>
           </ng-container>
           <!-- If product has no variations, show single barcode -->
           <div class="barcode-item" *ngIf="!product?.variationList?.length">
             <div class="product-name" *ngIf="barcodeSettings.showProductName">{{ (product.name || 'Product').substring(0, 30) }}</div>
+            <div class="variation-name" *ngIf="barcodeSettings.showSkuAndVariant && product?.sku">
+              SKU: {{ product.sku }}
+            </div>
             <div class="barcode-image-container" *ngIf="getDisplayBarcode(product)">
               <img [src]="barcodeDataUrls.get(product._id + ':base')" alt="Barcode" class="barcode-img" />
             </div>
-            <div class="barcode-text" *ngIf="barcodeSettings.showBarcodeCode && getDisplayBarcode(product)">
+            <div class="barcode-text" *ngIf="barcodeSettings.showBarcodeCode && getDisplayBarcode(product) && !barcodeSettings.showBarcodeAndVariant">
+              {{ getDisplayBarcode(product) }}
+            </div>
+            <div class="variation-name" *ngIf="barcodeSettings.showBarcodeAndVariant && getDisplayBarcode(product)">
               {{ getDisplayBarcode(product) }}
             </div>
             <div class="price-info" *ngIf="barcodeSettings.showPrice && showPrice">
               {{ shopInformation?.currency || '৳' }} {{ getPriceValue(product).toFixed(2) }}
             </div>
-            <div class="shop-name" *ngIf="barcodeSettings.showShopName">{{ shopInformation?.websiteName || 'Shop' }}</div>
+            <div class="shop-name" *ngIf="barcodeSettings.showShopName">
+              {{ shopInformation?.siteName || shopInformation?.websiteName || 'Shop' }}
+            </div>
           </div>
         </ng-container>
       </div>

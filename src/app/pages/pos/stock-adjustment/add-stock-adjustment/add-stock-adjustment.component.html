@@ -38,15 +38,15 @@
               <mat-icon matPrefix>search</mat-icon>
               <mat-error *ngIf="!selectedProduct && dataForm.get('product')?.touched && dataForm.get('product')?.hasError('required')">Product is required</mat-error>
             </mat-form-field>
-            <div class="product-search-results" *ngIf="searchProducts.length > 0">
+            <div class="product-search-results" *ngIf="searchResultsWithVariations.length > 0">
               <div
-                *ngFor="let product of searchProducts"
-                (click)="onSelectProduct(product)"
+                *ngFor="let item of searchResultsWithVariations"
+                (click)="onSelectSearchItem(item)"
                 class="product-search-item">
                 <div class="product-item-info">
-                  <span class="product-item-name">{{utilsService.getProductName(product)}}</span>
-                  <span class="product-item-sku" *ngIf="product.sku">SKU: {{product.sku}}</span>
-                  <span class="product-item-stock">Stock: {{product.quantity || 0}}</span>
+                  <span class="product-item-name">{{item.displayName}}</span>
+                  <span class="product-item-sku" *ngIf="item.sku">SKU: {{item.sku}}</span>
+                  <span class="product-item-stock">Stock: {{item.stock}}</span>
                 </div>
               </div>
             </div>
@@ -55,9 +55,15 @@
             <div class="product-card">
               <mat-icon>inventory_2</mat-icon>
               <div class="product-details">
-                <span class="product-name">{{utilsService.getProductName(selectedProduct)}}</span>
-                <span class="product-sku" *ngIf="selectedProduct.sku">SKU: {{selectedProduct.sku}}</span>
-                <span class="product-stock">Current Stock: {{selectedProduct.quantity || 0}}</span>
+                <span class="product-name">
+                  {{selectedVariation ? (selectedProduct.name + ' - ' + selectedVariation.name) : utilsService.getProductName(selectedProduct)}}
+                </span>
+                <span class="product-sku" *ngIf="selectedVariation?.sku || selectedProduct.sku">
+                  SKU: {{selectedVariation?.sku || selectedProduct.sku}}
+                </span>
+                <span class="product-stock">
+                  Current Stock: {{selectedVariation ? (selectedVariation.quantity || 0) : (selectedProduct.quantity || 0)}}
+                </span>
               </div>
             </div>
           </div>
