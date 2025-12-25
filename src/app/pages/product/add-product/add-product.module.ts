@@ -25,6 +25,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatCardModule} from "@angular/material/card";
+import {MatDividerModule} from "@angular/material/divider";
 import {AddCategoryComponent} from "./catalog-popup/add-category/add-category.component";
 import {NgxPaginationModule} from "ngx-pagination";
 import {NoContentComponent} from "../../../shared/components/no-content/no-content.component";
@@ -81,6 +82,7 @@ import { SkinConcernComponent } from './catalog-popup/skin-concern/skin-concern.
     MatDatepickerModule,
     MatNativeDateModule,
     MatCardModule,
+    MatDividerModule,
 
 
 

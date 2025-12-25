@@ -2,6 +2,7 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
+  FormControl,
   FormGroup,
   NgForm,
   Validators,
@@ -11,6 +12,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, take } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Brand } from '../../../interfaces/common/brand.interface';
 import { Category } from '../../../interfaces/common/category.interface';
 import { ChildCategory } from '../../../interfaces/common/child-category.interface';
@@ -76,6 +78,7 @@ export class AddProductComponent implements OnInit {
   themeInfo: any;
 
   @ViewChild('formElement') formElement: NgForm;
+  @ViewChild('brandSearchInput', { static: false }) brandSearchInput: any;
 
   // Form Data
   dataForm?: FormGroup;
@@ -90,6 +93,8 @@ export class AddProductComponent implements OnInit {
   subCategories: SubCategory[] = [];
   childCategories: ChildCategory[] = [];
   brands: Brand[] = [];
+  filterBrandData: Brand[] = [];
+  brandSearchControl = new FormControl('');
   skinTypes: Brand[] = [];
   skinConcerns: Brand[] = [];
   tags: Tag[] = [];
@@ -188,6 +193,7 @@ export class AddProductComponent implements OnInit {
     this.getAllConcerns();
     this.getAllTypes();
     this.getAllTags();
+    this.setupBrandSearch();
     this.getSetting();
     this.monitorOptionChanges();
     this.monitorVariationOptions();
@@ -1494,11 +1500,51 @@ export class AddProductComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.brands = res.data;
+          this.filterBrandData = [...this.brands];
         },
         error: (error) => {
           console.log(error);
         },
       });
+  }
+
+  private setupBrandSearch() {
+    const subBrandSearch = this.brandSearchControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      )
+      .subscribe((searchTerm: string) => {
+        if (!searchTerm || searchTerm.trim() === '') {
+          this.filterBrandData = [...this.brands];
+        } else {
+          const searchLower = searchTerm.toLowerCase().trim();
+          this.filterBrandData = this.brands.filter((brand) =>
+            brand.name?.toLowerCase().includes(searchLower)
+          );
+        }
+      });
+    this.subscriptions.push(subBrandSearch);
+  }
+
+  onBrandSelectOpened() {
+    // Reset search when dropdown opens
+    setTimeout(() => {
+      this.brandSearchControl.setValue('', { emitEvent: false });
+      this.filterBrandData = [...this.brands];
+      // Focus on search input
+      if (this.brandSearchInput && this.brandSearchInput.nativeElement) {
+        this.brandSearchInput.nativeElement.focus();
+      }
+    }, 150);
+  }
+
+  focusBrandSearch() {
+    setTimeout(() => {
+      if (this.brandSearchInput && this.brandSearchInput.nativeElement) {
+        this.brandSearchInput.nativeElement.focus();
+      }
+    }, 0);
   }
 
   private getAllTypes() {

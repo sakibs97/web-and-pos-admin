@@ -275,13 +275,33 @@
               <div>
                 <mat-form-field appearance="outline" class="input-area">
                   <mat-label>Brand</mat-label>
-                  <mat-select formControlName="brand">
-                    <mat-option
-                      *ngFor="let data of brands"
-                      [value]="data._id"
-                    >
-                      {{ data.name }}
+                  <mat-select formControlName="brand" (opened)="onBrandSelectOpened()">
+                    <mat-option class="search-option">
+                      <div class="brand-search-container" (click)="$event.stopPropagation()">
+                        <input 
+                          #brandSearchInput
+                          type="text" 
+                          [formControl]="brandSearchControl" 
+                          placeholder="Search brand..." 
+                          class="brand-search-input"
+                          (click)="$event.stopPropagation(); focusBrandSearch()"
+                          (focus)="$event.stopPropagation()"
+                          (keydown)="$event.stopPropagation()"
+                          (keyup)="$event.stopPropagation()">
+                        <mat-icon class="search-icon">search</mat-icon>
+                      </div>
                     </mat-option>
+                    @if (filterBrandData.length === 0) {
+                      <mat-option disabled>
+                        <span>No brand found</span>
+                      </mat-option>
+                    } @else {
+                      @for (data of filterBrandData; track data._id) {
+                        <mat-option [value]="data._id">
+                          {{ data.name }}
+                        </mat-option>
+                      }
+                    }
                   </mat-select>
                   <mat-error>This field is required.</mat-error>
                 </mat-form-field>
