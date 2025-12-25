@@ -139,7 +139,7 @@
             [(ngModel)]="productSearchQuery"
             (input)="onProductSearch($any($event.target).value)"
             (keyup)="onProductSearch($any($event.target).value)"
-            placeholder="Search by product name or SKU"
+            placeholder="Search by product name, SKU, or barcode"
           />
           <mat-icon matPrefix>search</mat-icon>
           <mat-hint *ngIf="allProducts.length > 0">{{allProducts.length}} products available</mat-hint>
@@ -170,7 +170,7 @@
           </div>
         </div>
       </div>
-      <div class="product-search-no-results" *ngIf="productSearchQuery && productSearchQuery.length > 0 && searchProducts.length === 0 && allProducts.length > 0">
+      <div class="product-search-no-results" *ngIf="productSearchQuery && productSearchQuery.length > 0 && searchResultsWithVariations.length === 0 && allProducts.length > 0">
         <mat-icon>search_off</mat-icon>
         <span>No products found matching "{{productSearchQuery}}"</span>
       </div>

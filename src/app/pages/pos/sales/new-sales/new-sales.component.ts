@@ -659,11 +659,15 @@ export class NewSalesComponent implements OnInit, OnDestroy {
       const searchTerm = query.toLowerCase().trim();
       this.searchProducts = this.allProducts.filter(p => {
         const productName = this.utilsService.getProductName(p)?.toLowerCase() || '';
-        const sku = p.sku?.toLowerCase() || '';
+        const sku = (p.sku?.toString() || '').toLowerCase();
         const name = p.name?.toLowerCase() || '';
+        const barcode = (p.barcode?.toString() || '').toLowerCase();
+        const productId = (p.productId?.toString() || '').toLowerCase();
         return productName.includes(searchTerm) ||
                sku.includes(searchTerm) ||
-               name.includes(searchTerm);
+               name.includes(searchTerm) ||
+               barcode.includes(searchTerm) ||
+               productId.includes(searchTerm);
       }).slice(0, 10);
 
       // Create flattened results with variations as separate items
@@ -674,8 +678,8 @@ export class NewSalesComponent implements OnInit, OnDestroy {
           product.variationList.forEach((variation: VariationList) => {
             // Also check if search term matches variation name, SKU, or barcode
             const variationName = variation.name?.toLowerCase() || '';
-            const variationSku = variation.sku?.toLowerCase() || '';
-            const variationBarcode = variation.barcode?.toLowerCase() || '';
+            const variationSku = (variation.sku?.toString() || '').toLowerCase();
+            const variationBarcode = (variation.barcode?.toString() || '').toLowerCase();
             const matchesVariation = variationName.includes(searchTerm) ||
                                      variationSku.includes(searchTerm) ||
                                      variationBarcode.includes(searchTerm);
@@ -710,6 +714,37 @@ export class NewSalesComponent implements OnInit, OnDestroy {
           });
         }
       });
+
+      // Also check for products where only variation barcode/SKU matches (not the main product)
+      // This handles cases where user searches by variation barcode/SKU but main product doesn't match
+      if (this.searchResultsWithVariations.length === 0) {
+        this.allProducts.forEach(product => {
+          if (product.isVariation && product.variationList && product.variationList.length > 0) {
+            product.variationList.forEach((variation: VariationList) => {
+              const variationSku = (variation.sku?.toString() || '').toLowerCase();
+              const variationBarcode = (variation.barcode?.toString() || '').toLowerCase();
+              const matchesVariation = variationSku.includes(searchTerm) ||
+                                       variationBarcode.includes(searchTerm);
+
+              if (matchesVariation) {
+                this.searchResultsWithVariations.push({
+                  product: product,
+                  variation: variation,
+                  isVariation: true,
+                  displayName: `${product.name} - ${variation.name || 'Variation'}`,
+                  price: variation.salePrice || variation.regularPrice || 0,
+                  costPrice: variation.costPrice || product.costPrice || 0,
+                  stock: variation.quantity || 0,
+                  sku: variation.sku || product.sku,
+                  barcode: variation.barcode || product.barcode
+                });
+              }
+            });
+          }
+        });
+        // Limit results to 10
+        this.searchResultsWithVariations = this.searchResultsWithVariations.slice(0, 10);
+      }
     } else {
       this.searchProducts = [];
       this.searchResultsWithVariations = [];
