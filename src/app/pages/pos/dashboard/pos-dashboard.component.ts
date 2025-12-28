@@ -1,7 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ReportsService } from '../../../services/common/reports.service';
 import { UiService } from '../../../services/core/ui.service';
+import { VendorService } from '../../../services/vendor/vendor.service';
 import { CurrencyIconPipe } from '../../../shared/pipes/currency-icon.pipe';
 
 @Component({
@@ -21,6 +23,8 @@ export class PosDashboardComponent implements OnInit, OnDestroy {
   };
 
   private subDataOne: Subscription;
+  private readonly vendorService = inject(VendorService);
+  private readonly router = inject(Router);
 
   constructor(
     private reportsService: ReportsService,
@@ -28,6 +32,26 @@ export class PosDashboardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Check if user has permission to access POS Dashboard
+    const role = this.vendorService.getUserRole?.();
+    const allowedPages = this.vendorService.getUserPagePermissions?.() || [];
+    
+    // Only owner and admin can access POS Dashboard by default
+    // For other roles, check if they have 'pos-dashboard' permission
+    if (role !== 'owner' && role !== 'admin') {
+      const hasPermission = Array.isArray(allowedPages) && 
+        allowedPages.some(page => 
+          page?.toLowerCase() === 'pos-dashboard' || 
+          page?.toLowerCase() === 'pos/dashboard'
+        );
+      
+      if (!hasPermission) {
+        this.uiService.message('You do not have permission to access POS Dashboard', 'warn');
+        this.router.navigate(['/pages/dashboard']);
+        return;
+      }
+    }
+    
     this.loadDashboardData();
   }
 

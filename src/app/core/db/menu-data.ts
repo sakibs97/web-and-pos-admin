@@ -911,14 +911,14 @@ const ALL_MENUS: AdminMenu[] = [
       },
     ],
   },
-  // {
-  //   id: 10,
-  //   name: 'Admin Control',
-  //   hasSubMenu: false,
-  //   routerLink: 'admin',
-  //   icon: 'admin_panel_settings',
-  //   subMenus: [],
-  // },
+  {
+    id: 10,
+    name: 'Admin Control',
+    hasSubMenu: false,
+    routerLink: 'admin',
+    icon: 'admin_panel_settings',
+    subMenus: [],
+  },
   // {
   //   id: 124,
   //   name: 'Blog Area',

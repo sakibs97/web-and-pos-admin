@@ -161,13 +161,148 @@ export class PagesComponent implements OnInit, OnDestroy, OnChanges {
     const isAllowedKey = (key?: string) =>
       !!key && allowed.has(key.trim().toLowerCase());
 
+    // Helper to check if a POS sub-menu is allowed
+    const isPosSubMenuAllowed = (sm: any): boolean => {
+      if (!sm?.name) return false;
+      
+      const name = sm.name.toLowerCase();
+      const routerLink = sm?.routerLink || '';
+      
+      // Check for POS Dashboard
+      if ((name.includes('pos dashboard') || name === 'pos dashboard') && routerLink.includes('pos/dashboard')) {
+        return isAllowedKey('pos-dashboard') || isAllowedKey('pos/dashboard');
+      }
+      
+      // Check for POS Sales (parent menu or any sales-related route)
+      if (name === 'sales' && routerLink.includes('pos/sales')) {
+        return isAllowedKey('pos-sales') || isAllowedKey('pos/sales');
+      }
+      
+      // Check for POS Customer
+      if (name === 'customer' && routerLink.includes('pos/customer')) {
+        return isAllowedKey('pos-customer') || isAllowedKey('pos/customer');
+      }
+      
+      // Check for POS Supplier
+      if (name === 'supplier' && routerLink.includes('pos/supplier')) {
+        return isAllowedKey('pos-supplier') || isAllowedKey('pos/supplier');
+      }
+      
+      // Check for POS Purchase
+      if (name === 'purchase' && routerLink.includes('pos/purchase')) {
+        return isAllowedKey('pos-purchase') || isAllowedKey('pos/purchase');
+      }
+      
+      // Check for POS Reports
+      if (name === 'reports' && routerLink.includes('pos/accounts/reports')) {
+        return isAllowedKey('pos-reports') || isAllowedKey('pos/reports');
+      }
+      
+      // Check for POS Accounts
+      if (name === 'accounts' && routerLink.includes('pos/accounts')) {
+        return isAllowedKey('pos-accounts') || isAllowedKey('pos/accounts');
+      }
+      
+      // Check for POS Stock Management
+      if ((name.includes('stock') || name.includes('inventory')) && routerLink.includes('pos/')) {
+        return isAllowedKey('pos-stock-management') || isAllowedKey('pos/stock');
+      }
+      
+      return false;
+    };
+
     const isMenuAllowed = (m: AdminMenu) => {
       const nameKey = this.nameToKey(m?.name);
       const routeKey = this.normalizeRouteKey(m?.routerLink);
-      return isAllowedKey(nameKey) || isAllowedKey(routeKey);
+      
+      // Check direct permission
+      if (isAllowedKey(nameKey) || isAllowedKey(routeKey)) {
+        return true;
+      }
+      
+      // Special handling for POS parent menu - show if any child is allowed
+      if (m?.name && (m.name.toLowerCase() === 'pos' || nameKey === 'pos')) {
+        if (m.hasSubMenu && Array.isArray((m as any).subMenus)) {
+          // Check if any child sub-menu is allowed
+          const hasAllowedChild = (m as any).subMenus.some((sm: any) => {
+            // Check direct child
+            if (isPosSubMenuAllowed(sm)) {
+              return true;
+            }
+            // Check nested children (for sub-menus with their own sub-menus)
+            if (sm.hasSubMenu && Array.isArray(sm.subMenus)) {
+              return sm.subMenus.some((nestedSm: any) => isPosSubMenuAllowed(nestedSm));
+            }
+            return false;
+          });
+          return hasAllowedChild;
+        }
+      }
+      
+      return false;
     };
 
     const isSubAllowed = (sm: any) => {
+      // First check POS sub-menu permissions
+      if (isPosSubMenuAllowed(sm)) {
+        return true;
+      }
+      
+      // Check nested children for sub-menus with their own sub-menus
+      if (sm.hasSubMenu && Array.isArray(sm.subMenus)) {
+        // Check if this parent sub-menu has permission
+        const parentName = sm.name?.toLowerCase() || '';
+        const hasParentPermission = 
+          (parentName === 'sales' && isAllowedKey('pos-sales')) ||
+          (parentName === 'customer' && isAllowedKey('pos-customer')) ||
+          (parentName === 'supplier' && isAllowedKey('pos-supplier')) ||
+          (parentName === 'purchase' && isAllowedKey('pos-purchase')) ||
+          (parentName === 'reports' && isAllowedKey('pos-reports')) ||
+          (parentName === 'accounts' && isAllowedKey('pos-accounts'));
+        
+        // If parent has permission, show all nested children
+        if (hasParentPermission) {
+          return true;
+        }
+        
+        // Otherwise check if any nested child matches
+        const hasAllowedNestedChild = sm.subMenus.some((nestedSm: any) => {
+          const nestedRoute = nestedSm?.routerLink || '';
+          
+          // If parent is Sales and child is a sales route, allow it
+          if (parentName === 'sales' && nestedRoute.includes('pos/sales')) {
+            return isAllowedKey('pos-sales');
+          }
+          // If parent is Customer and child is a customer route, allow it
+          if (parentName === 'customer' && nestedRoute.includes('pos/customer')) {
+            return isAllowedKey('pos-customer');
+          }
+          // If parent is Supplier and child is a supplier route, allow it
+          if (parentName === 'supplier' && nestedRoute.includes('pos/supplier')) {
+            return isAllowedKey('pos-supplier');
+          }
+          // If parent is Purchase and child is a purchase route, allow it
+          if (parentName === 'purchase' && nestedRoute.includes('pos/purchase')) {
+            return isAllowedKey('pos-purchase');
+          }
+          // If parent is Reports and child is a reports route, allow it
+          if (parentName === 'reports' && nestedRoute.includes('pos/accounts/reports')) {
+            return isAllowedKey('pos-reports');
+          }
+          // If parent is Accounts and child is an accounts route, allow it
+          if (parentName === 'accounts' && nestedRoute.includes('pos/accounts')) {
+            return isAllowedKey('pos-accounts');
+          }
+          
+          return false;
+        });
+        
+        if (hasAllowedNestedChild) {
+          return true;
+        }
+      }
+      
+      // Fallback to standard permission check
       const childKeyByName = this.nameToKey(sm?.name);
       const childKeyByRoute = this.normalizeRouteKey(sm?.routerLink);
       return isAllowedKey(childKeyByName) || isAllowedKey(childKeyByRoute);
@@ -190,8 +325,57 @@ export class PagesComponent implements OnInit, OnDestroy, OnChanges {
         } else {
           // ❗ parent not allowed → keep only allowed children
           const filteredChildren = (menu as any).subMenus.filter(isSubAllowed);
-          if (filteredChildren.length) {
-            return [{ ...menu, subMenus: filteredChildren }];
+          if (filteredChildren.length > 0) {
+            // If any child is allowed, show the parent menu with filtered children
+            // Also recursively filter nested sub-menus
+            const processedChildren = filteredChildren.map((child: any) => {
+              if (child.hasSubMenu && Array.isArray(child.subMenus) && child.subMenus.length > 0) {
+                const childName = child.name?.toLowerCase() || '';
+                // If parent child has permission, show all nested children
+                const hasParentPermission = 
+                  (childName === 'sales' && isAllowedKey('pos-sales')) ||
+                  (childName === 'customer' && isAllowedKey('pos-customer')) ||
+                  (childName === 'supplier' && isAllowedKey('pos-supplier')) ||
+                  (childName === 'purchase' && isAllowedKey('pos-purchase')) ||
+                  (childName === 'reports' && isAllowedKey('pos-reports')) ||
+                  (childName === 'accounts' && isAllowedKey('pos-accounts'));
+                
+                if (hasParentPermission) {
+                  // Show all nested children
+                  return child;
+                }
+                
+                // Otherwise filter nested children
+                const filteredNested = child.subMenus.filter((nested: any) => {
+                  const nestedRoute = nested?.routerLink || '';
+                  
+                  // Check parent permission context
+                  if (childName === 'sales' && nestedRoute.includes('pos/sales')) {
+                    return isAllowedKey('pos-sales');
+                  }
+                  if (childName === 'customer' && nestedRoute.includes('pos/customer')) {
+                    return isAllowedKey('pos-customer');
+                  }
+                  if (childName === 'supplier' && nestedRoute.includes('pos/supplier')) {
+                    return isAllowedKey('pos-supplier');
+                  }
+                  if (childName === 'purchase' && nestedRoute.includes('pos/purchase')) {
+                    return isAllowedKey('pos-purchase');
+                  }
+                  if (childName === 'reports' && nestedRoute.includes('pos/accounts/reports')) {
+                    return isAllowedKey('pos-reports');
+                  }
+                  if (childName === 'accounts' && nestedRoute.includes('pos/accounts')) {
+                    return isAllowedKey('pos-accounts');
+                  }
+                  
+                  return false;
+                });
+                return { ...child, subMenus: filteredNested };
+              }
+              return child;
+            });
+            return [{ ...menu, subMenus: processedChildren }];
           }
           return [];
         }
@@ -439,7 +623,18 @@ export class PagesComponent implements OnInit, OnDestroy, OnChanges {
 
     // 3) permission apply when ready (non-owner)
     if (role !== 'owner') {
-      const allowedArr = (this.vendorService.getUserPagePermissions?.() as string[]) || [];
+      const vendorData = this.vendorService.getUserPagePermissions?.();
+      // Extract pages array from vendor data object
+      let allowedArr: string[] = [];
+      if (vendorData) {
+        if (Array.isArray(vendorData)) {
+          // If it's already an array, use it directly
+          allowedArr = vendorData;
+        } else if (vendorData.pages && Array.isArray(vendorData.pages)) {
+          // If it's an object with pages property, extract it
+          allowedArr = vendorData.pages;
+        }
+      }
 
       // console.log("allowedArr", allowedArr);
 

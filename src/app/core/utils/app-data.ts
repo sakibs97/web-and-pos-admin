@@ -38,6 +38,15 @@ export const PAGES: Select[] = [
   { "value": "affiliate", "viewValue": "Affiliate" },
   { "value": "accounts", "viewValue": "Accounts" },
   { "value": "pos", "viewValue": "Pos" },
+  // POS Sub-pages
+  { "value": "pos-dashboard", "viewValue": "POS Dashboard" },
+  { "value": "pos-sales", "viewValue": "POS Sales" },
+  { "value": "pos-customer", "viewValue": "POS Customer" },
+  { "value": "pos-supplier", "viewValue": "POS Supplier" },
+  { "value": "pos-purchase", "viewValue": "POS Purchase" },
+  { "value": "pos-reports", "viewValue": "POS Reports" },
+  { "value": "pos-accounts", "viewValue": "POS Accounts" },
+  { "value": "pos-stock-management", "viewValue": "POS Stock Management" },
 ]
 
 
