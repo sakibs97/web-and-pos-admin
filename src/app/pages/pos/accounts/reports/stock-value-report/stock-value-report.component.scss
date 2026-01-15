@@ -50,6 +50,21 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.search-container {
+  margin-bottom: 1rem;
+  
+  .search-field {
+    width: 100%;
+    max-width: 500px;
+    
+    ::ng-deep {
+      .mat-form-field-wrapper {
+        padding-bottom: 0;
+      }
+    }
+  }
+}
+
 .export-toolbar {
   display: flex;
   gap: 8px;

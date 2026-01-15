@@ -30,6 +30,27 @@
 
 <section class="filter-section" *ngIf="!isLoading && stockData">
   <div class="filter-card">
+    <div class="search-container">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search Products</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange()"
+          placeholder="Search by product name, SKU, or category..."
+          autocomplete="off">
+        <mat-icon matPrefix>search</mat-icon>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="searchTerm"
+          (click)="clearSearch()"
+          aria-label="Clear search">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
     <div class="export-toolbar">
       <button
         mat-stroked-button

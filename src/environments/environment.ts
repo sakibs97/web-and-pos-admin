@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   name: 'Admin',
-  domain: 'admin.clothigo.com',
+  domain: 'gadgetandmobile.com.bd',
   baseLink: 'http://localhost:3000',
   paymentBaseLink: 'http://localhost:4200',
 

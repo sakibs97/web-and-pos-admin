@@ -14,12 +14,13 @@
 <section class="filter-section">
   <div class="filter-card">
     <div class="filter-content">
-      <mat-form-field appearance="outline">
+      <!-- Date filter commented out to fetch all data including expenses -->
+      <!-- <mat-form-field appearance="outline">
         <mat-label>As On Date</mat-label>
         <input matInput [matDatepicker]="picker" [(ngModel)]="asOnDate" (dateChange)="onDateChange()">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+      </mat-form-field> -->
     </div>
     <div class="export-toolbar" *ngIf="!isLoading && balanceSheet">
       <button
@@ -133,9 +134,17 @@
         </div>
         
         <div class="section-content">
-          <div class="item total">
+          <div class="item">
             <span>TOTAL ASSETS</span>
             <strong>{{ balanceSheet.assets?.totalAssets | currency:'BDT ':'symbol':'1.2-2' }}</strong>
+          </div>
+          <div class="item expense-deduction" *ngIf="balanceSheet.expenses?.totalExpenses">
+            <span>Less: Total Expenses</span>
+            <strong>{{ balanceSheet.expenses?.totalExpenses | currency:'BDT ':'symbol':'1.2-2' }}</strong>
+          </div>
+          <div class="item total">
+            <span>NET ASSETS (After Expenses)</span>
+            <strong>{{ (balanceSheet.assets?.totalAssets || 0) - (balanceSheet.expenses?.totalExpenses || 0) | currency:'BDT ':'symbol':'1.2-2' }}</strong>
           </div>
         </div>
       </div>

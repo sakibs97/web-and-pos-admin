@@ -28,7 +28,7 @@ export class ReportsService {
   }
 
   /**
-   * GET BALANCE SHEET (New Financial Reports API)
+   * GET BALANCE SHEET (Using Reports API - date parameters commented out to fetch all expenses)
    */
   getBalanceSheet(startDate?: string, endDate?: string, asOnDate?: string): Observable<ResponsePayload> {
     let params = new HttpParams();
@@ -38,11 +38,12 @@ export class ReportsService {
       params = params.append('shop', shopId);
     }
     
-    if (asOnDate) {
-      params = params.append('asOfDate', asOnDate);
-    }
+    // Date parameters commented out to fetch all data including expenses
+    // if (asOnDate) {
+    //   params = params.append('asOfDate', asOnDate);
+    // }
     
-    return this.httpClient.get<ResponsePayload>(API_FINANCIAL_REPORTS + 'balance-sheet', { params });
+    return this.httpClient.get<ResponsePayload>(API_REPORTS + 'balance-sheet', { params });
   }
 
   /**

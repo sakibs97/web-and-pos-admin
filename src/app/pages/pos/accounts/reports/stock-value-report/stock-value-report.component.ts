@@ -13,6 +13,8 @@ import { ExportPrintService } from '../../../../../services/core/export-print.se
 export class StockValueReportComponent implements OnInit {
   isLoading: boolean = true;
   stockData: any;
+  originalStockData: any;
+  searchTerm: string = '';
 
   constructor(
     private reportsService: ReportsService,
@@ -32,6 +34,7 @@ export class StockValueReportComponent implements OnInit {
         next: (res) => {
           this.isLoading = false;
           if (res.success) {
+            this.originalStockData = JSON.parse(JSON.stringify(res.data));
             this.stockData = res.data;
           }
         },
@@ -92,6 +95,78 @@ export class StockValueReportComponent implements OnInit {
 
   showColumnsInfo() {
     this.uiService.message('Column visibility is not applicable for Stock Value Report', 'warn');
+  }
+
+  onSearchChange() {
+    if (!this.originalStockData) {
+      return;
+    }
+
+    const searchLower = this.searchTerm.toLowerCase().trim();
+
+    if (!searchLower) {
+      this.stockData = JSON.parse(JSON.stringify(this.originalStockData));
+      return;
+    }
+
+    // Filter products
+    let filteredProducts = [];
+    if (this.originalStockData.products && this.originalStockData.products.length > 0) {
+      filteredProducts = this.originalStockData.products.filter((product: any) => {
+        const productName = (product.productName || '').toLowerCase();
+        const sku = (product.sku || '').toLowerCase();
+        const category = (product.category || '').toLowerCase();
+        return productName.includes(searchLower) || 
+               sku.includes(searchLower) || 
+               category.includes(searchLower);
+      });
+    }
+
+    // Filter category summary based on filtered products
+    let filteredCategorySummary = [];
+    if (this.originalStockData.categorySummary && this.originalStockData.categorySummary.length > 0) {
+      const categoryMap = new Map();
+      
+      // Group filtered products by category
+      filteredProducts.forEach((product: any) => {
+        const categoryName = product.category || 'N/A';
+        if (!categoryMap.has(categoryName)) {
+          categoryMap.set(categoryName, {
+            categoryName: categoryName,
+            totalQuantity: 0,
+            totalStockValue: 0,
+            productCount: 0
+          });
+        }
+        const cat = categoryMap.get(categoryName);
+        cat.totalQuantity += product.quantity || 0;
+        cat.totalStockValue += product.stockValue || 0;
+        cat.productCount += 1;
+      });
+
+      // Also include categories that match search term directly
+      this.originalStockData.categorySummary.forEach((cat: any) => {
+        const categoryName = (cat.categoryName || '').toLowerCase();
+        if (categoryName.includes(searchLower) && !categoryMap.has(cat.categoryName)) {
+          categoryMap.set(cat.categoryName, { ...cat });
+        }
+      });
+
+      filteredCategorySummary = Array.from(categoryMap.values());
+    }
+
+    // Update stockData with filtered results
+    this.stockData = {
+      ...this.originalStockData,
+      products: filteredProducts,
+      categorySummary: filteredCategorySummary,
+      summary: this.originalStockData.summary // Keep original summary
+    };
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.onSearchChange();
   }
 
   private prepareStockValueData(): any[] {

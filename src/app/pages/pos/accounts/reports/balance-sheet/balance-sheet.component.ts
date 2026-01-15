@@ -28,8 +28,9 @@ export class BalanceSheetComponent implements OnInit {
 
   loadBalanceSheet() {
     this.isLoading = true;
-    const dateStr = this.asOnDate.toISOString().split('T')[0];
-    this.reportsService.getBalanceSheet(null, null, dateStr)
+    // const dateStr = this.asOnDate.toISOString().split('T')[0];
+    // Commented out date parameter to fetch all data including expenses
+    this.reportsService.getBalanceSheet(null, null, null)
       .subscribe({
         next: (res) => {
           this.isLoading = false;
@@ -38,6 +39,7 @@ export class BalanceSheetComponent implements OnInit {
             // Debug: Check repair amount
             console.log('Balance Sheet Data:', this.balanceSheet);
             console.log('Repair Service Amount:', this.balanceSheet?.assets?.currentAssets?.repairServiceAmount);
+            console.log('Total Expenses:', this.balanceSheet?.expenses?.totalExpenses);
           }
         },
         error: (err) => {
@@ -59,7 +61,7 @@ export class BalanceSheetComponent implements OnInit {
 
     const csvData = this.prepareBalanceSheetData();
     const headers = ['Category', 'Item', 'Amount'];
-    
+
     this.exportPrintService.exportCSV(csvData, 'Balance_Sheet', headers);
     this.uiService.message('CSV exported successfully', 'success');
   }
@@ -72,7 +74,7 @@ export class BalanceSheetComponent implements OnInit {
 
     const excelData = this.prepareBalanceSheetData();
     const headers = ['Category', 'Item', 'Amount'];
-    
+
     this.exportPrintService.exportExcel(excelData, 'Balance_Sheet', 'Balance Sheet', headers);
     this.uiService.message('Excel exported successfully', 'success');
   }
@@ -147,12 +149,12 @@ export class BalanceSheetComponent implements OnInit {
       <div style="font-family: Arial, sans-serif; padding: 20px;">
         <h1 style="text-align: center; color: #2196f3; margin-bottom: 10px;">Balance Sheet</h1>
         <div style="text-align: center; color: #666; margin-bottom: 30px;">As on ${dateStr}</div>
-        
+
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
           <!-- Assets Section -->
           <div>
             <h2 style="color: #333; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 15px;">Assets</h2>
-            
+
             <h3 style="color: #555; margin: 15px 0 10px 0; font-size: 14px;">Current Assets</h3>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
               <tr>
@@ -180,7 +182,7 @@ export class BalanceSheetComponent implements OnInit {
                 <td style="text-align: right; padding: 10px 0; font-weight: 600;">${(bs.assets?.currentAssets?.totalCurrentAssets || 0).toFixed(2)}</td>
               </tr>
             </table>
-            
+
             <h3 style="color: #555; margin: 15px 0 10px 0; font-size: 14px;">Fixed Assets</h3>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
               <tr>
@@ -188,7 +190,7 @@ export class BalanceSheetComponent implements OnInit {
                 <td style="text-align: right; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-weight: 600;">${(bs.assets?.fixedAssets?.total || 0).toFixed(2)}</td>
               </tr>
             </table>
-            
+
             <div style="border-top: 2px solid #e0e0e0; margin-top: 15px; padding-top: 15px;">
               <table style="width: 100%; border-collapse: collapse;">
                 <tr>
@@ -198,11 +200,11 @@ export class BalanceSheetComponent implements OnInit {
               </table>
             </div>
           </div>
-          
+
           <!-- Liabilities & Equity Section -->
           <div>
             <h2 style="color: #333; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 15px;">Liabilities</h2>
-            
+
             <h3 style="color: #555; margin: 15px 0 10px 0; font-size: 14px;">Current Liabilities</h3>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
               <tr>
@@ -222,7 +224,7 @@ export class BalanceSheetComponent implements OnInit {
                 <td style="text-align: right; padding: 10px 0; font-weight: 600;">${(bs.liabilities?.currentLiabilities?.totalCurrentLiabilities || 0).toFixed(2)}</td>
               </tr>
             </table>
-            
+
             <h3 style="color: #555; margin: 15px 0 10px 0; font-size: 14px;">Long Term Liabilities</h3>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
               <tr>
@@ -230,7 +232,7 @@ export class BalanceSheetComponent implements OnInit {
                 <td style="text-align: right; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-weight: 600;">${(bs.liabilities?.longTermLiabilities?.total || 0).toFixed(2)}</td>
               </tr>
             </table>
-            
+
             <div style="border-top: 2px solid #e0e0e0; margin-top: 15px; padding-top: 15px; margin-bottom: 30px;">
               <table style="width: 100%; border-collapse: collapse;">
                 <tr>
@@ -239,7 +241,7 @@ export class BalanceSheetComponent implements OnInit {
                 </tr>
               </table>
             </div>
-            
+
             <h2 style="color: #333; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 15px;">Owner's Equity</h2>
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
@@ -261,7 +263,7 @@ export class BalanceSheetComponent implements OnInit {
             </table>
           </div>
         </div>
-        
+
         <!-- Summary -->
         <div style="margin-top: 40px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
           <div style="display: flex; justify-content: space-around; align-items: center;">
