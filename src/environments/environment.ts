@@ -5,11 +5,11 @@ export const environment = {
   baseLink: 'http://localhost:3000',
   paymentBaseLink: 'http://localhost:4200',
 
-  apiBaseLink: 'http://localhost:3000',
-  ftpBaseLink: 'http://localhost:3000',
+  // apiBaseLink: 'http://localhost:3000',
+  // ftpBaseLink: 'http://localhost:3000',
 
-  // apiBaseLink: 'https://api.gadgetandmobile.com.bd',
-  // ftpBaseLink: 'https://api.gadgetandmobile.com.bd',
+  apiBaseLink: 'https://api.gadgetandmobile.com.bd',
+  ftpBaseLink: 'https://api.gadgetandmobile.com.bd',
 
   ftpPrefixPath: 'https://api.gadgetandmobile.com.bd/api/upload/images',
   ftpPrefix: '/api',

@@ -132,6 +132,18 @@
       </p>
     </div>
   </div>
+  
+  <div class="summary-card today-sales">
+    <div class="summary-icon">
+      <mat-icon>today</mat-icon>
+    </div>
+    <div class="summary-content">
+      <h3 class="summary-label">Today's Sales</h3>
+      <p class="summary-value">
+        {{shopInformation?.currency | currencyIcon}}{{ getDailyGrandTotal() | number:'1.2-2' }}
+      </p>
+    </div>
+  </div>
 </section>
 
 <!-- Bulk Actions -->
@@ -176,6 +188,8 @@
         <span class="item-count">{{group.data.length}} sale(s)</span>
       </div>
     </div>
+
+
 
     <!-- Sales Table -->
     <div class="table-card">
