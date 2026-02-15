@@ -583,3 +583,27 @@
   color: #999;
   font-style: italic;
 }
+
+// Customer Search Autocomplete
+::ng-deep {
+  .mat-autocomplete-panel {
+    .customer-option {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 4px 0;
+
+      .customer-name {
+        font-weight: 500;
+        color: #333;
+        font-size: 14px;
+      }
+
+      .customer-phone {
+        font-size: 12px;
+        color: #666;
+        font-family: monospace;
+      }
+    }
+  }
+}

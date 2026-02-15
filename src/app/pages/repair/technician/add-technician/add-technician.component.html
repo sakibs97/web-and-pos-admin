@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <div class="header">
+        <h2>{{id ? 'Edit' : 'Add'}} Technician</h2>
+    </div>
+
+    <mat-card class="form-card">
+        <form [formGroup]="dataForm" (ngSubmit)="onSubmit()" #formElement="ngForm">
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" placeholder="Enter technician name" required />
+                    <mat-error *ngIf="dataForm.get('name').invalid">Name is required</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Phone No</mat-label>
+                    <input matInput formControlName="phoneNo" placeholder="Enter phone number" />
+                </mat-form-field>
+            </div>
+
+            <div class="form-row">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Address</mat-label>
+                    <textarea matInput formControlName="address" placeholder="Enter address"></textarea>
+                </mat-form-field>
+            </div>
+
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Status</mat-label>
+                    <mat-select formControlName="status">
+                        <mat-option value="Active">Active</mat-option>
+                        <mat-option value="Inactive">Inactive</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" mat-button color="warn" [routerLink]="['/repair/technician-list']">Cancel</button>
+                <button type="submit" mat-raised-button color="primary" [disabled]="dataForm.invalid">
+                    {{id ? 'Update' : 'Save'}} Technician
+                </button>
+            </div>
+        </form>
+    </mat-card>
+</div>

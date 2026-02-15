@@ -1,0 +1,64 @@
+.container-fluid {
+    padding: 24px;
+    background-color: #f8fafc;
+    min-height: calc(100vh - 64px);
+}
+
+.header {
+    margin-bottom: 24px;
+
+    h2 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+        color: #1e293b;
+    }
+}
+
+.form-card {
+    max-width: 800px;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    background: white;
+
+    .form-row {
+        display: flex;
+        gap: 24px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+
+        mat-form-field {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .full-width {
+            width: 100%;
+        }
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 16px;
+        margin-top: 32px;
+
+        button {
+            height: 48px;
+            padding: 0 32px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+    }
+}
+
+@media (max-width: 640px) {
+    .form-row {
+        flex-direction: column;
+
+        mat-form-field {
+            min-width: 100% !important;
+        }
+    }
+}

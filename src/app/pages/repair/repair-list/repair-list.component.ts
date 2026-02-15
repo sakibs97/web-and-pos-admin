@@ -19,6 +19,7 @@ import { PageDataService } from '../../../services/core/page-data.service';
 import { Title } from '@angular/platform-browser';
 import * as XLSX from 'xlsx';
 import { ExportToolbarComponent, ColumnVisibility } from '../../../shared/components/export-toolbar/export-toolbar.component';
+import { TechnicianService } from '../../../services/common/technician.service';
 
 @Component({
   selector: 'app-repair-list',
@@ -45,6 +46,8 @@ export class RepairListComponent extends adminBaseMixin(Component) implements On
   sortQuery: any = null;
   activeFilterMonth: number = null;
   activeFilterYear: number = null;
+  activeFilterTechnician: number = null;
+  technicians: any[] = [];
   repairData: any;
   activeSort: number;
   selectedStatus: string | null = null;
@@ -90,6 +93,7 @@ export class RepairListComponent extends adminBaseMixin(Component) implements On
   private readonly pageDataService = inject(PageDataService);
   private readonly title = inject(Title);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly technicianService = inject(TechnicianService);
 
   ngOnInit(): void {
     const subReload = this.reloadService.refreshData$.subscribe(() => {
@@ -101,6 +105,7 @@ export class RepairListComponent extends adminBaseMixin(Component) implements On
     this.filter = null;
     this.getAllRepair();
     this.getShopInformation();
+    this.getAllTehcnicians();
     this.setPageData();
   }
 
@@ -135,6 +140,7 @@ export class RepairListComponent extends adminBaseMixin(Component) implements On
             repairFor: 1,
             deliveredTime: 1,
             amount: 1,
+            technician: 1,
             partsAmount: 1,
             parts: 1,
             status: 1,
@@ -245,6 +251,7 @@ export class RepairListComponent extends adminBaseMixin(Component) implements On
       status: 1,
       problem: 1,
       password: 1,
+      technician: 1,
       modelNo: 1,
       color: 1,
       imeiNo: 1,
@@ -347,8 +354,14 @@ export class RepairListComponent extends adminBaseMixin(Component) implements On
     switch (type) {
       case 'month': {
         this.isDefaultFilter = false;
-        this.filter = { 'month': value };
+        this.filter = { ...this.filter, 'month': value };
         this.activeFilterMonth = index;
+        break;
+      }
+      case 'technician': {
+        this.isDefaultFilter = false;
+        this.filter = { ...this.filter, 'technician._id': value };
+        this.activeFilterTechnician = index;
         break;
       }
       default: {
@@ -391,6 +404,7 @@ export class RepairListComponent extends adminBaseMixin(Component) implements On
     this.activeSort = null;
     this.activeFilterMonth = null;
     this.activeFilterYear = null;
+    this.activeFilterTechnician = null;
     this.selectedStatus = null;
     this.sortQuery = { dateString: -1 };
     this.filter = null;
@@ -1201,6 +1215,15 @@ export class RepairListComponent extends adminBaseMixin(Component) implements On
   getTotalRepairAmount(): number {
     if (!this.allRepair || !this.allRepair.length) return 0;
     return this.allRepair.reduce((sum, repair) => sum + this.getRepairAmount(repair), 0);
+  }
+
+  getAllTehcnicians() {
+    this.technicianService.getAllTechniciansByShop({ pagination: null, filter: null, select: null, sort: { name: 1 } })
+      .subscribe({
+        next: (res) => {
+          this.technicians = res.data;
+        }
+      });
   }
 
   ngOnDestroy() {

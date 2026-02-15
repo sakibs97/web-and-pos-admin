@@ -1,32 +1,32 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
-import {UiService} from '../../../../services/core/ui.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs';
-import {SaleService} from '../../../../services/common/sale.service';
-import {Product} from '../../../../interfaces/common/product.interface';
-import {ProductService} from '../../../../services/common/product.service';
-import {MatDialog} from '@angular/material/dialog';
-import {UtilsService} from '../../../../services/core/utils.service';
-import {Sale} from '../../../../interfaces/common/sale.interface';
-import {PaymentBreakdown} from '../../../../interfaces/common/sale.interface';
-import {Select} from '../../../../interfaces/core/select';
-import {DISCOUNT_TYPES, PAYMENT_TYPES} from '../../../../core/utils/app-data';
-import {VendorService} from '../../../../services/vendor/vendor.service';
-import {ShopInformation} from '../../../../interfaces/common/shop-information.interface';
-import {ShopInformationService} from '../../../../services/common/shop-information.service';
-import {FilterData} from '../../../../interfaces/gallery/filter-data';
-import {ConfirmDialogComponent} from '../../../../shared/components/ui/confirm-dialog/confirm-dialog.component';
-import {SplitPaymentDialogComponent} from '../split-payment-dialog/split-payment-dialog.component';
-import {ReprintBillComponent} from '../reprint-bill/reprint-bill.component';
-import {ExchangeDialogComponent} from '../exchange-dialog/exchange-dialog.component';
-import {CustomerService} from '../../../../services/common/customer.service';
-import {Customer} from '../../../../interfaces/common/customer.interface';
-import {ThermalPrinterService} from '../../../../services/common/thermal-printer.service';
-import {PrinterSettingsService} from '../../../../services/common/printer-settings.service';
-import {SettingService} from '../../../../services/common/setting.service';
-import {VariationSelectionDialogComponent} from '../variation-selection-dialog/variation-selection-dialog.component';
-import {VariationList} from '../../../../interfaces/common/product.interface';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { UiService } from '../../../../services/core/ui.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { SaleService } from '../../../../services/common/sale.service';
+import { Product } from '../../../../interfaces/common/product.interface';
+import { ProductService } from '../../../../services/common/product.service';
+import { MatDialog } from '@angular/material/dialog';
+import { UtilsService } from '../../../../services/core/utils.service';
+import { Sale } from '../../../../interfaces/common/sale.interface';
+import { PaymentBreakdown } from '../../../../interfaces/common/sale.interface';
+import { Select } from '../../../../interfaces/core/select';
+import { DISCOUNT_TYPES, PAYMENT_TYPES } from '../../../../core/utils/app-data';
+import { VendorService } from '../../../../services/vendor/vendor.service';
+import { ShopInformation } from '../../../../interfaces/common/shop-information.interface';
+import { ShopInformationService } from '../../../../services/common/shop-information.service';
+import { FilterData } from '../../../../interfaces/gallery/filter-data';
+import { ConfirmDialogComponent } from '../../../../shared/components/ui/confirm-dialog/confirm-dialog.component';
+import { SplitPaymentDialogComponent } from '../split-payment-dialog/split-payment-dialog.component';
+import { ReprintBillComponent } from '../reprint-bill/reprint-bill.component';
+import { ExchangeDialogComponent } from '../exchange-dialog/exchange-dialog.component';
+import { CustomerService } from '../../../../services/common/customer.service';
+import { Customer } from '../../../../interfaces/common/customer.interface';
+import { ThermalPrinterService } from '../../../../services/common/thermal-printer.service';
+import { PrinterSettingsService } from '../../../../services/common/printer-settings.service';
+import { SettingService } from '../../../../services/common/setting.service';
+import { VariationSelectionDialogComponent } from '../variation-selection-dialog/variation-selection-dialog.component';
+import { VariationList } from '../../../../interfaces/common/product.interface';
 
 @Component({
   selector: 'app-new-sales',
@@ -168,9 +168,9 @@ export class NewSalesComponent implements OnInit, OnDestroy {
           if (res.success && res.data) {
             // Try to get name from vendor data
             vendorName = res.data.name ||
-                        res.data.username ||
-                        this.vendorService.getUserRole() ||
-                        'Admin';
+              res.data.username ||
+              this.vendorService.getUserRole() ||
+              'Admin';
             // Cache the name
             if (vendorName !== 'Admin') {
               sessionStorage.setItem('vendor-name', vendorName);
@@ -206,7 +206,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
 
   private setFormValue() {
     if (this?.sale?.customer?.phone) {
-      this.dataForm.patchValue({...this.sale.customer});
+      this.dataForm.patchValue({ ...this.sale.customer });
       this.customerInfo = true;
     }
 
@@ -240,7 +240,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     }));
 
     this.saleData = {
-      customer: this.dataForm.valid ? {...this.dataForm.value} : null,
+      customer: this.dataForm.valid ? { ...this.dataForm.value } : null,
       products: mappedProducts,
       soldDate: this.soldDate,
       soldDateString: this.utilsService.getDateString(this.soldDate),
@@ -284,7 +284,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
         this.saleData = {
           ...this.saleData,
           ...{
-            customer: {...this.sale.customer, ...this.dataForm.value}
+            customer: { ...this.sale.customer, ...this.dataForm.value }
           }
         };
       }
@@ -303,7 +303,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
    */
   onCustomerSearch(query: string) {
     this.customerSearchQuery = query;
-    
+
     if (!query || query.trim().length === 0) {
       this.searchedCustomer = null;
       this.customer = null;
@@ -340,10 +340,10 @@ export class NewSalesComponent implements OnInit, OnDestroy {
         next: (res) => {
           if (res.success && res.data && res.data.length > 0) {
             // Find exact phone match first
-            const exactMatch = res.data.find((c: Customer) => 
+            const exactMatch = res.data.find((c: Customer) =>
               c.phone && c.phone.toString().trim() === query.trim()
             );
-            
+
             if (exactMatch) {
               this.searchedCustomer = exactMatch;
               this.customer = exactMatch;
@@ -392,67 +392,67 @@ export class NewSalesComponent implements OnInit, OnDestroy {
   private addSale() {
     this.isLoading = true;
     this.subDataFive = this.newSalesService.addSale(this.saleData).subscribe({
-        next: (res) => {
-          if (res.success) {
-            const message = this.isHoldBill
-              ? 'Bill held successfully'
-              : (this.isDraftBill
-                ? 'Draft saved successfully'
-                : (res.message || 'Sale added successfully'));
-            this.uiService.message(message, 'success');
-            this.saleData = {...this.saleData, ...{invoiceNo: res.data.invoiceNo}};
+      next: (res) => {
+        if (res.success) {
+          const message = this.isHoldBill
+            ? 'Bill held successfully'
+            : (this.isDraftBill
+              ? 'Draft saved successfully'
+              : (res.message || 'Sale added successfully'));
+          this.uiService.message(message, 'success');
+          this.saleData = { ...this.saleData, ...{ invoiceNo: res.data.invoiceNo } };
 
-            // Reset form
-            this.formElement?.resetForm();
-            this.products = [];
-            this.customer = null;
-            this.vat = 0;
-            this.tax = 0;
-            this.ait = 0;
-            this.serviceCharge = 0;
-            this.usePoints = 0;
-            this.pointsDiscount = 0;
-            this.discountType = null;
-            this.discountAmount = null;
-            this.receivedFromCustomer = null;
-            this.paymentType = 'cash';
-            this.payments = [];
-            this.useSplitPayment = false;
-            const wasHold = this.isHoldBill;
-            const wasDraft = this.isDraftBill;
-            this.isHoldBill = false;
-            this.isDraftBill = false;
-            this.openDialog = false;
-            this.isLoading = false;
+          // Reset form
+          this.formElement?.resetForm();
+          this.products = [];
+          this.customer = null;
+          this.vat = 0;
+          this.tax = 0;
+          this.ait = 0;
+          this.serviceCharge = 0;
+          this.usePoints = 0;
+          this.pointsDiscount = 0;
+          this.discountType = null;
+          this.discountAmount = null;
+          this.receivedFromCustomer = null;
+          this.paymentType = 'cash';
+          this.payments = [];
+          this.useSplitPayment = false;
+          const wasHold = this.isHoldBill;
+          const wasDraft = this.isDraftBill;
+          this.isHoldBill = false;
+          this.isDraftBill = false;
+          this.openDialog = false;
+          this.isLoading = false;
 
-            // Print only if not hold or draft
-            if (!wasHold && !wasDraft) {
-              setTimeout(() => {
-                if (this.saleData && this.saleData.invoiceNo) {
-                  this.onPrint();
-                }
-              }, 300);
+          // Print only if not hold or draft
+          if (!wasHold && !wasDraft) {
+            setTimeout(() => {
+              if (this.saleData && this.saleData.invoiceNo) {
+                this.onPrint();
+              }
+            }, 300);
 
-              setTimeout(() => {
-                this.router.navigate(['/pos/sales/sale-list']);
-              }, 1500);
-            } else {
-              // Navigate to list for hold/draft
-              setTimeout(() => {
-                this.router.navigate(['/pos/sales/sale-list']);
-              }, 500);
-            }
+            setTimeout(() => {
+              this.router.navigate(['/pos/sales/sale-list']);
+            }, 1500);
           } else {
-            this.isLoading = false;
-            this.uiService.message(res.message || 'Failed to add sale', 'warn');
+            // Navigate to list for hold/draft
+            setTimeout(() => {
+              this.router.navigate(['/pos/sales/sale-list']);
+            }, 500);
           }
-        },
+        } else {
+          this.isLoading = false;
+          this.uiService.message(res.message || 'Failed to add sale', 'warn');
+        }
+      },
       error: (error) => {
         this.isLoading = false;
         console.error('Error adding sale:', error);
         const errorMessage = error?.error?.message ||
-                            error?.message ||
-                            'Failed to add sale. Please check your connection and try again.';
+          error?.message ||
+          'Failed to add sale. Please check your connection and try again.';
         this.uiService.message(errorMessage, 'warn');
       },
     });
@@ -493,11 +493,11 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     // Filter for active products only
     const filter: FilterData = {
       filter: {
-        status: {$ne: 'trash'}
+        status: { $ne: 'trash' }
       },
       pagination: null,
       select: mSelect,
-      sort: {createdAt: -1},
+      sort: { createdAt: -1 },
     };
 
     this.subDataOne = this.productService.getAllProducts(filter, null)
@@ -534,7 +534,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
             this.serviceCharge = this.sale.serviceCharge || 0;
             this.receivedFromCustomer = this.sale.receivedFromCustomer || this.sale.paidAmount || this.sale.total;
             this.paymentType = this.sale.paymentType;
-            
+
             // Load split payments if paymentType is mixed
             if (this.sale.paymentType === 'mixed' && this.sale.payments && this.sale.payments.length > 0) {
               this.payments = this.sale.payments;
@@ -543,7 +543,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
               this.payments = [];
               this.useSplitPayment = false;
             }
-            
+
             this.setFormValue();
           }
         }),
@@ -664,10 +664,10 @@ export class NewSalesComponent implements OnInit, OnDestroy {
         const barcode = (p.barcode?.toString() || '').toLowerCase();
         const productId = (p.productId?.toString() || '').toLowerCase();
         return productName.includes(searchTerm) ||
-               sku.includes(searchTerm) ||
-               name.includes(searchTerm) ||
-               barcode.includes(searchTerm) ||
-               productId.includes(searchTerm);
+          sku.includes(searchTerm) ||
+          name.includes(searchTerm) ||
+          barcode.includes(searchTerm) ||
+          productId.includes(searchTerm);
       }).slice(0, 10);
 
       // Create flattened results with variations as separate items
@@ -681,8 +681,8 @@ export class NewSalesComponent implements OnInit, OnDestroy {
             const variationSku = (variation.sku?.toString() || '').toLowerCase();
             const variationBarcode = (variation.barcode?.toString() || '').toLowerCase();
             const matchesVariation = variationName.includes(searchTerm) ||
-                                     variationSku.includes(searchTerm) ||
-                                     variationBarcode.includes(searchTerm);
+              variationSku.includes(searchTerm) ||
+              variationBarcode.includes(searchTerm);
 
             // Include if product matches OR variation matches
             if (matchesVariation || this.searchProducts.includes(product)) {
@@ -726,7 +726,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
               const variationSku = (variation.sku?.toString() || '').toLowerCase();
               const variationBarcode = (variation.barcode?.toString() || '').toLowerCase();
               const matchesVariation = variationSku.includes(searchTerm) ||
-                                       variationBarcode.includes(searchTerm);
+                variationBarcode.includes(searchTerm);
 
               if (matchesVariation) {
                 this.searchResultsWithVariations.push({
@@ -828,8 +828,8 @@ export class NewSalesComponent implements OnInit, OnDestroy {
         productData.selectedVariationId = selectedVariation._id;
         productData.selectedVariation = selectedVariation;
         // Use regularPrice if provided (from search results), otherwise use salePrice or regularPrice
-        productData.salePrice = useRegularPrice !== undefined && useRegularPrice > 0 
-          ? useRegularPrice 
+        productData.salePrice = useRegularPrice !== undefined && useRegularPrice > 0
+          ? useRegularPrice
           : (selectedVariation.salePrice || selectedVariation.regularPrice || product.salePrice);
         productData.regularPrice = selectedVariation.regularPrice || product.regularPrice;
         productData.costPrice = selectedVariation.costPrice || product.costPrice;
@@ -1142,7 +1142,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
   public openConfirmDialog() {
     this.openDialog = true;
     const currencySymbol = this.getCurrencySymbol();
-    const totalAmount = this.grandTotal.toLocaleString('bn-BD');
+    const totalAmount = this.grandTotal.toFixed(2);
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: '500px',
       data: {
@@ -1167,7 +1167,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     if (!this.shopInformation?.currency) {
       return '৳';
     }
-    switch(this.shopInformation.currency) {
+    switch (this.shopInformation.currency) {
       case 'BDT':
         return '৳';
       case 'SGD':
@@ -1224,7 +1224,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
   private handlePrint() {
     const settings = this.printerSettings || {};
     const printType = settings.printType || 'pos'; // Default to POS if not set
-    
+
     console.log('Handle print - Settings:', settings);
     console.log('Handle print - Print Type:', printType);
 
@@ -1234,7 +1234,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
       this.printInvoiceHTML();
       return;
     }
-    
+
     // If Label print is selected, use HTML print (Label format)
     if (printType === 'label') {
       console.log('Using Label print');
@@ -1339,7 +1339,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     const date = new Date();
     const currencySymbol = this.getCurrencySymbol();
     const printType = settings.printType || 'pos'; // Default to POS if not set
-    
+
     console.log('Generate print content - Settings:', settings);
     console.log('Generate print content - Print Type:', printType);
     console.log('Generate print content - Paper Size:', settings.paperSize);
@@ -1362,12 +1362,12 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     const shopPhone = shopInfo?.phones?.[0]?.value || '';
     const shopEmail = shopInfo?.emails?.[0]?.value || '';
     const shopWebsite = (shopInfo as any)?.website || '';
-    
+
     // Invoice Information
     const invoiceNo = sale?.invoiceNo || 'N/A';
     const saleDate = this.utilsService.getDateString(sale?.soldDate || new Date());
     const saleTime = sale?.soldTime || '';
-    
+
     // Customer Information
     const customerName = sale?.customer?.name || '';
     const customerPhone = sale?.customer?.phone || '';
@@ -1375,7 +1375,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     const customerAddress = sale?.customer?.address || '';
     const customerCity = sale?.customer?.city || '';
     const customerPostCode = sale?.customer?.postCode || '';
-    
+
     // Salesman Information
     const salesmanName = sale?.salesman?.name || this.vendor?.name || 'N/A';
     const salesmanPhone = sale?.salesman?.phone || '';
@@ -1385,7 +1385,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     const isLabelPrint = printType === 'label';
     const paperSize = isA4Print ? 'A4' : (isLabelPrint ? (settings.labelSize || '3in 10in') : (settings.paperSize || '58mm'));
     const orientation = settings.orientation || 'portrait'; // portrait, landscape, portrait-180, landscape-180
-    
+
     // Calculate paper width for POS thermal printers
     let calculatedPaperWidth = '58mm';
     if (!isA4Print && !isLabelPrint) {
@@ -1403,9 +1403,10 @@ export class NewSalesComponent implements OnInit, OnDestroy {
         const qty = p.soldQuantity || 0;
         const price = (p.salePrice || 0).toFixed(2);
         const total = ((p.salePrice || 0) * qty).toFixed(2);
+        const imei = p.imei ? `<div style="font-size: 10px; color: #666; margin-top: 2px;">IMEI/SN: ${p.imei}</div>` : '';
         return `
         <tr>
-          <td>${productName}</td>
+          <td>${productName}${imei}</td>
           <td>${qty}</td>
           <td>${currencySymbol}${price}</td>
           <td>${currencySymbol}${total}</td>
@@ -1414,17 +1415,18 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     }
 
     // Format totals
-    const subTotal = (sale?.subTotal || 0).toLocaleString('bn-BD');
-    const discountAmount = sale?.discountAmount || sale?.discount || 0;
-    const discount = discountAmount > 0 ? discountAmount.toLocaleString('bn-BD') : '0';
-    const vatAmount = (sale?.vatAmount || 0).toLocaleString('bn-BD');
-    const grandTotal = (sale?.total || 0).toLocaleString('bn-BD');
+    const subTotal = (sale?.subTotal || 0).toFixed(2);
+    const discountVal = (sale?.discount || 0);
+    const discount = discountVal > 0 ? discountVal.toFixed(2) : '0.00';
+    const discountAmount = discountVal; // Use the calculated amount for consistency with template checks
+    const vatAmount = (sale?.vatAmount || 0).toFixed(2);
+    const grandTotal = (sale?.total || 0).toFixed(2);
     const totalAmount = sale?.total || 0;
     // Paid amount should be receivedFromCustomer if available, otherwise paidAmount, otherwise total (for full payment)
     const paidAmount = sale?.receivedFromCustomer || sale?.paidAmount || (sale?.paymentType === 'cash' && !sale?.receivedFromCustomer ? sale?.total : 0);
     const dueAmount = totalAmount - paidAmount;
-    const due = dueAmount > 0 ? dueAmount.toLocaleString('bn-BD') : '0';
-    const received = paidAmount > 0 ? paidAmount.toLocaleString('bn-BD') : (sale?.total || 0).toLocaleString('bn-BD');
+    const due = dueAmount > 0 ? dueAmount.toFixed(2) : '0.00';
+    const received = paidAmount > 0 ? paidAmount.toFixed(2) : (sale?.total || 0).toFixed(2);
     const change = sale?.receivedFromCustomer && sale?.receivedFromCustomer > sale?.total
       ? (sale.receivedFromCustomer - sale.total).toFixed(2)
       : '0.00';
@@ -1442,10 +1444,69 @@ export class NewSalesComponent implements OnInit, OnDestroy {
   <style>
     @media print {
       @page { 
-        margin: 8mm; 
-        size: A4;
+        margin: 8mm !important; 
+        size: A4 !important;
+        page-break-inside: avoid !important;
+        orphans: 0 !important;
+        widows: 0 !important;
       }
-      body { margin: 0; }
+      /* Universal page break prevention for all elements */
+      * {
+        page-break-inside: avoid !important;
+        page-break-after: avoid !important;
+        page-break-before: avoid !important;
+        break-inside: avoid !important;
+        break-after: avoid !important;
+        break-before: avoid !important;
+      }
+      html, body {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+        page-break-before: avoid !important;
+        break-before: avoid !important;
+      }
+      body { 
+        margin: 0 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      /* Prevent page breaks for all invoice sections */
+      .invoice-container, .invoice-header, .shop-info, .invoice-details, .invoice-body, .invoice-summary, .invoice-footer, .footer-section, table, thead, tbody, tr, td, th {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+        page-break-before: avoid !important;
+        break-before: avoid !important;
+      }
+      table {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      thead {
+        display: table-header-group;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+      tbody {
+        display: table-row-group;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+      td, th {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
     }
     * {
       margin: 0;
@@ -1458,7 +1519,9 @@ export class NewSalesComponent implements OnInit, OnDestroy {
       max-width: 210mm;
       margin: 0 auto;
       background: #fff;
-      color: #333;
+      color: #000 !important; /* Force black text for printing */
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
       line-height: 1.4;
       font-size: 11px;
     }
@@ -1467,35 +1530,41 @@ export class NewSalesComponent implements OnInit, OnDestroy {
       padding: 15px;
     }
     .invoice-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      text-align: center;
       margin-bottom: 12px;
       padding-bottom: 10px;
       border-bottom: 2px solid #4CAF50;
     }
     .shop-info {
-      flex: 1;
+      margin: 0 auto;
+      display: inline-block;
+      text-align: center;
     }
     .shop-logo-container {
-      margin-bottom: 5px;
+      margin: 0 auto 5px auto;
+      display: flex;
+      justify-content: center;
     }
     .shop-logo {
-      max-width: 60px;
+      max-width: 100px;
       max-height: 60px;
-      display: ${settings.showShopLogo && (shopInfo as any)?.logo ? 'block' : 'none'};
+      display: ${settings.showShopLogo && (shopInfo as any)?.logoPrimary ? 'block' : 'none'};
+      margin: 0 auto;
     }
     .shop-name {
       font-size: 18px;
       font-weight: bold;
-      color: #2c3e50;
+      color: #000 !important;
       margin-bottom: 4px;
-      display: ${(settings.showShopLogo && (shopInfo as any)?.logo) ? 'none' : (settings.showShopName !== false ? 'block' : 'none')};
+      display: ${(settings.showShopLogo && (shopInfo as any)?.logoPrimary) ? 'none' : (settings.showShopName !== false ? 'block' : 'none')};
     }
     .shop-details {
-      color: #666;
-      font-size: 10px;
-      line-height: 1.3;
+      color: #000 !important;
+      font-size: 12px;
+      line-height: 1.4;
+      text-align: center;
+      margin-top: 8px;
+      font-weight: 500;
     }
     .shop-address {
       display: ${settings.showShopAddress !== false ? 'block' : 'none'};
@@ -1514,44 +1583,52 @@ export class NewSalesComponent implements OnInit, OnDestroy {
       margin-bottom: 2px;
     }
     .invoice-title {
-      text-align: right;
-      flex: 1;
+      text-align: center;
+      margin-top: 5px;
     }
     .invoice-title h1 {
       font-size: 24px;
-      color: #4CAF50;
+      color: #000 !important;
       margin-bottom: 5px;
-      font-weight: 700;
+      font-weight: 900;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
     .invoice-title .invoice-number {
       font-size: 12px;
-      color: #666;
+      color: #000 !important;
+      font-weight: 500;
       display: ${settings.showInvoiceNumber !== false ? 'block' : 'none'};
     }
     .invoice-meta {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin: 20px 0;
       padding: 10px;
-      background: #f8f9fa;
+      background: #f8f9fa !important;
+      border: 1px solid #ddd !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
       border-radius: 4px;
-      font-size: 10px;
+      font-size: 12px;
     }
     .invoice-meta-section {
       flex: 1;
     }
     .invoice-meta-section h3 {
-      font-size: 11px;
-      color: #4CAF50;
-      margin-bottom: 6px;
+      font-size: 14px;
+      color: #000 !important;
+      margin-bottom: 8px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      font-weight: 600;
+      font-weight: 700;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 4px;
     }
     .invoice-meta-section p {
-      margin: 3px 0;
-      color: #333;
-      font-size: 10px;
+      margin: 4px 0;
     }
     .invoice-meta-section strong {
       color: #2c3e50;
@@ -1561,29 +1638,39 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     .products-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 10px 0;
+      margin: 15px 0;
       background: #fff;
       display: ${settings.showProductTable !== false ? 'table' : 'none'};
-      font-size: 10px;
+      font-size: 12px;
+      border: 1px solid #ddd;
     }
-    .products-table thead {
-      background: #4CAF50;
-      color: #fff;
-    }
-    .products-table th {
-      padding: 6px 8px;
+    .products-table thead th {
+      background: #f5f5f5 !important;
+      color: #000 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      padding: 8px 10px;
       text-align: left;
-      font-weight: 600;
-      font-size: 10px;
-      text-transform: uppercase;
+      font-weight: 700; /* Bolder text */
+      font-size: 13px;  /* Slightly larger */
+      border: 1px solid #ddd;
     }
-    .products-table td {
-      padding: 5px 8px;
-      border-bottom: 1px solid #e0e0e0;
-      font-size: 10px;
+    .products-table tbody td {
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+      font-size: 12px;
+      color: #000 !important; /* Force black text */
+      font-weight: 500; /* Slightly bolder */
     }
-    .products-table tbody tr:last-child td {
-      border-bottom: none;
+    .products-table tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    /* Force all text in table to be black */
+    .products-table * {
+      color: #000 !important;
+    }
+    .products-table tbody tr:hover {
+      background-color: #f1f1f1;
     }
     .text-right {
       text-align: right;
@@ -1592,10 +1679,11 @@ export class NewSalesComponent implements OnInit, OnDestroy {
       text-align: center;
     }
     .totals-section {
-      margin-top: 10px;
+      margin-top: 20px;
       display: flex;
       justify-content: flex-end;
       display: ${settings.showTotals !== false ? 'flex' : 'none'};
+      font-size: 13px;
     }
     .totals-box {
       width: 280px;
@@ -1609,7 +1697,7 @@ export class NewSalesComponent implements OnInit, OnDestroy {
       justify-content: space-between;
       padding: 4px 0;
       border-bottom: 1px solid #e0e0e0;
-      font-size: 11px;
+      margin: 6px 0;
     }
     .total-row:last-child {
       border-bottom: none;
@@ -1624,11 +1712,11 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     }
     .grand-total {
       font-size: 14px;
-      font-weight: 700;
+      font-weight: bold;
       color: #4CAF50;
       padding-top: 6px;
-      margin-top: 4px;
-      border-top: 2px solid #4CAF50;
+      margin-top: 8px;
+      border-top: 1px solid #333;
     }
     .grand-total .total-value {
       color: #4CAF50;
@@ -1637,17 +1725,22 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     .payment-section {
       margin-top: 10px;
       padding: 10px;
-      background: #e8f5e9;
+      background: #f0f0f0 !important;
+      border: 1px solid #ddd !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
       border-radius: 4px;
-      border-left: 3px solid #4CAF50;
+      border-left: 3px solid #000 !important;
       display: ${settings.showPaymentInfo !== false ? 'block' : 'none'};
       font-size: 10px;
     }
     .payment-section h3 {
       font-size: 11px;
-      color: #2c3e50;
+      color: #000 !important;
       margin-bottom: 6px;
-      font-weight: 600;
+      font-weight: 700;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
     .payment-info {
       display: flex;
@@ -1673,20 +1766,24 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     .footer-section {
       margin-top: 15px;
       padding-top: 10px;
-      border-top: 1px solid #e0e0e0;
+      border-top: 1px solid #000 !important;
       text-align: center;
-      color: #666;
+      color: #000 !important;
       font-size: 9px;
       display: ${settings.footerText ? 'block' : 'none'};
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
     .footer-section p {
       margin: 3px 0;
     }
     .thank-you {
       font-size: 12px;
-      color: #4CAF50;
-      font-weight: 600;
+      color: #000 !important;
+      font-weight: 700;
       margin-bottom: 5px;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
     .signature-section {
       margin-top: 20px;
@@ -1704,35 +1801,32 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     }
     .signature-label {
       font-size: 10px;
-      color: #666;
+      color: #000 !important;
       font-weight: 600;
     }
     ${customCss}
   </style>
 </head>
-<body>
-  <div class="invoice-container">
+<body style="page-break-inside: avoid !important; break-inside: avoid !important;">
+  <div class="invoice-container" style="page-break-inside: avoid !important; break-inside: avoid !important;">
     <!-- Header -->
     <div class="invoice-header">
-      <div class="shop-info">
-        ${settings.showShopLogo && (shopInfo as any)?.logo ? `
-        <div class="shop-logo-container">
-          <img src="${(shopInfo as any).logo}" alt="Logo" class="shop-logo">
-        </div>
-        ` : ''}
-        ${(!settings.showShopLogo || !(shopInfo as any)?.logo) && settings.showShopName !== false ? `<div class="shop-name">${shopName}</div>` : ''}
-        <div class="shop-details">
-          ${settings.showShopAddress !== false ? `<div class="shop-address">${shopAddress}</div>` : ''}
-          ${settings.showShopPhone !== false ? `<div class="shop-phone">${shopPhone}</div>` : ''}
-          ${shopEmail ? `<div class="shop-email">${shopEmail}</div>` : ''}
-          ${shopWebsite ? `<div class="shop-website">${shopWebsite}</div>` : ''}
-        </div>
+    <div class="shop-info">
+      ${settings.showShopLogo && (shopInfo as any)?.logoPrimary ? `
+      <div class="shop-logo-container">
+        <img src="${(shopInfo as any).logoPrimary}" alt="Logo" class="shop-logo">
       </div>
-      <div class="invoice-title">
-        <h1>INVOICE</h1>
-        ${settings.showInvoiceNumber !== false ? `<div class="invoice-number">#${invoiceNo}</div>` : ''}
+      ` : ''}
+      ${(!settings.showShopLogo || !(shopInfo as any)?.logoPrimary) && settings.showShopName !== false ? `<div class="shop-name">${shopName}</div>` : ''}
+      <div class="shop-details">
+        ${settings.showShopAddress !== false ? `<div class="shop-address">${shopAddress}</div>` : ''}
+        ${settings.showShopPhone !== false ? `<div class="shop-phone">${shopPhone}</div>` : ''}
+        ${shopEmail ? `<div class="shop-email">${shopEmail}</div>` : ''}
+        ${shopWebsite ? `<div class="shop-website">${shopWebsite}</div>` : ''}
       </div>
     </div>
+    
+  </div>
 
     <!-- Invoice Meta Information -->
     <div class="invoice-meta">
@@ -1848,7 +1942,6 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     <!-- Footer -->
     ${settings.footerText ? `
     <div class="footer-section">
-      <div class="thank-you">Thank You for Your Business!</div>
       <p>${settings.footerText}</p>
       ${settings.showReturnPolicy !== false && settings.returnPolicyText ? `
       <p style="margin-top: 15px; font-size: 12px; color: #999;">
@@ -1858,7 +1951,6 @@ export class NewSalesComponent implements OnInit, OnDestroy {
     </div>
     ` : ''}
   </div>
-${isLabelPrint ? '</div>' : ''}
 </body>
 </html>`;
     }
@@ -2401,12 +2493,12 @@ ${isLabelPrint ? '</div>' : ''}
       product.salePrice = 0;
       this.uiService.message('Price cannot be negative', 'warn');
     }
-    
+
     // Recalculate item discount if it exists (percentage discount depends on price)
     if (product.itemDiscount && product.itemDiscount > 0 && product.itemDiscountType === 0) {
       // Percentage discount - will be recalculated automatically in getItemDiscount
     }
-    
+
     // Force change detection to update totals
     this.products[index] = { ...product };
     // Auto-calculate VAT and Tax after updating product
@@ -2456,11 +2548,11 @@ ${isLabelPrint ? '</div>' : ''}
         .filter(f => (f.returnedQty || 0) > 0)
         .map(t => (t.salePrice || 0) * (t.returnedQty || 0))
         .reduce((acc, value) => acc + value, 0);
-      
+
       if (fromReturnedQty > 0) {
         return Number(fromReturnedQty.toFixed(2));
       }
-      
+
       // Legacy: check saleType === 'Return'
       return Number(
         this.products.filter(f => f.saleType === 'Return').map(t => {

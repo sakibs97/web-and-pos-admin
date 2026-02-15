@@ -1,0 +1,70 @@
+<div class="container-fluid">
+    <div class="header">
+        <div class="title">
+            <mat-icon>assessment</mat-icon>
+            <h2>Technician Performance Report</h2>
+        </div>
+    </div>
+
+    <mat-card class="filter-card">
+        <div class="filter-actions">
+            <mat-form-field appearance="outline">
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [formGroup]="dateRange" [rangePicker]="picker">
+                    <input matStartDate formControlName="start" placeholder="Start date">
+                    <input matEndDate formControlName="end" placeholder="End date" (dateChange)="onFilter()">
+                </mat-date-range-input>
+                <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" (click)="getTechnicianReport()">
+                <mat-icon>refresh</mat-icon>
+                Refresh
+            </button>
+        </div>
+    </mat-card>
+
+    <mat-card class="table-card" *ngIf="!isLoading">
+        <div class="responsive-table">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Technician Name</th>
+                        <th>Total Repairs</th>
+                        <th>Service Charge</th>
+                        <!-- <th>Parts Amount</th>
+                        <th>Total Revenue</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of reportData">
+                        <td>{{item.technicianName}}</td>
+                        <td>{{item.totalRepairs}}</td>
+                        <td>{{item.totalServiceCharge | number:'1.2-2'}}</td>
+                        <!-- <td>{{item.totalPartsAmount | number:'1.2-2'}}</td>
+                        <td>{{item.totalAmount | number:'1.2-2'}}</td> -->
+                    </tr>
+                    <tr class="no-data" *ngIf="reportData.length === 0">
+                        <td colspan="5">No data available for this period</td>
+                    </tr>
+                </tbody>
+                <tfoot *ngIf="reportData.length > 0">
+                    <tr class="total-row">
+                        <td>Total</td>
+                        <td>{{getTotalRepairs()}}</td>
+                        <td>{{getTotalServiceCharge() | number:'1.2-2'}}</td>
+                        <!-- <td>{{getTotalPartsAmount() | number:'1.2-2'}}</td> -->
+                        <!-- <td>{{getTotalAmount() | number:'1.2-2'}}</td> -->
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </mat-card>
+
+    <div class="loading-overlay" *ngIf="isLoading">
+        <mat-spinner diameter="50"></mat-spinner>
+        <span>Loading report...</span>
+    </div>
+</div>

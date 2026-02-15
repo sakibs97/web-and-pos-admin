@@ -1,0 +1,75 @@
+<div class="container">
+    <div class="header">
+        <form class="table-search" #searchForm="ngForm">
+            <input type="text" name="searchTerm" autocomplete="off" [(ngModel)]="searchQuery"
+                placeholder="Search technicians...">
+            <button type="button" *ngIf="!searchQuery">
+                <mat-icon>search</mat-icon>
+            </button>
+            <button type="button" *ngIf="searchQuery" (click)="onClearSearch()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </form>
+
+        <div class="right">
+            <a mat-raised-button color="primary" [routerLink]="['/repair/add-technician']">
+                <mat-icon>add</mat-icon>
+                Add Technician
+            </a>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="table-tab-container">
+            <div class="right-area">
+                <app-pagination [totalData]="totalData" [dataPerPage]="dataPerPage"
+                    (pageChange)="onPageChanged($event)"></app-pagination>
+            </div>
+        </div>
+
+        <div class="sub-content">
+            <div class="table-wrapper">
+                <table>
+                    <tr class="td-border first-heading-row">
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+
+                    <ng-container *ngIf="!isLoading">
+                        <tr *ngFor="let data of allTableData" class="td-border">
+                            <td>{{data.name}}</td>
+                            <td>{{data.phoneNo || '-'}}</td>
+                            <td>{{data.address || '-'}}</td>
+                            <td>
+                                <span class="status-badge" [class.active]="data.status === 'Active'">
+                                    {{data.status}}
+                                </span>
+                            </td>
+                            <td class="action-buttons">
+                                <button mat-icon-button color="primary"
+                                    [routerLink]="['/repair/edit-technician', data._id]" matTooltip="Edit">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button mat-icon-button color="warn" (click)="onDelete(data._id)" matTooltip="Delete">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="!allTableData.length">
+                            <td colspan="5" class="no-data">No technicians found.</td>
+                        </tr>
+                    </ng-container>
+
+                    <tr *ngIf="isLoading">
+                        <td colspan="5">
+                            <app-page-loader></app-page-loader>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

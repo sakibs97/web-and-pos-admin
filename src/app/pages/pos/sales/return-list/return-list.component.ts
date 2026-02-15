@@ -1,24 +1,24 @@
-import {Component, OnInit, ViewChild, OnDestroy} from '@angular/core';
-import {UiService} from "../../../../services/core/ui.service";
-import {Router} from "@angular/router";
-import {ReloadService} from "../../../../services/core/reload.service";
-import {EMPTY, Subscription} from "rxjs";
-import {FilterData} from "../../../../interfaces/gallery/filter-data";
-import {SaleService} from "../../../../services/common/sale.service";
-import {MatCheckbox} from "@angular/material/checkbox";
-import {FormControl, FormGroup, NgForm} from "@angular/forms";
-import {UtilsService} from "../../../../services/core/utils.service";
-import {debounceTime, distinctUntilChanged, pluck, switchMap} from "rxjs/operators";
-import {MatDatepickerInputEvent} from "@angular/material/datepicker";
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { UiService } from "../../../../services/core/ui.service";
+import { Router } from "@angular/router";
+import { ReloadService } from "../../../../services/core/reload.service";
+import { EMPTY, Subscription } from "rxjs";
+import { FilterData } from "../../../../interfaces/gallery/filter-data";
+import { SaleService } from "../../../../services/common/sale.service";
+import { MatCheckbox } from "@angular/material/checkbox";
+import { FormControl, FormGroup, NgForm } from "@angular/forms";
+import { UtilsService } from "../../../../services/core/utils.service";
+import { debounceTime, distinctUntilChanged, pluck, switchMap } from "rxjs/operators";
+import { MatDatepickerInputEvent } from "@angular/material/datepicker";
 import * as XLSX from 'xlsx';
-import {MatDialog} from "@angular/material/dialog";
-import {ConfirmDialogComponent} from "../../../../shared/components/ui/confirm-dialog/confirm-dialog.component";
-import {Select} from '../../../../interfaces/core/select';
-import {MONTHS, YEARS} from '../../../../core/utils/app-data';
-import {Sale, SaleCalculation} from '../../../../interfaces/common/sale.interface';
-import {VendorService} from '../../../../services/vendor/vendor.service';
-import {ShopInformation} from '../../../../interfaces/common/shop-information.interface';
-import {ShopInformationService} from '../../../../services/common/shop-information.service';
+import { MatDialog } from "@angular/material/dialog";
+import { ConfirmDialogComponent } from "../../../../shared/components/ui/confirm-dialog/confirm-dialog.component";
+import { Select } from '../../../../interfaces/core/select';
+import { MONTHS, YEARS } from '../../../../core/utils/app-data';
+import { Sale, SaleCalculation } from '../../../../interfaces/common/sale.interface';
+import { VendorService } from '../../../../services/vendor/vendor.service';
+import { ShopInformation } from '../../../../interfaces/common/shop-information.interface';
+import { ShopInformationService } from '../../../../services/common/shop-information.service';
 
 @Component({
   selector: 'app-return-list',
@@ -156,7 +156,7 @@ export class ReturnListComponent implements OnInit, OnDestroy {
             },
             pagination: null,
             select: mSelect,
-            sort: {createdAt: -1},
+            sort: { createdAt: -1 },
           };
 
           return this.saleService.getAllReturnSales(filter, this.searchQuery);
@@ -203,10 +203,10 @@ export class ReturnListComponent implements OnInit, OnDestroy {
   filterData(query: any, index: number, type: string) {
     if (type === 'month') {
       this.activeFilterMonth = index;
-      this.filter = {...this.filter, ...{month: query.value}};
+      this.filter = { ...this.filter, ...{ month: query.value } };
     } else if (type === 'year') {
       this.activeFilterYear = index;
-      this.filter = {...this.filter, ...{year: query.value}};
+      this.filter = { ...this.filter, ...{ year: query.value } };
     }
     this.isDefaultFilter = false;
     this.getAllReturns();
@@ -221,9 +221,9 @@ export class ReturnListComponent implements OnInit, OnDestroy {
         const startDateString = this.utilsService.getDateString(startDate);
         const endDateString = this.utilsService.getDateString(endDate);
 
-        const qData = {soldDateString: {$gte: startDateString, $lte: endDateString}};
+        const qData = { soldDateString: { $gte: startDateString, $lte: endDateString } };
         this.isDefaultFilter = false;
-        this.filter = {...this.filter, ...qData};
+        this.filter = { ...this.filter, ...qData };
 
         // Re fetch Data
         this.getAllReturns();
@@ -241,7 +241,7 @@ export class ReturnListComponent implements OnInit, OnDestroy {
     this.activeSort = null;
     this.activeFilterMonth = null;
     this.activeFilterYear = null;
-    this.sortQuery = {createdAt: -1};
+    this.sortQuery = { createdAt: -1 };
     this.filter = null;
     this.dataFormDateRange.reset();
     this.setDefaultFilter();
@@ -317,14 +317,14 @@ export class ReturnListComponent implements OnInit, OnDestroy {
     };
 
     // Remove status filter - return-sales doesn't have status field
-    const filterWithoutStatus = {...this.filter};
+    const filterWithoutStatus = { ...this.filter };
     delete filterWithoutStatus.status;
 
     const filter: FilterData = {
       filter: filterWithoutStatus,
       pagination: null,
       select: mSelect,
-      sort: {createdAt: -1},
+      sort: { createdAt: -1 },
     };
 
     this.subDataOne = this.saleService
@@ -462,19 +462,19 @@ export class ReturnListComponent implements OnInit, OnDestroy {
       }
 
       const printContent = this.generatePrintContent(returnSale);
-      
+
       if (!printContent || printContent.includes('Error:')) {
         this.uiService.message('Failed to generate return invoice content', 'warn');
         return;
       }
-      
+
       const printWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
-      
+
       if (printWindow && !printWindow.closed) {
         printWindow.document.open();
         printWindow.document.write(printContent);
         printWindow.document.close();
-        
+
         setTimeout(() => {
           try {
             if (printWindow && !printWindow.closed) {
@@ -510,10 +510,10 @@ export class ReturnListComponent implements OnInit, OnDestroy {
   private generatePrintContent(returnSale: Sale): string {
     const shopInfo = this.shopInformation;
     const date = new Date();
-    
+
     let currencySymbol = '৳';
     if (shopInfo?.currency) {
-      switch(shopInfo.currency) {
+      switch (shopInfo.currency) {
         case 'BDT':
           currencySymbol = '৳';
           break;
@@ -527,7 +527,7 @@ export class ReturnListComponent implements OnInit, OnDestroy {
           currencySymbol = '৳';
       }
     }
-    
+
     const shopName = shopInfo?.siteName || shopInfo?.websiteName || 'Shop Name';
     const shopAddress = shopInfo?.addresses?.[0]?.value || '';
     const shopPhone = shopInfo?.phones?.[0]?.value || '';
@@ -537,7 +537,7 @@ export class ReturnListComponent implements OnInit, OnDestroy {
     const customerName = returnSale?.customer?.name || '';
     const customerPhone = returnSale?.customer?.phone || '';
     const salesmanName = returnSale?.salesman?.name || 'N/A';
-    
+
     let productsRows = '';
     if (returnSale?.products && returnSale.products.length > 0) {
       productsRows = returnSale.products.map(p => {
@@ -554,9 +554,9 @@ export class ReturnListComponent implements OnInit, OnDestroy {
         </tr>`;
       }).join('');
     }
-    
-    const returnTotal = (returnSale?.total || 0).toLocaleString('bn-BD');
-    
+
+    const returnTotal = (returnSale?.total || 0).toFixed(2);
+
     return `<!DOCTYPE html>
 <html>
 <head>
