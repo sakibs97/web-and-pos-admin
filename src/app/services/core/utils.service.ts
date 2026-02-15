@@ -1,9 +1,9 @@
-import {inject, Inject, Injectable} from '@angular/core';
+import { inject, Inject, Injectable } from '@angular/core';
 import moment from 'moment';
-import {DOCUMENT} from '@angular/common';
-import {StorageService} from "./storage.service";
-import {DATABASE_KEY} from "../../core/utils/global-variable";
-import {PixelUserData} from "../../interfaces/core/analytics.interface";
+import { DOCUMENT } from '@angular/common';
+import { StorageService } from "./storage.service";
+import { DATABASE_KEY } from "../../core/utils/global-variable";
+import { PixelUserData } from "../../interfaces/core/analytics.interface";
 import sha256 from 'crypto-js/sha256';
 
 @Injectable({
@@ -78,13 +78,17 @@ export class UtilsService {
     return moment(date).format(fm);
   }
 
+  getEndOfDate(date: Date): Date {
+    return moment(date).endOf('day').toDate();
+  }
+
   getCurrentTime(): string {
     return moment(new Date()).format('hh:mm a');
   }
   getDateWithCurrentTime(date: Date): Date {
     const _ = moment();
     // const newDate = moment(date).add({hours: _.hour(), minutes:_.minute() , seconds:_.second()});
-    const newDate = moment(date).add({hours: _.hour(), minutes: _.minute()});
+    const newDate = moment(date).add({ hours: _.hour(), minutes: _.minute() });
     return newDate.toDate();
   }
 
@@ -113,7 +117,7 @@ export class UtilsService {
   }
 
 
-  mergeUniqueImages (originalImages: string[], newImages: string[]) {
+  mergeUniqueImages(originalImages: string[], newImages: string[]) {
     const uniqueImages = new Set<string>(originalImages);
     newImages.forEach(image => {
       if (!uniqueImages.has(image)) {
@@ -227,7 +231,7 @@ export class UtilsService {
   }
 
 
-  roundNumber(num: number): number{
+  roundNumber(num: number): number {
     const integer = Math.floor(num);
     const fractional = num - integer;
 
@@ -244,7 +248,7 @@ export class UtilsService {
 
   // 🔹 Final user_data generator method
   getUserData(pixelUserData: PixelUserData): { em?: string; ph?: string } {
-    const {email, phoneNo, firstName, lastName, gender, dob, city, zip, external_id} = pixelUserData;
+    const { email, phoneNo, firstName, lastName, gender, dob, city, zip, external_id } = pixelUserData;
     const userData: any = {};
 
     if (phoneNo) {
@@ -277,7 +281,7 @@ export class UtilsService {
     // userData.db = this.hashDataSha256(dob ?? '19970216');
     userData.external_id = [this.hashDataSha256(external_id ?? `${Date.now()}`)];
 
-    return {...userData, ...this.getFbCookies()};
+    return { ...userData, ...this.getFbCookies() };
   }
 
 
@@ -376,7 +380,7 @@ export class UtilsService {
     for (const key in data) {
       let obj;
 
-      switch(calculationFor) {
+      switch (calculationFor) {
         case 'sale': {
           const total = data[key].map(t => t['total'] ?? 0).reduce((acc, value) => acc + value, 0);
           const subTotal = data[key].map(t => t['subTotal'] ?? 0).reduce((acc, value) => acc + value, 0);

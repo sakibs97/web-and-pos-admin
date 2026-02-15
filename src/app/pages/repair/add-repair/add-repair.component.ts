@@ -1,28 +1,29 @@
-import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs';
-import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
-import {UiService} from '../../../services/core/ui.service';
-import {RepairService} from '../../../services/common/repair.service';
-import {BrandService} from '../../../services/common/brand.service';
-import {ModelService} from '../../../services/common/model.service';
-import {ProblemService} from '../../../services/common/problem.service';
-import {ProductService} from '../../../services/common/product.service';
-import {CustomerService} from '../../../services/common/customer.service';
-import {Customer} from '../../../interfaces/common/customer.interface';
-import {UtilsService} from '../../../services/core/utils.service';
-import {Product, VariationList} from '../../../interfaces/common/product.interface';
-import {ReloadService} from '../../../services/core/reload.service';
-import {ShopInformationService} from '../../../services/common/shop-information.service';
-import {PageDataService} from '../../../services/core/page-data.service';
-import {Title} from '@angular/platform-browser';
-import {adminBaseMixin} from '../../../mixin/admin-base.mixin';
-import {FilterData} from '../../../interfaces/gallery/filter-data';
-import {MatDialog} from '@angular/material/dialog';
-import {PatternLockComponent} from '../../../shared/components/pattern-lock/pattern-lock.component';
-import {SaleService} from '../../../services/common/sale.service';
-import {Sale} from '../../../interfaces/common/sale.interface';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { UiService } from '../../../services/core/ui.service';
+import { RepairService } from '../../../services/common/repair.service';
+import { BrandService } from '../../../services/common/brand.service';
+import { ModelService } from '../../../services/common/model.service';
+import { ProblemService } from '../../../services/common/problem.service';
+import { ProductService } from '../../../services/common/product.service';
+import { CustomerService } from '../../../services/common/customer.service';
+import { Customer } from '../../../interfaces/common/customer.interface';
+import { UtilsService } from '../../../services/core/utils.service';
+import { Product, VariationList } from '../../../interfaces/common/product.interface';
+import { ReloadService } from '../../../services/core/reload.service';
+import { ShopInformationService } from '../../../services/common/shop-information.service';
+import { PageDataService } from '../../../services/core/page-data.service';
+import { Title } from '@angular/platform-browser';
+import { adminBaseMixin } from '../../../mixin/admin-base.mixin';
+import { FilterData } from '../../../interfaces/gallery/filter-data';
+import { MatDialog } from '@angular/material/dialog';
+import { PatternLockComponent } from '../../../shared/components/pattern-lock/pattern-lock.component';
+import { SaleService } from '../../../services/common/sale.service';
+import { Sale } from '../../../interfaces/common/sale.interface';
+import { TechnicianService } from '../../../services/common/technician.service';
 
 @Component({
   selector: 'app-add-repair',
@@ -46,6 +47,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
   models: any[] = [];
   problems: any[] = [];
   colors: any[] = []; // For future use if ColorService is added
+  technicians: any[] = [];
 
   // Filtered data for dropdowns
   filterBrandData: any[] = [];
@@ -56,6 +58,11 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
   // Search controls
   brandSearchControl = new FormControl('');
   modelSearchControl = new FormControl('');
+  customerSearchControl = new FormControl('');
+
+  // Customer search
+  searchedCustomers: Customer[] = [];
+  isSearchingCustomer: boolean = false;
 
   @ViewChild('brandSearchInput', { static: false }) brandSearchInput: any;
   @ViewChild('modelSearchInput', { static: false }) modelSearchInput: any;
@@ -89,6 +96,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
   private readonly title = inject(Title);
   private readonly dialog = inject(MatDialog);
   private readonly saleService = inject(SaleService);
+  private readonly technicianService = inject(TechnicianService);
 
   ngOnInit(): void {
     this.initDataForm();
@@ -107,16 +115,20 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
       this.getAllBrand();
       this.getAllModel();
       this.getAllProblem();
+      this.getAllTechnician();
     });
     this.subscriptions.push(subReload);
 
     this.getAllBrand();
     this.getAllModel();
     this.getAllProblem();
+    this.getAllTechnician();
     this.getAllProducts();
     this.getShopInformation();
     this.setupSearch();
     this.setupBrandChangeListener();
+    this.setupCustomerSearch();
+    this.setupCustomerAutoListeners();
   }
 
   private setupSearch() {
@@ -183,7 +195,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
     if (subBrandChange) {
       this.subscriptions.push(subBrandChange);
     }
-    
+
     // Set initial disabled state for modelNo
     if (!this.dataForm?.get('brand')?.value) {
       this.dataForm?.get('modelNo')?.disable();
@@ -196,10 +208,9 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
     this.pageDataService.setPageData({
       title: pageTitle,
       navArray: [
-        {name: 'Dashboard', url: `/dashboard`},
-        {name: 'Repair', url: `/repair`},
-        {name: 'Repair List', url: `/repair/repair-list`},
-        {name: pageTitle, url: ''},
+        { name: 'Dashboard', url: `/dashboard` },
+        { name: 'Repair', url: `/repair` },
+        { name: pageTitle, url: '' },
       ]
     });
   }
@@ -214,7 +225,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
       phoneNo: [null, Validators.required],
       status: ['Pending'],
       brand: [null, Validators.required],
-      modelNo: [{value: null, disabled: true}, Validators.required], // Disabled by default until brand is selected
+      modelNo: [{ value: null, disabled: true }, Validators.required], // Disabled by default until brand is selected
       color: [null], // Optional - ColorService not available
       imeiNo: [null],
       problem: [[], Validators.required],
@@ -225,34 +236,168 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
       amount: [null],
       description: [null],
       images: [null],
+      technician: [null],
     });
 
-    // Setup phone number listener to auto-add customer
-    this.setupPhoneNumberListener();
+    // Setup listeners
   }
 
-  private setupPhoneNumberListener() {
+  /**
+   * Setup customer search with autocomplete
+   */
+  private setupCustomerSearch() {
+    const subCustomerSearch = this.customerSearchControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      )
+      .subscribe((searchTerm: any) => {
+        // Only search if it's a string (not when customer object is selected)
+        if (typeof searchTerm === 'string' && searchTerm && searchTerm.trim().length > 0) {
+          console.log('Searching for customer:', searchTerm.trim());
+          this.searchCustomers(searchTerm.trim());
+        } else if (!searchTerm || searchTerm === '') {
+          this.searchedCustomers = [];
+        }
+      });
+    this.subscriptions.push(subCustomerSearch);
+  }
+
+  /**
+   * Display name of customer in autocomplete
+   */
+  displayCustomerFn(customer: any): string {
+    return customer && customer.name ? customer.name : '';
+  }
+
+  /**
+   * Setup auto-fill and auto-add listeners
+   */
+  private setupCustomerAutoListeners() {
+    // Listen to phone number changes for auto-fill and auto-add
     const subPhoneNo = this.dataForm?.get('phoneNo')?.valueChanges
       .pipe(
-        debounceTime(1000),
+        debounceTime(800),
         distinctUntilChanged()
       )
       .subscribe((phoneNo: string) => {
         if (phoneNo && phoneNo.length >= 10) {
-          this.addCustomerIfNotExists(phoneNo);
+          this.checkAndFillCustomerByPhone(phoneNo);
+          this.addCustomerIfNotExists();
         }
       });
     if (subPhoneNo) {
       this.subscriptions.push(subPhoneNo);
     }
+
+    // Listen to name changes for auto-add
+    const subName = this.dataForm?.get('customerName')?.valueChanges
+      .pipe(
+        debounceTime(1500),
+        distinctUntilChanged()
+      )
+      .subscribe((name: string) => {
+        if (name && name.trim().length > 2) {
+          this.addCustomerIfNotExists();
+        }
+      });
+    if (subName) {
+      this.subscriptions.push(subName);
+    }
   }
 
-  private addCustomerIfNotExists(phoneNo: string) {
-    const customerName = this.dataForm?.get('customerName')?.value || `Customer ${phoneNo}`;
-    
+  /**
+   * Search customers by name or phone
+   */
+  private searchCustomers(searchTerm: string) {
+    this.isSearchingCustomer = true;
+
+    const filter: FilterData = {
+      filter: null,
+      pagination: null,
+      select: {
+        name: 1,
+        phone: 1,
+        email: 1,
+        address: 1,
+      },
+      sort: { createdAt: -1 },
+    };
+
+    const subscription = this.customerService.getAllCustomers(filter, searchTerm)
+      .subscribe({
+        next: (res: any) => {
+          this.isSearchingCustomer = false;
+          console.log('Customer search response:', res);
+          if (res.success && res.data) {
+            this.searchedCustomers = res.data;
+            console.log('Search results count:', this.searchedCustomers.length);
+          } else {
+            console.log('No data or success false in search res');
+            this.searchedCustomers = [];
+          }
+        },
+        error: (error) => {
+          this.isSearchingCustomer = false;
+          this.searchedCustomers = [];
+          console.error('Customer search error:', error);
+        }
+      });
+    this.subscriptions.push(subscription);
+  }
+
+  /**
+   * Check if customer exists by phone and auto-fill name
+   */
+  private checkAndFillCustomerByPhone(phoneNo: string) {
+    const filter: FilterData = {
+      filter: { phone: phoneNo },
+      pagination: null,
+      select: {
+        name: 1,
+        phone: 1,
+        email: 1,
+        address: 1,
+      },
+      sort: { createdAt: -1 },
+    };
+
+    const subscription = this.customerService.getAllCustomers(filter, null)
+      .subscribe({
+        next: (res: any) => {
+          if (res.success && res.data && res.data.length > 0) {
+            // Customer exists, auto-fill the name if it's currently empty
+            const customer = res.data[0];
+            const currentName = this.dataForm?.get('customerName')?.value;
+            if (!currentName || currentName.trim() === '') {
+              this.dataForm?.patchValue({
+                customerName: customer.name
+              });
+              console.log('Customer found by phone and auto-filled:', customer.name);
+            }
+          }
+        },
+        error: (error) => {
+          console.log('Error checking customer by phone:', error);
+        }
+      });
+    this.subscriptions.push(subscription);
+  }
+
+  /**
+   * Add customer to list if not exists
+   */
+  private addCustomerIfNotExists() {
+    const phoneNo = this.dataForm?.get('phoneNo')?.value;
+    const customerName = this.dataForm?.get('customerName')?.value;
+
+    if (!phoneNo || phoneNo.length < 10 || !customerName || customerName.trim().length < 3) {
+      return;
+    }
+
     const customerData: Customer = {
-      name: customerName,
-      phone: phoneNo,
+      name: customerName.trim(),
+      phone: phoneNo.trim(),
       customerGroup: 'General',
       walletBalance: 0,
       smsEnabled: true,
@@ -263,21 +408,42 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
       .subscribe({
         next: (res: any) => {
           if (res.success) {
-            // Customer added successfully
-            console.log('Customer added to list:', res);
-          } else {
-            // Customer might already exist, which is fine
-            if (res.message && res.message.includes('already exists')) {
-              console.log('Customer already exists:', res.message);
-            }
+            console.log('Customer added successfully:', res.data?.name || customerName);
           }
         },
         error: (error) => {
-          // Silently handle errors (customer might already exist)
-          console.log('Customer add error (might already exist):', error);
+          // Silent fail often means customer already exists
         }
       });
     this.subscriptions.push(subscription);
+  }
+
+  /**
+   * Handle customer selection from autocomplete
+   */
+  onCustomerSelected(event: any) {
+    const customer = event.option.value;
+    if (customer && typeof customer === 'object') {
+      console.log('Selected customer:', customer);
+      this.dataForm?.patchValue({
+        customerName: customer.name,
+        phoneNo: customer.phone
+      }, { emitEvent: false }); // Avoid triggering auto-add immediately
+
+      // Clear the search field after selection
+      setTimeout(() => {
+        this.customerSearchControl.setValue('', { emitEvent: false });
+        this.searchedCustomers = [];
+      }, 100);
+    }
+  }
+
+  /**
+   * Clear customer search
+   */
+  clearCustomerSearch() {
+    this.customerSearchControl.setValue('', { emitEvent: false });
+    this.searchedCustomers = [];
   }
 
   private setFormValue() {
@@ -300,7 +466,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
     delete repairData.problem; // Remove problem from the object to handle separately
 
     const patchData: any = {};
-    
+
     if (this.repair?.date) {
       patchData.date = new Date(this.repair.date);
     }
@@ -310,13 +476,13 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
     if (this.repair?.pattern) {
       patchData.pattern = this.repair.pattern;
     }
-    
+
     if (Object.keys(patchData).length > 0) {
       this.dataForm.patchValue(patchData);
     }
     // Patch repair data without problem field
     this.dataForm.patchValue(repairData);
-    
+
     // Now set the problem field as an array
     this.dataForm.patchValue({
       problem: problemValue
@@ -399,7 +565,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
           _id: p._id,
           name: p.name,
         }));
-      
+
       if (selectedProblems.length > 0) {
         mData = {
           ...mData,
@@ -422,6 +588,20 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
       }
     }
 
+    // Set technician object
+    if (this.dataForm.value.technician) {
+      const selectedTechnician = this.technicians.find((f) => f._id === this.dataForm.value.technician);
+      if (selectedTechnician) {
+        mData = {
+          ...mData,
+          technician: {
+            _id: selectedTechnician._id,
+            name: selectedTechnician.name,
+          }
+        };
+      }
+    }
+
     // Add parts data separately
     const partsData = this.parts.map(part => ({
       product: {
@@ -435,29 +615,39 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
       totalPrice: part.totalPrice,
     }));
 
-    // Calculate parts amount separately
-    const partsAmount = this.getPartsTotal();
-    
-    console.log('Parts Data:', partsData);
-    console.log('Parts Amount:', partsAmount);
-    console.log('Parts Array:', this.parts);
+    mData.parts = partsData;
+    mData.partsAmount = this.getPartsTotal();
 
-    mData = {
-      ...mData,
-      parts: partsData,
-      partsAmount: partsAmount,
-      // Keep amount as repair amount (service charge)
-    };
-    
-    console.log('Final mData:', mData);
-
-    this.repairData = mData;
-
-    if (this.repair) {
+    if (this.id) {
       this.updateRepairById(mData);
     } else {
       this.addRepair(mData);
     }
+  }
+
+  /**
+   * Get all technicians
+   */
+  private getAllTechnician() {
+    const filter: FilterData = {
+      filter: { status: 'Active' },
+      pagination: null,
+      select: { name: 1, phoneNo: 1 },
+      sort: { name: 1 },
+    };
+
+    const subscription = this.technicianService.getAllTechniciansByShop(filter)
+      .subscribe({
+        next: (res: any) => {
+          if (res.success) {
+            this.technicians = res.data;
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching technicians:', error);
+        }
+      });
+    this.subscriptions.push(subscription);
   }
 
   private getRepairById() {
@@ -489,7 +679,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
           this.isLoading = false;
           if (res.success) {
             const repairId = res.data?._id;
-            
+
             // Create sale for parts if parts exist
             if (this.parts && this.parts.length > 0) {
               this.createOrUpdateSaleForParts(data, repairId);
@@ -568,7 +758,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
       filter: null,
       pagination: null,
       select: mSelect,
-      sort: {createdAt: -1},
+      sort: { createdAt: -1 },
     };
 
     const searchTerm = searchQuery || this.brandSearchControl.value || '';
@@ -614,7 +804,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
       filter: brandId ? { 'brand._id': brandId } : null,
       pagination: null,
       select: mSelect,
-      sort: {createdAt: -1},
+      sort: { createdAt: -1 },
     };
 
     const searchTerm = searchQuery || this.modelSearchControl.value || '';
@@ -663,17 +853,17 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
       if (!model.brand) {
         return false;
       }
-      
+
       // Handle brand as object with _id
       if (typeof model.brand === 'object' && model.brand._id) {
         return model.brand._id === brandId || model.brand._id.toString() === brandId;
       }
-      
+
       // Handle brand as direct _id string
       if (typeof model.brand === 'string') {
         return model.brand === brandId;
       }
-      
+
       return false;
     });
   }
@@ -687,7 +877,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
       filter: null,
       pagination: null,
       select: mSelect,
-      sort: {createdAt: -1},
+      sort: { createdAt: -1 },
     };
 
     // Use getAllProblems1 which uses get-all endpoint (doesn't require shop parameter)
@@ -820,13 +1010,13 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
   }
 
   onSelectSearchItem(item: any) {
-    const existingIndex = this.parts.findIndex(p => 
-      p.productId === item.product._id && 
+    const existingIndex = this.parts.findIndex(p =>
+      p.productId === item.product._id &&
       (!item.isVariation || p.selectedVariationId === item.variation._id)
     );
 
     if (existingIndex === -1) {
-      const unitPrice = item.isVariation 
+      const unitPrice = item.isVariation
         ? (item.variation.salePrice || item.variation.regularPrice || item.product.salePrice || 0)
         : (item.product.salePrice || 0);
 
@@ -913,7 +1103,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
     // Convert parts to sale products format
     const saleProducts = this.parts.map(part => {
       const fullProduct = this.allProducts.find(p => p._id === part.productId);
-      
+
       const productData: any = {
         _id: part.productId,
         name: part.product.name,
@@ -961,7 +1151,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
     } : null;
 
     // Ensure date is a Date object
-    const saleDate = repairData.date 
+    const saleDate = repairData.date
       ? (repairData.date instanceof Date ? repairData.date : new Date(repairData.date))
       : new Date();
 

@@ -9,11 +9,7 @@
         </h1>
       </div>
       <div class="header-actions">
-        <button
-          type="button"
-          routerLink="/pos/sales/sale-list"
-          mat-stroked-button
-          class="back-btn">
+        <button type="button" routerLink="/pos/sales/sale-list" mat-stroked-button class="back-btn">
           <mat-icon>arrow_back</mat-icon>
           <span>Back to List</span>
         </button>
@@ -30,22 +26,12 @@
       <div class="form-group customer-phone-group" *ngIf="!id">
         <mat-form-field appearance="outline" class="customer-phone-field">
           <mat-label>Customer Phone</mat-label>
-          <input
-            matInput
-            type="text"
-            digitOnly
-            [(ngModel)]="customerSearchQuery"
-            (input)="onCustomerSearch($any($event.target).value)"
-            (keyup)="onCustomerSearch($any($event.target).value)"
-            placeholder="Search customer by phone"
-          />
+          <input matInput type="text" digitOnly [(ngModel)]="customerSearchQuery"
+            (input)="onCustomerSearch($any($event.target).value)" (keyup)="onCustomerSearch($any($event.target).value)"
+            placeholder="Search customer by phone" />
           <mat-icon matPrefix>phone</mat-icon>
         </mat-form-field>
-        <button
-          mat-icon-button
-          class="toggle-customer-btn"
-          (click)="customerInfoToggle()"
-          [class.active]="customerInfo"
+        <button mat-icon-button class="toggle-customer-btn" (click)="customerInfoToggle()" [class.active]="customerInfo"
           matTooltip="{{customerInfo ? 'Close' : 'Add Customer Info'}}">
           <mat-icon>{{customerInfo ? 'close' : 'add'}}</mat-icon>
         </button>
@@ -76,7 +62,8 @@
               Due: {{shopInformation?.currency | currencyIcon}}{{ (searchedCustomer.totalDue || 0) | number:'1.2-2'}}
             </span>
             <span class="wallet-badge" *ngIf="(searchedCustomer.walletBalance || 0) > 0">
-              Wallet: {{shopInformation?.currency | currencyIcon}}{{ (searchedCustomer.walletBalance || 0) | number:'1.2-2'}}
+              Wallet: {{shopInformation?.currency | currencyIcon}}{{ (searchedCustomer.walletBalance || 0) |
+              number:'1.2-2'}}
             </span>
             <span class="points-badge" *ngIf="(searchedCustomer.userPoints || 0) > 0">
               Points: {{searchedCustomer.userPoints || 0}}
@@ -90,37 +77,36 @@
     </div>
 
     <!-- Customer Information Form -->
-    <form
-      *ngIf="customer || customerInfo || (id && sale?.customer)"
-      #formElement="ngForm"
-      [formGroup]="dataForm"
+    <form *ngIf="customer || customerInfo || (id && sale?.customer)" #formElement="ngForm" [formGroup]="dataForm"
       class="customer-form">
       <div class="form-row">
         <div class="form-group">
           <mat-label class="form-label">Customer Name</mat-label>
           <mat-form-field appearance="outline">
-            <input formControlName="name" matInput placeholder="Enter customer name" [readonly]="isViewMode"/>
+            <input formControlName="name" matInput placeholder="Enter customer name" [readonly]="isViewMode" />
             <mat-icon matPrefix>person</mat-icon>
           </mat-form-field>
         </div>
         <div class="form-group">
           <mat-label class="form-label">Customer Phone No *</mat-label>
           <mat-form-field appearance="outline">
-            <input formControlName="phone" matInput type="text" digitOnly placeholder="Enter phone number" [readonly]="isViewMode"/>
+            <input formControlName="phone" matInput type="text" digitOnly placeholder="Enter phone number"
+              [readonly]="isViewMode" />
             <mat-icon matPrefix>phone</mat-icon>
           </mat-form-field>
         </div>
         <div class="form-group">
           <mat-label class="form-label">Customer Address</mat-label>
           <mat-form-field appearance="outline">
-            <input formControlName="address" matInput placeholder="Enter address" [readonly]="isViewMode"/>
+            <input formControlName="address" matInput placeholder="Enter address" [readonly]="isViewMode" />
             <mat-icon matPrefix>location_on</mat-icon>
           </mat-form-field>
         </div>
         <div class="form-group">
           <mat-form-field appearance="outline">
             <mat-label>Birthdate (Own/Favourite Person)</mat-label>
-            <input matInput [matDatepicker]="picker2" formControlName="birthdate" placeholder="Select date" [readonly]="isViewMode">
+            <input matInput [matDatepicker]="picker2" formControlName="birthdate" placeholder="Select date"
+              [readonly]="isViewMode">
             <mat-datepicker-toggle [for]="picker2" *ngIf="!isViewMode"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>
@@ -133,44 +119,36 @@
       <div class="search-row">
         <mat-form-field appearance="outline" class="product-search-field">
           <mat-label>Search Product</mat-label>
-          <input
-            matInput
-            type="text"
-            [(ngModel)]="productSearchQuery"
-            (input)="onProductSearch($any($event.target).value)"
-            (keyup)="onProductSearch($any($event.target).value)"
-            placeholder="Search by product name, SKU, or barcode"
-          />
+          <input matInput type="text" [(ngModel)]="productSearchQuery"
+            (input)="onProductSearch($any($event.target).value)" (keyup)="onProductSearch($any($event.target).value)"
+            placeholder="Search by product name, SKU, or barcode" />
           <mat-icon matPrefix>search</mat-icon>
           <mat-hint *ngIf="allProducts.length > 0">{{allProducts.length}} products available</mat-hint>
         </mat-form-field>
-        <button
-          mat-raised-button
-          color="accent"
-          (click)="openBarcodeScanner()"
-          class="barcode-btn"
+        <button mat-raised-button color="accent" (click)="openBarcodeScanner()" class="barcode-btn"
           matTooltip="Scan Barcode/QR Code (F2)">
           <mat-icon>qr_code_scanner</mat-icon>
           <span>Scan</span>
         </button>
       </div>
       <div class="product-search-results" *ngIf="searchResultsWithVariations.length > 0">
-        <div
-          *ngFor="let item of searchResultsWithVariations"
-          (click)="onSelectSearchItem(item)"
-          class="product-search-item"
-          [class.variation-item]="item.isVariation">
+        <div *ngFor="let item of searchResultsWithVariations" (click)="onSelectSearchItem(item)"
+          class="product-search-item" [class.variation-item]="item.isVariation">
           <div class="product-item-info">
             <span class="product-item-name">{{item.displayName}}</span>
             <span class="product-item-details">
-              Qty: {{item.stock}} | Cost Price: {{shopInformation?.currency | currencyIcon}}{{item.costPrice | number:'1.2-2'}} | Sales Price: {{shopInformation?.currency | currencyIcon}}{{item.price | number:'1.2-2'}} | Regular Price: {{shopInformation?.currency | currencyIcon}}{{item.regularPrice | number:'1.2-2'}}
+              Qty: {{item.stock}} | Cost Price: {{shopInformation?.currency | currencyIcon}}{{item.costPrice |
+              number:'1.2-2'}} | Sales Price: {{shopInformation?.currency | currencyIcon}}{{item.price |
+              number:'1.2-2'}} | Regular Price: {{shopInformation?.currency | currencyIcon}}{{item.regularPrice |
+              number:'1.2-2'}}
               <span class="variation-badge" *ngIf="item.isVariation">Variation</span>
             </span>
             <span class="product-item-sku" *ngIf="item.sku">SKU: {{item.sku}}</span>
           </div>
         </div>
       </div>
-      <div class="product-search-no-results" *ngIf="productSearchQuery && productSearchQuery.length > 0 && searchResultsWithVariations.length === 0 && allProducts.length > 0">
+      <div class="product-search-no-results"
+        *ngIf="productSearchQuery && productSearchQuery.length > 0 && searchResultsWithVariations.length === 0 && allProducts.length > 0">
         <mat-icon>search_off</mat-icon>
         <span>No products found matching "{{productSearchQuery}}"</span>
       </div>
@@ -189,165 +167,133 @@
         <div class="table-responsive">
           <table class="modern-table">
             <thead>
-            <tr>
-              <th class="product-name-col">Product Name</th>
-              <th class="quantity-col">Available</th>
-              <th class="quantity-col" *ngIf="!isViewMode">Quantity</th>
-              <th class="quantity-col" *ngIf="isViewMode">Sold QTY</th>
-              <th class="quantity-col" *ngIf="isViewMode && (sale?.hasReturn || sale?.hasPartialReturn)">Returned</th>
-              <th class="quantity-col" *ngIf="isViewMode && (sale?.hasReturn || sale?.hasPartialReturn)">Net QTY</th>
-              <th class="price-col">Unit Price</th>
-              <th class="discount-col" *ngIf="!isViewMode">Item Disc.</th>
-              <th class="price-col">Total</th>
-              <th class="action-col">Action</th>
-            </tr>
+              <tr>
+                <th class="product-name-col">Product Name</th>
+                <th class="quantity-col">Available</th>
+                <th class="quantity-col" *ngIf="!isViewMode">Quantity</th>
+                <th class="quantity-col" *ngIf="isViewMode">Sold QTY</th>
+                <th class="quantity-col" *ngIf="isViewMode && (sale?.hasReturn || sale?.hasPartialReturn)">Returned</th>
+                <th class="quantity-col" *ngIf="isViewMode && (sale?.hasReturn || sale?.hasPartialReturn)">Net QTY</th>
+                <th class="price-col">Unit Price</th>
+                <th class="discount-col" *ngIf="!isViewMode">Item Disc.</th>
+                <th class="price-col">Total</th>
+                <th class="action-col">Action</th>
+              </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let data of products; let i = index" class="table-row">
-              <td class="product-name-cell">
-                <div class="product-info">
-                  <mat-icon class="product-icon" [class.return-icon]="data?.saleType === 'Return' || data?.returnedQty > 0">
-                    {{(data?.saleType === 'Return' || data?.returnedQty > 0) ? 'undo' : 'inventory_2'}}
-                  </mat-icon>
-                  <div class="product-details">
-                    <span class="product-name">{{utilsService.getProductName(data)}}</span>
-                    <span class="variation-name" *ngIf="data?.variationName">({{data.variationName}})</span>
-                    <span class="product-badge" *ngIf="data?.saleType === 'Return'">Returned</span>
-                    <span class="product-badge return-partial" *ngIf="data?.returnedQty > 0 && data?.returnedQty < data?.soldQuantity">
-                      Partial Return ({{data.returnedQty}})
-                    </span>
-                    <span class="product-badge return-full" *ngIf="data?.returnedQty > 0 && data?.returnedQty >= data?.soldQuantity">
-                      Full Return
-                    </span>
-                    <span class="product-sku" *ngIf="data?.sku">SKU: {{data.sku}}</span>
+              <tr *ngFor="let data of products; let i = index" class="table-row">
+                <td class="product-name-cell">
+                  <div class="product-info">
+                    <mat-icon class="product-icon"
+                      [class.return-icon]="data?.saleType === 'Return' || data?.returnedQty > 0">
+                      {{(data?.saleType === 'Return' || data?.returnedQty > 0) ? 'undo' : 'inventory_2'}}
+                    </mat-icon>
+                    <div class="product-details">
+                      <span class="product-name">{{utilsService.getProductName(data)}}</span>
+                      <span class="variation-name" *ngIf="data?.variationName">({{data.variationName}})</span>
+                      <span class="product-badge" *ngIf="data?.saleType === 'Return'">Returned</span>
+                      <span class="product-badge return-partial"
+                        *ngIf="data?.returnedQty > 0 && data?.returnedQty < data?.soldQuantity">
+                        Partial Return ({{data.returnedQty}})
+                      </span>
+                      <span class="product-badge return-full"
+                        *ngIf="data?.returnedQty > 0 && data?.returnedQty >= data?.soldQuantity">
+                        Full Return
+                      </span>
+                      <span class="product-sku" *ngIf="data?.sku">SKU: {{data.sku}}</span>
+                      <!-- IMEI/Serial Number Input -->
+                      <div class="imei-input-container" *ngIf="!isViewMode">
+                        <input type="text" [(ngModel)]="data.imei" placeholder="IMEI/Serial Number"
+                          class="imei-input" />
+                      </div>
+                      <span class="product-imei" *ngIf="isViewMode && data?.imei">IMEI: {{data.imei}}</span>
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td class="quantity-cell">
-                <span class="quantity-badge" [class.low-stock]="data?.quantity < 10">
-                  {{ data?.quantity }}
-                </span>
-              </td>
-              <td *ngIf="isViewMode" class="quantity-cell">
-                <span class="sold-quantity">{{ data?.soldQuantity }}</span>
-              </td>
-              <td *ngIf="isViewMode && (sale?.hasReturn || sale?.hasPartialReturn)" class="quantity-cell">
-                <span class="returned-quantity" [class.has-return]="data?.returnedQty > 0">
-                  {{ data?.returnedQty || 0 }}
-                </span>
-              </td>
-              <td *ngIf="isViewMode && (sale?.hasReturn || sale?.hasPartialReturn)" class="quantity-cell">
-                <span class="net-quantity">
-                  {{ (data?.soldQuantity || 0) - (data?.returnedQty || 0) }}
-                </span>
-              </td>
-              <td *ngIf="!isViewMode" class="quantity-control-cell">
-                <div class="quantity-controls">
-                  <button
-                    type="button"
-                    class="qty-btn qty-decrease"
-                    (click)="decrementQuantity(i)"
-                    [disabled]="data.soldQuantity <= 1"
-                    matTooltip="Decrease quantity">
-                    <mat-icon>remove</mat-icon>
-                  </button>
-                  <input
-                    digitOnly
-                    [max]="data?.quantity"
-                    [(ngModel)]="data.soldQuantity"
-                    type="text"
-                    class="qty-input"
-                    [value]="data?.soldQuantity"/>
-                  <button
-                    type="button"
-                    class="qty-btn qty-increase"
-                    (click)="incrementQuantity(i, data)"
-                    [disabled]="data.soldQuantity >= data.quantity"
-                    matTooltip="Increase quantity">
-                    <mat-icon>add</mat-icon>
-                  </button>
-                </div>
-              </td>
-              <td class="price-cell" *ngIf="isViewMode">
-                <span class="price-value">
-                  {{shopInformation?.currency | currencyIcon}}{{ data?.salePrice | number:'1.2-2'}}
-                </span>
-              </td>
-              <td class="price-cell" *ngIf="!isViewMode">
-                <div class="price-input-container">
-                  <span class="currency-symbol">{{shopInformation?.currency | currencyIcon}}</span>
-                  <input
-                    type="number"
-                    [(ngModel)]="data.salePrice"
-                    [ngModelOptions]="{standalone: true}"
-                    class="price-input"
-                    placeholder="0.00"
-                    min="0"
-                    step="0.01"
-                    (blur)="onPriceChange(i, data)"
-                    matTooltip="Edit product price"
-                  />
-                </div>
-              </td>
-              <td class="discount-cell" *ngIf="!isViewMode">
-                <div class="item-discount-controls">
-                  <mat-form-field appearance="outline" class="discount-type-field">
-                    <mat-select [(ngModel)]="data.itemDiscountType" [ngModelOptions]="{standalone: true}">
-                      <mat-option [value]="0">%</mat-option>
-                      <mat-option [value]="1">Flat</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                  <input
-                    type="number"
-                    [(ngModel)]="data.itemDiscount"
-                    [ngModelOptions]="{standalone: true}"
-                    class="discount-input"
-                    placeholder="0"
-                    min="0"
-                    [max]="data.itemDiscountType === 0 ? 100 : data.salePrice * data.soldQuantity"
-                  />
-                  <span class="discount-amount" *ngIf="data.itemDiscount > 0">
-                    -{{shopInformation?.currency | currencyIcon}}{{getItemDiscount(data) | number:'1.2-2'}}
+                </td>
+                <td class="quantity-cell">
+                  <span class="quantity-badge" [class.low-stock]="data?.quantity < 10">
+                    {{ data?.quantity }}
                   </span>
-                </div>
-              </td>
-              <td class="price-cell total-cell">
-                <span class="total-value" [class.return-value]="data?.saleType === 'Return'">
-                  {{data?.saleType === 'Return' ? '-' : ''}}{{shopInformation?.currency | currencyIcon}}{{ ((data?.salePrice * data.soldQuantity) - getItemDiscount(data)) | number:'1.2-2'}}
-                </span>
-              </td>
-              <td class="action-cell">
-                <div class="action-buttons-group">
-                  <button
-                    *ngIf="id && !isViewMode && data?.saleType !== 'Return'"
-                    mat-icon-button
-                    color="accent"
-                    class="return-btn"
-                    matTooltip="Mark as Return"
-                    (click)="markAsReturn(i)">
-                    <mat-icon>undo</mat-icon>
-                  </button>
-                  <button
-                    *ngIf="id && !isViewMode && data?.saleType === 'Return'"
-                    mat-icon-button
-                    color="primary"
-                    class="unreturn-btn"
-                    matTooltip="Mark as Sale"
-                    (click)="markAsSale(i)">
-                    <mat-icon>redo</mat-icon>
-                  </button>
-                  <button
-                    [disabled]="isViewMode"
-                    mat-icon-button
-                    color="warn"
-                    class="delete-btn"
-                    matTooltip="Remove product"
-                    (click)="deleteProduct(i)">
-                    <mat-icon>delete_outline</mat-icon>
-                  </button>
-                </div>
-              </td>
-            </tr>
+                </td>
+                <td *ngIf="isViewMode" class="quantity-cell">
+                  <span class="sold-quantity">{{ data?.soldQuantity }}</span>
+                </td>
+                <td *ngIf="isViewMode && (sale?.hasReturn || sale?.hasPartialReturn)" class="quantity-cell">
+                  <span class="returned-quantity" [class.has-return]="data?.returnedQty > 0">
+                    {{ data?.returnedQty || 0 }}
+                  </span>
+                </td>
+                <td *ngIf="isViewMode && (sale?.hasReturn || sale?.hasPartialReturn)" class="quantity-cell">
+                  <span class="net-quantity">
+                    {{ (data?.soldQuantity || 0) - (data?.returnedQty || 0) }}
+                  </span>
+                </td>
+                <td *ngIf="!isViewMode" class="quantity-control-cell">
+                  <div class="quantity-controls">
+                    <button type="button" class="qty-btn qty-decrease" (click)="decrementQuantity(i)"
+                      [disabled]="data.soldQuantity <= 1" matTooltip="Decrease quantity">
+                      <mat-icon>remove</mat-icon>
+                    </button>
+                    <input digitOnly [max]="data?.quantity" [(ngModel)]="data.soldQuantity" type="text"
+                      class="qty-input" [value]="data?.soldQuantity" />
+                    <button type="button" class="qty-btn qty-increase" (click)="incrementQuantity(i, data)"
+                      [disabled]="data.soldQuantity >= data.quantity" matTooltip="Increase quantity">
+                      <mat-icon>add</mat-icon>
+                    </button>
+                  </div>
+                </td>
+                <td class="price-cell" *ngIf="isViewMode">
+                  <span class="price-value">
+                    {{shopInformation?.currency | currencyIcon}}{{ data?.salePrice | number:'1.2-2'}}
+                  </span>
+                </td>
+                <td class="price-cell" *ngIf="!isViewMode">
+                  <div class="price-input-container">
+                    <span class="currency-symbol">{{shopInformation?.currency | currencyIcon}}</span>
+                    <input type="number" [(ngModel)]="data.salePrice" [ngModelOptions]="{standalone: true}"
+                      class="price-input" placeholder="0.00" min="0" step="0.01" (blur)="onPriceChange(i, data)"
+                      matTooltip="Edit product price" />
+                  </div>
+                </td>
+                <td class="discount-cell" *ngIf="!isViewMode">
+                  <div class="item-discount-controls">
+                    <mat-form-field appearance="outline" class="discount-type-field">
+                      <mat-select [(ngModel)]="data.itemDiscountType" [ngModelOptions]="{standalone: true}">
+                        <mat-option [value]="0">%</mat-option>
+                        <mat-option [value]="1">Flat</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <input type="number" [(ngModel)]="data.itemDiscount" [ngModelOptions]="{standalone: true}"
+                      class="discount-input" placeholder="0" min="0"
+                      [max]="data.itemDiscountType === 0 ? 100 : data.salePrice * data.soldQuantity" />
+                    <span class="discount-amount" *ngIf="data.itemDiscount > 0">
+                      -{{shopInformation?.currency | currencyIcon}}{{getItemDiscount(data) | number:'1.2-2'}}
+                    </span>
+                  </div>
+                </td>
+                <td class="price-cell total-cell">
+                  <span class="total-value" [class.return-value]="data?.saleType === 'Return'">
+                    {{data?.saleType === 'Return' ? '-' : ''}}{{shopInformation?.currency | currencyIcon}}{{
+                    ((data?.salePrice * data.soldQuantity) - getItemDiscount(data)) | number:'1.2-2'}}
+                  </span>
+                </td>
+                <td class="action-cell">
+                  <div class="action-buttons-group">
+                    <button *ngIf="id && !isViewMode && data?.saleType !== 'Return'" mat-icon-button color="accent"
+                      class="return-btn" matTooltip="Mark as Return" (click)="markAsReturn(i)">
+                      <mat-icon>undo</mat-icon>
+                    </button>
+                    <button *ngIf="id && !isViewMode && data?.saleType === 'Return'" mat-icon-button color="primary"
+                      class="unreturn-btn" matTooltip="Mark as Sale" (click)="markAsSale(i)">
+                      <mat-icon>redo</mat-icon>
+                    </button>
+                    <button [disabled]="isViewMode" mat-icon-button color="warn" class="delete-btn"
+                      matTooltip="Remove product" (click)="deleteProduct(i)">
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -380,7 +326,7 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            
+
             <!-- Discount Amount -->
             <div class="form-group discount-amount-group">
               <mat-label class="form-label">
@@ -388,20 +334,13 @@
                 Discount
               </mat-label>
               <mat-form-field appearance="outline" class="discount-amount-field">
-                <input 
-                  matInput 
-                  type="number" 
-                  digitOnly 
-                  pattern="^\d+(\.\d{1,2})?$" 
-                  [decimal]="true" 
-                  [(ngModel)]="discountAmount" 
-                  placeholder="0.00" 
-                  [readonly]="isViewMode"
-                  (ngModelChange)="onDiscountChange()"/>
+                <input matInput type="number" digitOnly pattern="^\d+(\.\d{1,2})?$" [decimal]="true"
+                  [(ngModel)]="discountAmount" placeholder="0.00" [readonly]="isViewMode"
+                  (ngModelChange)="onDiscountChange()" />
                 <mat-icon matPrefix>percent</mat-icon>
               </mat-form-field>
             </div>
-            
+
             <!-- Tax -->
             <div class="form-group tax-group" *ngIf="posSettings?.showTax !== false">
               <mat-label class="form-label">
@@ -410,20 +349,13 @@
                 <span *ngIf="posSettings?.isAutoCalculateTax" class="auto-calc-badge">(Auto)</span>
               </mat-label>
               <mat-form-field appearance="outline" class="tax-field">
-                <input 
-                  digitOnly 
-                  pattern="^\d+(\.\d{1,2})?$" 
-                  [decimal]="true" 
-                  matInput 
-                  type="number" 
-                  [(ngModel)]="tax" 
-                  placeholder="0.00" 
-                  [readonly]="isViewMode || posSettings?.isAutoCalculateTax"
-                  (ngModelChange)="!posSettings?.isAutoCalculateTax && autoCalculateVatAndTax()"/>
+                <input digitOnly pattern="^\d+(\.\d{1,2})?$" [decimal]="true" matInput type="number" [(ngModel)]="tax"
+                  placeholder="0.00" [readonly]="isViewMode || posSettings?.isAutoCalculateTax"
+                  (ngModelChange)="!posSettings?.isAutoCalculateTax && autoCalculateVatAndTax()" />
                 <mat-icon matPrefix>account_balance</mat-icon>
               </mat-form-field>
             </div>
-            
+
             <!-- VAT -->
             <div class="form-group vat-group" *ngIf="posSettings?.showVat !== false">
               <mat-label class="form-label">
@@ -432,20 +364,13 @@
                 <span *ngIf="posSettings?.isAutoCalculateVat" class="auto-calc-badge">(Auto)</span>
               </mat-label>
               <mat-form-field appearance="outline" class="vat-field">
-                <input 
-                  digitOnly 
-                  pattern="^\d+(\.\d{1,2})?$" 
-                  [decimal]="true" 
-                  matInput 
-                  type="number" 
-                  [(ngModel)]="vat" 
-                  placeholder="0.00" 
-                  [readonly]="isViewMode || posSettings?.isAutoCalculateVat"
-                  (ngModelChange)="!posSettings?.isAutoCalculateVat && autoCalculateVatAndTax()"/>
+                <input digitOnly pattern="^\d+(\.\d{1,2})?$" [decimal]="true" matInput type="number" [(ngModel)]="vat"
+                  placeholder="0.00" [readonly]="isViewMode || posSettings?.isAutoCalculateVat"
+                  (ngModelChange)="!posSettings?.isAutoCalculateVat && autoCalculateVatAndTax()" />
                 <mat-icon matPrefix>receipt</mat-icon>
               </mat-form-field>
             </div>
-            
+
             <!-- AIT -->
             <div class="form-group ait-group" *ngIf="posSettings?.showAit !== false">
               <mat-label class="form-label">
@@ -453,19 +378,12 @@
                 AIT
               </mat-label>
               <mat-form-field appearance="outline" class="ait-field">
-                <input 
-                  digitOnly 
-                  pattern="^\d+(\.\d{1,2})?$" 
-                  [decimal]="true" 
-                  matInput 
-                  type="number" 
-                  [(ngModel)]="ait" 
-                  placeholder="0.00" 
-                  [readonly]="isViewMode"/>
+                <input digitOnly pattern="^\d+(\.\d{1,2})?$" [decimal]="true" matInput type="number" [(ngModel)]="ait"
+                  placeholder="0.00" [readonly]="isViewMode" />
                 <mat-icon matPrefix>description</mat-icon>
               </mat-form-field>
             </div>
-            
+
             <!-- Service Charge -->
             <div class="form-group service-charge-group" *ngIf="posSettings?.showServiceCharge !== false">
               <mat-label class="form-label">
@@ -473,15 +391,8 @@
                 Service Charge
               </mat-label>
               <mat-form-field appearance="outline" class="service-charge-field">
-                <input 
-                  digitOnly 
-                  pattern="^\d+(\.\d{1,2})?$" 
-                  [decimal]="true" 
-                  matInput 
-                  type="number" 
-                  [(ngModel)]="serviceCharge" 
-                  placeholder="0.00" 
-                  [readonly]="isViewMode"/>
+                <input digitOnly pattern="^\d+(\.\d{1,2})?$" [decimal]="true" matInput type="number"
+                  [(ngModel)]="serviceCharge" placeholder="0.00" [readonly]="isViewMode" />
                 <mat-icon matPrefix>room_service</mat-icon>
               </mat-form-field>
             </div>
@@ -498,7 +409,8 @@
             <div class="form-group">
               <mat-label class="form-label">Payment Type</mat-label>
               <mat-form-field appearance="outline">
-                <mat-select [(ngModel)]="paymentType" required (ngModelChange)="onPaymentTypeChanged($event)" [disabled]="isViewMode">
+                <mat-select [(ngModel)]="paymentType" required (ngModelChange)="onPaymentTypeChanged($event)"
+                  [disabled]="isViewMode">
                   <mat-option *ngFor="let data of paymentTypes" [value]="data.value">
                     {{data.viewValue}}
                   </mat-option>
@@ -508,13 +420,8 @@
             </div>
             <div class="form-group" *ngIf="!useSplitPayment && paymentType !== 'due' && grandTotal > 0">
               <mat-label class="form-label">&nbsp;</mat-label>
-              <button 
-                mat-stroked-button 
-                color="accent" 
-                type="button"
-                (click)="openSplitPaymentDialog()" 
-                [disabled]="isViewMode"
-                class="split-payment-btn">
+              <button mat-stroked-button color="accent" type="button" (click)="openSplitPaymentDialog()"
+                [disabled]="isViewMode" class="split-payment-btn">
                 <mat-icon>account_balance_wallet</mat-icon>
                 <span>Split Payment</span>
               </button>
@@ -522,30 +429,20 @@
             <div class="form-group" *ngIf="!useSplitPayment">
               <mat-label class="form-label">Received From Customer</mat-label>
               <mat-form-field appearance="outline">
-                <input
-                  digitOnly
-                  pattern="^\d+(\.\d{1,2})?$"
-                  [decimal]="true"
-                  #receivedFromCustomerInput
-                  matInput
-                  type="number"
-                  [(ngModel)]="receivedFromCustomer"
-                  placeholder="0.00"
-                  [readonly]="isViewMode || paymentType === 'due'"/>
+                <input digitOnly pattern="^\d+(\.\d{1,2})?$" [decimal]="true" #receivedFromCustomerInput matInput
+                  type="number" [(ngModel)]="receivedFromCustomer" placeholder="0.00"
+                  [readonly]="isViewMode || paymentType === 'due'" />
                 <mat-icon matPrefix>account_balance_wallet</mat-icon>
               </mat-form-field>
             </div>
             <div class="form-group" *ngIf="useSplitPayment">
               <mat-label class="form-label">Split Payment Total</mat-label>
               <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  type="text"
-                  [value]="splitPaymentTotal | number : '1.2-2'"
-                  readonly="true"
-                  placeholder="0.00"/>
+                <input matInput type="text" [value]="splitPaymentTotal | number : '1.2-2'" readonly="true"
+                  placeholder="0.00" />
                 <mat-icon matPrefix>account_balance_wallet</mat-icon>
-                <button matSuffix mat-icon-button (click)="openSplitPaymentDialog()" [disabled]="isViewMode" matTooltip="Edit Split Payment">
+                <button matSuffix mat-icon-button (click)="openSplitPaymentDialog()" [disabled]="isViewMode"
+                  matTooltip="Edit Split Payment">
                   <mat-icon>edit</mat-icon>
                 </button>
               </mat-form-field>
@@ -553,24 +450,16 @@
             <div class="form-group" *ngIf="paymentType !== 'due'">
               <mat-label class="form-label">Return to Customer</mat-label>
               <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  type="text"
-                  [value]="((receivedFromCustomer || 0) - grandTotal) | number : '1.2-2'"
-                  readonly="true"
-                  placeholder="0.00"/>
+                <input matInput type="text" [value]="((receivedFromCustomer || 0) - grandTotal) | number : '1.2-2'"
+                  readonly="true" placeholder="0.00" />
                 <mat-icon matPrefix>money_off</mat-icon>
               </mat-form-field>
             </div>
             <div class="form-group" *ngIf="paymentType === 'due'">
               <mat-label class="form-label">Due Amount</mat-label>
               <mat-form-field appearance="outline">
-                <input
-                  matInput
-                  type="text"
-                  [value]="grandTotal | number : '1.2-2'"
-                  readonly="true"
-                  placeholder="0.00"/>
+                <input matInput type="text" [value]="grandTotal | number : '1.2-2'" readonly="true"
+                  placeholder="0.00" />
                 <mat-icon matPrefix>credit_card</mat-icon>
               </mat-form-field>
             </div>
@@ -595,63 +484,35 @@
         <div class="action-buttons-section" *ngIf="grandTotal > 0">
           <!-- Hold & Draft Buttons -->
           <div class="secondary-actions" *ngIf="!isViewMode && !id">
-            <button
-              mat-stroked-button
-              color="accent"
-              type="button"
-              (click)="holdBill()"
-              [disabled]="!products.length"
+            <button mat-stroked-button color="accent" type="button" (click)="holdBill()" [disabled]="!products.length"
               class="hold-btn">
               <mat-icon>pause_circle</mat-icon>
               <span>Hold Bill</span>
             </button>
-            <button
-              mat-stroked-button
-              color="primary"
-              type="button"
-              (click)="saveDraft()"
-              [disabled]="!products.length"
+            <button mat-stroked-button color="primary" type="button" (click)="saveDraft()" [disabled]="!products.length"
               class="draft-btn">
               <mat-icon>save</mat-icon>
               <span>Save Draft</span>
             </button>
-            <button
-              mat-stroked-button
-              color="warn"
-              type="button"
-              (click)="openExchangeDialog()"
-              [disabled]="!products.length"
-              class="exchange-btn">
+            <button mat-stroked-button color="warn" type="button" (click)="openExchangeDialog()"
+              [disabled]="!products.length" class="exchange-btn">
               <mat-icon>swap_horiz</mat-icon>
               <span>Exchange</span>
             </button>
           </div>
-          
+
           <!-- Main Submit Button -->
-          <button
-            *ngIf="!isViewMode && !isLoading"
-            mat-raised-button
-            color="primary"
-            type="button"
-            (click)="onSubmit()"
+          <button *ngIf="!isViewMode && !isLoading" mat-raised-button color="primary" type="button" (click)="onSubmit()"
             class="submit-btn">
             <mat-icon>{{ id ? 'update' : 'check_circle' }}</mat-icon>
-            <span>{{isExchange ? 'Complete Exchange' : (id ? "Update Sale" : (paymentType === 'due' ? 'Confirm Sale (Due)' : 'Confirm & Print'))}}</span>
+            <span>{{isExchange ? 'Complete Exchange' : (id ? "Update Sale" : (paymentType === 'due' ? 'Confirm Sale
+              (Due)' : 'Confirm & Print'))}}</span>
           </button>
-          <button
-            *ngIf="isLoading"
-            disabled
-            type="button"
-            mat-raised-button
-            class="loading-btn">
+          <button *ngIf="isLoading" disabled type="button" mat-raised-button class="loading-btn">
             <mat-icon>hourglass_empty</mat-icon>
             <span>Please Wait...</span>
           </button>
-          <button
-            type="button"
-            routerLink="/pos/sales/sale-list"
-            mat-stroked-button
-            class="cancel-btn">
+          <button type="button" routerLink="/pos/sales/sale-list" mat-stroked-button class="cancel-btn">
             <mat-icon>close</mat-icon>
             <span>Cancel</span>
           </button>
@@ -670,56 +531,61 @@
           <div class="summary-content">
             <div class="summary-row">
               <span class="summary-label">Sub Total</span>
-              <span class="summary-value">{{shopInformation?.currency | currencyIcon}}{{ subTotal | number:'':'bn' }}</span>
+              <span class="summary-value">{{shopInformation?.currency | currencyIcon}}{{ subTotal | number:'1.2-2'
+                }}</span>
             </div>
             <div class="summary-row discount-row" *ngIf="discount > 0">
               <span class="summary-label">
                 <mat-icon class="label-icon">local_offer</mat-icon>
                 Discount
               </span>
-              <span class="summary-value discount-value">-{{shopInformation?.currency | currencyIcon}}{{ discount | number:'':'bn' }}</span>
+              <span class="summary-value discount-value">-{{shopInformation?.currency | currencyIcon}}{{ discount |
+                number:'1.2-2' }}</span>
             </div>
             <div class="summary-row" *ngIf="tax > 0 && posSettings?.showTax !== false">
               <span class="summary-label">
                 <mat-icon class="label-icon">account_balance</mat-icon>
                 Tax
               </span>
-              <span class="summary-value">{{shopInformation?.currency | currencyIcon}}{{ tax | number:'':'bn' }}</span>
+              <span class="summary-value">{{shopInformation?.currency | currencyIcon}}{{ tax | number:'1.2-2' }}</span>
             </div>
             <div class="summary-row" *ngIf="vat > 0 && posSettings?.showVat !== false">
               <span class="summary-label">
                 <mat-icon class="label-icon">receipt</mat-icon>
                 VAT
               </span>
-              <span class="summary-value">{{shopInformation?.currency | currencyIcon}}{{ vat | number:'':'bn' }}</span>
+              <span class="summary-value">{{shopInformation?.currency | currencyIcon}}{{ vat | number:'1.2-2' }}</span>
             </div>
             <div class="summary-row" *ngIf="ait > 0 && posSettings?.showAit !== false">
               <span class="summary-label">
                 <mat-icon class="label-icon">description</mat-icon>
                 AIT
               </span>
-              <span class="summary-value">{{shopInformation?.currency | currencyIcon}}{{ ait | number:'':'bn' }}</span>
+              <span class="summary-value">{{shopInformation?.currency | currencyIcon}}{{ ait | number:'1.2-2' }}</span>
             </div>
             <div class="summary-row" *ngIf="serviceCharge > 0 && posSettings?.showServiceCharge !== false">
               <span class="summary-label">
                 <mat-icon class="label-icon">room_service</mat-icon>
                 Service Charge
               </span>
-              <span class="summary-value">{{shopInformation?.currency | currencyIcon}}{{ serviceCharge | number:'':'bn' }}</span>
+              <span class="summary-value">{{shopInformation?.currency | currencyIcon}}{{ serviceCharge | number:'1.2-2'
+                }}</span>
             </div>
             <div class="summary-row points-row" *ngIf="pointsDiscount > 0">
               <span class="summary-label">
                 <mat-icon class="label-icon">stars</mat-icon>
                 Points Discount
               </span>
-              <span class="summary-value points-value">-{{shopInformation?.currency | currencyIcon}}{{ pointsDiscount | number:'':'bn' }}</span>
+              <span class="summary-value points-value">-{{shopInformation?.currency | currencyIcon}}{{ pointsDiscount |
+                number:'1.2-2' }}</span>
             </div>
             <div class="summary-row return-row" *ngIf="id && returnTotal > 0">
               <span class="summary-label">
                 <mat-icon class="label-icon">undo</mat-icon>
                 Return Total
               </span>
-              <span class="summary-value return-value">-{{shopInformation?.currency | currencyIcon}}{{ returnTotal | number:'':'bn' }}</span>
+              <span class="summary-value return-value">-{{shopInformation?.currency | currencyIcon}}{{ returnTotal |
+                number:'1.2-2' }}</span>
             </div>
             <div class="summary-divider"></div>
             <div class="summary-row grand-total-row">
@@ -727,28 +593,32 @@
                 <mat-icon class="label-icon">account_balance_wallet</mat-icon>
                 Grand Total
               </span>
-              <span class="summary-value grand-total-value">{{shopInformation?.currency | currencyIcon}}{{ grandTotal | number:'':'bn' }}</span>
+              <span class="summary-value grand-total-value">{{shopInformation?.currency | currencyIcon}}{{ grandTotal |
+                number:'1.2-2' }}</span>
             </div>
             <div class="summary-row net-total-row" *ngIf="id && returnTotal > 0">
               <span class="summary-label net-total-label">
                 <mat-icon class="label-icon">account_balance</mat-icon>
                 Net Total (After Return)
               </span>
-              <span class="summary-value net-total-value">{{shopInformation?.currency | currencyIcon}}{{ netTotal | number:'':'bn' }}</span>
+              <span class="summary-value net-total-value">{{shopInformation?.currency | currencyIcon}}{{ netTotal |
+                number:'1.2-2' }}</span>
             </div>
             <div class="summary-row profit-row profit-positive" *ngIf="totalProfit > 0">
               <span class="summary-label">
                 <mat-icon class="label-icon profit-icon">trending_up</mat-icon>
                 Profit
               </span>
-              <span class="summary-value profit-value">{{shopInformation?.currency | currencyIcon}}{{ totalProfit | number:'':'bn' }}</span>
+              <span class="summary-value profit-value">{{shopInformation?.currency | currencyIcon}}{{ totalProfit |
+                number:'1.2-2' }}</span>
             </div>
             <div class="summary-row profit-row profit-negative" *ngIf="totalProfit < 0">
               <span class="summary-label">
                 <mat-icon class="label-icon loss-icon">trending_down</mat-icon>
                 Loss
               </span>
-              <span class="summary-value loss-value">{{shopInformation?.currency | currencyIcon}}{{ totalProfit | number:'':'bn' }}</span>
+              <span class="summary-value loss-value">{{shopInformation?.currency | currencyIcon}}{{ totalProfit |
+                number:'1.2-2' }}</span>
             </div>
           </div>
         </div>
@@ -758,12 +628,8 @@
 </section>
 
 <!-- Barcode Scanner Modal -->
-<app-barcode-scanner
-  *ngIf="showBarcodeScanner"
-  (scanResult)="onBarcodeScanned($event)"
-  (close)="closeBarcodeScanner()">
+<app-barcode-scanner *ngIf="showBarcodeScanner" (scanResult)="onBarcodeScanned($event)" (close)="closeBarcodeScanner()">
 </app-barcode-scanner>
 
 <!-- Loading Spinner -->
 <app-page-loader *ngIf="isLoading"></app-page-loader>
-

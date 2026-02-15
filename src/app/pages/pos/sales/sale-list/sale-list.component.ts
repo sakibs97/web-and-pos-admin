@@ -759,9 +759,10 @@ export class SaleListComponent implements OnInit, OnDestroy {
         const qty = p.soldQuantity || 0;
         const price = (p.salePrice || 0).toFixed(2);
         const total = ((p.salePrice || 0) * qty).toFixed(2);
+        const imei = p.imei ? `<div style="font-size: 10px; color: #666; margin-top: 2px;">IMEI/SN: ${p.imei}</div>` : '';
         return `
         <tr>
-          <td>${productName}</td>
+          <td>${productName}${imei}</td>
           <td>${qty}</td>
           <td>${currencySymbol}${price}</td>
           <td>${currencySymbol}${total}</td>
@@ -771,8 +772,9 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
     // Format totals
     const subTotal = (sale?.subTotal || 0);
-    const discountAmount = sale?.discountAmount || sale?.discount || 0;
-    const discount = discountAmount > 0 ? discountAmount : '0';
+    const discountVal = (sale?.discount || 0);
+    const discount = discountVal > 0 ? discountVal.toFixed(2) : '0.00';
+    const discountAmount = discountVal;
     const vatAmount = (sale?.vatAmount || 0);
     const grandTotal = (sale?.total || 0);
     const totalAmount = sale?.total || 0;
@@ -1731,12 +1733,12 @@ export class SaleListComponent implements OnInit, OnDestroy {
    */
   getDailyGrandTotal(): number {
     if (!this.sales || !this.sales.length) return 0;
-    
+
     const today = new Date().toISOString().split('T')[0];
     const todaySales = this.sales.find(group => group._id === today);
-    
+
     if (!todaySales || !todaySales.data || !todaySales.data.length) return 0;
-    
+
     return todaySales.data.reduce((total, sale) => {
       return total + (sale?.total || 0);
     }, 0);

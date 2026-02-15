@@ -31,7 +31,7 @@ export class ReprintBillComponent implements OnInit {
     private shopInformationService: ShopInformationService,
     private printerSettingsService: PrinterSettingsService,
     public utilsService: UtilsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getLast10Sales();
@@ -80,7 +80,7 @@ export class ReprintBillComponent implements OnInit {
         paymentType: 1,
         receivedFromCustomer: 1,
       },
-      sort: {createdAt: -1},
+      sort: { createdAt: -1 },
     };
 
     this.subDataOne = this.saleService.getAllSale(filter, null)
@@ -165,13 +165,13 @@ export class ReprintBillComponent implements OnInit {
   }
 
   private generatePrintContent(sale: Sale): string {
-    const shopInfo:any = this.shopInformation;
+    const shopInfo: any = this.shopInformation;
     const settings = this.printerSettings || {};
     const date = new Date();
 
     let currencySymbol = '৳';
     if (shopInfo?.currency) {
-      switch(shopInfo.currency) {
+      switch (shopInfo.currency) {
         case 'BDT':
           currencySymbol = '৳';
           break;
@@ -218,14 +218,14 @@ export class ReprintBillComponent implements OnInit {
       }).join('');
     }
 
-    const subTotal = (sale?.subTotal || 0).toLocaleString('bn-BD');
-    const discount = (sale?.discount || 0).toLocaleString('bn-BD');
-    const tax = (sale?.tax || 0).toLocaleString('bn-BD');
-    const vatAmount = (sale?.vatAmount || 0).toLocaleString('bn-BD');
-    const ait = (sale?.ait || 0).toLocaleString('bn-BD');
-    const serviceCharge = (sale?.serviceCharge || 0).toLocaleString('bn-BD');
-    const grandTotal = (sale?.total || 0).toLocaleString('bn-BD');
-    const received = (sale?.receivedFromCustomer || sale?.total || 0).toLocaleString('bn-BD');
+    const subTotal = (sale?.subTotal || 0).toFixed(2);
+    const discount = (sale?.discount || 0).toFixed(2);
+    const tax = (sale?.tax || 0).toFixed(2);
+    const vatAmount = (sale?.vatAmount || 0).toFixed(2);
+    const ait = (sale?.ait || 0).toFixed(2);
+    const serviceCharge = (sale?.serviceCharge || 0).toFixed(2);
+    const grandTotal = (sale?.total || 0).toFixed(2);
+    const received = (sale?.receivedFromCustomer || sale?.total || 0).toFixed(2);
     const change = sale?.receivedFromCustomer && sale?.receivedFromCustomer > sale?.total
       ? (sale.receivedFromCustomer - sale.total).toFixed(2)
       : '0.00';
