@@ -10,11 +10,7 @@
         <p class="page-subtitle">Manage and track all your sales transactions</p>
       </div>
       <div class="header-actions">
-        <button
-          type="button"
-          (click)="openReprintDialog()"
-          mat-stroked-button
-          class="reprint-btn"
+        <button type="button" (click)="openReprintDialog()" mat-stroked-button class="reprint-btn"
           matTooltip="Reprint Last 10 Bills">
           <mat-icon>print</mat-icon>
           <span>Reprint</span>
@@ -37,15 +33,8 @@
         <form #searchForm="ngForm">
           <mat-form-field appearance="outline" class="search-field">
             <mat-label>Search Sales</mat-label>
-            <input
-              matInput
-              type="search"
-              #searchInput
-              name="searchTerm"
-              autocomplete="off"
-              ngModel
-              placeholder="Search by invoice, customer phone..."
-            />
+            <input matInput type="search" #searchInput name="searchTerm" autocomplete="off" ngModel
+              placeholder="Search by invoice, phone, IMEI/Serial..." />
             <mat-icon matPrefix>search</mat-icon>
           </mat-form-field>
         </form>
@@ -53,30 +42,12 @@
 
       <!-- Date Filter -->
       <div class="date-filter-container">
-        <mat-form-field
-          class="date-filter-field"
-          appearance="outline"
-          (click)="picker.open()"
-        >
+        <mat-form-field class="date-filter-field" appearance="outline" (click)="picker.open()">
           <mat-label>Date Range</mat-label>
-          <mat-date-range-input
-            [formGroup]="dataFormDateRange"
-            [rangePicker]="picker"
-            [max]="today"
-          >
-            <input
-              matStartDate
-              formControlName="start"
-              placeholder="Start date"
-              readonly
-            />
-            <input
-              matEndDate
-              formControlName="end"
-              placeholder="End date"
-              readonly
-              (dateChange)="endChangeRegDateRange($event)"
-            />
+          <mat-date-range-input [formGroup]="dataFormDateRange" [rangePicker]="picker" [max]="today">
+            <input matStartDate formControlName="start" placeholder="Start date" readonly />
+            <input matEndDate formControlName="end" placeholder="End date" readonly
+              (dateChange)="endChangeRegDateRange($event)" />
           </mat-date-range-input>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-date-range-picker #picker></mat-date-range-picker>
@@ -91,12 +62,8 @@
           <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
         <mat-menu #menuMonth="matMenu">
-          <button
-            *ngFor="let data of months; let i = index"
-            mat-menu-item
-            (click)="filterData(data.value, i, 'month')"
-            [class.active]="activeFilterMonth === i"
-          >
+          <button *ngFor="let data of months; let i = index" mat-menu-item (click)="filterData(data.value, i, 'month')"
+            [class.active]="activeFilterMonth === i">
             {{ data?.viewValue }}
           </button>
         </mat-menu>
@@ -128,7 +95,19 @@
     <div class="summary-content">
       <h3 class="summary-label">Total Sales Amount</h3>
       <p class="summary-value">
-        {{shopInformation?.currency | currencyIcon}}{{ calculation?.grandTotal ?? 0 | number: '' : 'bn' }}
+        {{shopInformation?.currency | currencyIcon}}{{ calculation?.grandTotal ?? 0 | number: '1.2-2' }}
+      </p>
+    </div>
+  </div>
+
+  <div class="summary-card today-sales">
+    <div class="summary-icon">
+      <mat-icon>today</mat-icon>
+    </div>
+    <div class="summary-content">
+      <h3 class="summary-label">Today's Sales</h3>
+      <p class="summary-value">
+        {{shopInformation?.currency | currencyIcon}}{{ getDailyGrandTotal() | number:'1.2-2' }}
       </p>
     </div>
   </div>
@@ -142,13 +121,8 @@
       <span>{{selectedIds.length}} item(s) selected</span>
     </div>
     <div class="bulk-actions">
-      <button
-        *ngIf="checkDeletePermission"
-        mat-raised-button
-        color="warn"
-        (click)="openConfirmDialog('delete')"
-        class="delete-btn"
-      >
+      <button *ngIf="checkDeletePermission" mat-raised-button color="warn" (click)="openConfirmDialog('delete')"
+        class="delete-btn">
         <mat-icon>delete</mat-icon>
         <span>Delete Selected</span>
       </button>
@@ -158,12 +132,8 @@
 
 <!-- Sales List -->
 <section class="sales-list-section">
-  <app-no-content
-    *ngIf="!isLoading && !sales.length"
-    [matIcon]="'shopping_cart'"
-    title="No Sales Found!"
-    description="Start by creating your first sale"
-  ></app-no-content>
+  <app-no-content *ngIf="!isLoading && !sales.length" [matIcon]="'shopping_cart'" title="No Sales Found!"
+    description="Start by creating your first sale"></app-no-content>
 
   <div *ngFor="let group of sales; let i = index" class="sales-group">
     <!-- Group Header -->
@@ -177,6 +147,8 @@
       </div>
     </div>
 
+
+
     <!-- Sales Table -->
     <div class="table-card">
       <div class="table-responsive">
@@ -184,11 +156,8 @@
           <thead>
             <tr>
               <th class="checkbox-col">
-                <mat-checkbox
-                  #matCheckbox
-                  (change)="onAllSelectChange($event, group.data, i)"
-                  color="primary"
-                ></mat-checkbox>
+                <mat-checkbox #matCheckbox (change)="onAllSelectChange($event, group.data, i)"
+                  color="primary"></mat-checkbox>
               </th>
               <th class="invoice-col">Invoice ID</th>
               <th class="customer-col">Customer</th>
@@ -207,11 +176,8 @@
           <tbody>
             <tr *ngFor="let sale of group.data; let j = index" class="table-row">
               <td class="checkbox-cell">
-                <mat-checkbox
-                  [(ngModel)]="sale.select"
-                  (ngModelChange)="onCheckChange($event, j, sale._id)"
-                  color="primary"
-                ></mat-checkbox>
+                <mat-checkbox [(ngModel)]="sale.select" (ngModelChange)="onCheckChange($event, j, sale._id)"
+                  color="primary"></mat-checkbox>
               </td>
               <td class="invoice-cell">
                 <div class="invoice-info">
@@ -279,8 +245,10 @@
                 </span>
               </td>
               <td class="amount-cell return-cell">
-                <span class="return-value" [class.has-return]="(sale?.totalReturnedAmount || sale?.returnTotal || 0) > 0">
-                  {{(sale?.totalReturnedAmount || sale?.returnTotal || 0) > 0 ? '-' : ''}}{{shopInformation?.currency | currencyIcon}}{{ (sale?.totalReturnedAmount || sale?.returnTotal || 0) | number:'1.2-2'}}
+                <span class="return-value"
+                  [class.has-return]="(sale?.totalReturnedAmount || sale?.returnTotal || 0) > 0">
+                  {{(sale?.totalReturnedAmount || sale?.returnTotal || 0) > 0 ? '-' : ''}}{{shopInformation?.currency |
+                  currencyIcon}}{{ (sale?.totalReturnedAmount || sale?.returnTotal || 0) | number:'1.2-2'}}
                 </span>
               </td>
               <td class="amount-cell">
@@ -295,33 +263,16 @@
               </td>
               <td class="action-cell">
                 <div class="action-buttons">
-                  <a
-                    mat-icon-button
-                    color="primary"
-                    [routerLink]="['/pos/sales/new-sales/', sale._id]"
-                    [queryParams]="{view: true}"
-                    matTooltip="View Details"
-                    class="view-btn"
-                  >
+                  <a mat-icon-button color="primary" [routerLink]="['/pos/sales/new-sales/', sale._id]"
+                    [queryParams]="{view: true}" matTooltip="View Details" class="view-btn">
                     <mat-icon>visibility</mat-icon>
                   </a>
-                  <a
-                    *ngIf="checkEditPermission"
-                    mat-icon-button
-                    color="accent"
-                    [routerLink]="['/pos/sales/new-sales/', sale._id]"
-                    matTooltip="Edit Sale"
-                    class="edit-btn"
-                  >
+                  <a *ngIf="checkEditPermission" mat-icon-button color="accent"
+                    [routerLink]="['/pos/sales/new-sales/', sale._id]" matTooltip="Edit Sale" class="edit-btn">
                     <mat-icon>edit</mat-icon>
                   </a>
-                  <button
-                    mat-icon-button
-                    color="warn"
-                    (click)="openConfirmDialog('print', sale)"
-                    matTooltip="Print Invoice"
-                    class="print-btn"
-                  >
+                  <button mat-icon-button color="warn" (click)="openConfirmDialog('print', sale)"
+                    matTooltip="Print Invoice" class="print-btn">
                     <mat-icon>print</mat-icon>
                   </button>
                 </div>

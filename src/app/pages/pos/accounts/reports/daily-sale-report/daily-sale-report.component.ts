@@ -20,7 +20,7 @@ export class DailySaleReportComponent implements OnInit {
     private uiService: UiService,
     private exportPrintService: ExportPrintService,
     private datePipe: DatePipe,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadReport();
@@ -28,7 +28,7 @@ export class DailySaleReportComponent implements OnInit {
 
   loadReport() {
     this.isLoading = true;
-    const dateStr = this.selectedDate.toISOString().split('T')[0];
+    const dateStr = this.datePipe.transform(this.selectedDate, 'YYYY-MM-dd');
     this.reportsService.getDailySaleReport(dateStr)
       .subscribe({
         next: (res) => {
@@ -57,7 +57,7 @@ export class DailySaleReportComponent implements OnInit {
 
     const csvData = this.prepareDailySaleData();
     const headers = ['Item', 'Value'];
-    
+
     this.exportPrintService.exportCSV(csvData, 'Daily_Sale_Report', headers);
     this.uiService.message('CSV exported successfully', 'success');
   }
@@ -70,7 +70,7 @@ export class DailySaleReportComponent implements OnInit {
 
     const excelData = this.prepareDailySaleData();
     const headers = ['Item', 'Value'];
-    
+
     this.exportPrintService.exportExcel(excelData, 'Daily_Sale_Report', 'Daily Sale Report', headers);
     this.uiService.message('Excel exported successfully', 'success');
   }

@@ -1,17 +1,17 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, NgForm} from '@angular/forms';
-import {UiService} from '../../../../services/core/ui.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs';
-import {SaleService} from '../../../../services/common/sale.service';
-import {Product} from '../../../../interfaces/common/product.interface';
-import {MatDialog} from '@angular/material/dialog';
-import {UtilsService} from '../../../../services/core/utils.service';
-import {Sale} from '../../../../interfaces/common/sale.interface';
-import {VendorService} from '../../../../services/vendor/vendor.service';
-import {ShopInformation} from '../../../../interfaces/common/shop-information.interface';
-import {ShopInformationService} from '../../../../services/common/shop-information.service';
-import {ConfirmDialogComponent} from '../../../../shared/components/ui/confirm-dialog/confirm-dialog.component';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
+import { UiService } from '../../../../services/core/ui.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { SaleService } from '../../../../services/common/sale.service';
+import { Product } from '../../../../interfaces/common/product.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { UtilsService } from '../../../../services/core/utils.service';
+import { Sale } from '../../../../interfaces/common/sale.interface';
+import { VendorService } from '../../../../services/vendor/vendor.service';
+import { ShopInformation } from '../../../../interfaces/common/shop-information.interface';
+import { ShopInformationService } from '../../../../services/common/shop-information.service';
+import { ConfirmDialogComponent } from '../../../../shared/components/ui/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-new-sales-return',
@@ -77,22 +77,22 @@ export class NewSalesReturnComponent implements OnInit, OnDestroy {
   private getVendorData() {
     const vendorId = this.vendorService.getUserId();
     let vendorName = 'Admin';
-    
+
     const cachedName = sessionStorage.getItem('vendor-name');
     if (cachedName) {
       vendorName = cachedName;
       this.vendor = { _id: vendorId, name: vendorName };
       return;
     }
-    
+
     this.subDataTwo = this.vendorService.getLoggedInVendorData()
       .subscribe({
         next: (res) => {
           if (res.success && res.data) {
-            vendorName = res.data.name || 
-                        res.data.username || 
-                        this.vendorService.getUserRole() || 
-                        'Admin';
+            vendorName = res.data.name ||
+              res.data.username ||
+              this.vendorService.getUserRole() ||
+              'Admin';
             if (vendorName !== 'Admin') {
               sessionStorage.setItem('vendor-name', vendorName);
             }
@@ -141,7 +141,7 @@ export class NewSalesReturnComponent implements OnInit, OnDestroy {
         hasReturn: 1,
         totalReturnedAmount: 1,
       },
-      sort: {createdAt: -1},
+      sort: { createdAt: -1 },
     };
 
     this.subDataOne = this.saleService.getAllSale(filter, null)
@@ -197,7 +197,7 @@ export class NewSalesReturnComponent implements OnInit, OnDestroy {
     this.returnProducts = [];
     this.saleSearchQuery = '';
     this.searchSales = [];
-    
+
     // Load products from selected sale
     if (sale.products && sale.products.length > 0) {
       this.returnProducts = sale.products.map(p => ({
@@ -293,7 +293,7 @@ export class NewSalesReturnComponent implements OnInit, OnDestroy {
    */
   public openConfirmDialog() {
     const currencySymbol = this.getCurrencySymbol();
-    const totalAmount = this.returnTotal.toLocaleString('bn-BD');
+    const totalAmount = this.returnTotal.toFixed(2);
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: '500px',
       data: {
@@ -333,9 +333,9 @@ export class NewSalesReturnComponent implements OnInit, OnDestroy {
       error: (error) => {
         this.isLoading = false;
         console.error('Error processing return:', error);
-        const errorMessage = error?.error?.message || 
-                            error?.message || 
-                            'Failed to process return. Please check your connection and try again.';
+        const errorMessage = error?.error?.message ||
+          error?.message ||
+          'Failed to process return. Please check your connection and try again.';
         this.uiService.message(errorMessage, 'warn');
       },
     });
@@ -348,7 +348,7 @@ export class NewSalesReturnComponent implements OnInit, OnDestroy {
     if (!this.shopInformation?.currency) {
       return '৳';
     }
-    switch(this.shopInformation.currency) {
+    switch (this.shopInformation.currency) {
       case 'BDT':
         return '৳';
       case 'SGD':

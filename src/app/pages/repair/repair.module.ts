@@ -40,6 +40,9 @@ import { AddProblemComponent } from './problem/add-problem/add-problem.component
 // Repair Components
 import { RepairListComponent } from './repair-list/repair-list.component';
 import { AddRepairComponent } from './add-repair/add-repair.component';
+import { TechnicianReportComponent } from './technician-report/technician-report.component';
+import { AllTechnicianComponent } from './technician/all-technician/all-technician.component';
+import { AddTechnicianComponent } from './technician/add-technician/add-technician.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +58,9 @@ import { AddRepairComponent } from './add-repair/add-repair.component';
     // Repair
     RepairListComponent,
     AddRepairComponent,
+    TechnicianReportComponent,
+    AllTechnicianComponent,
+    AddTechnicianComponent,
   ],
   imports: [
     CommonModule,

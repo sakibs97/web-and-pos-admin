@@ -126,7 +126,7 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Stock Value</mat-label>
                   <input formControlName="quantity" matInput type="number" digitOnly decimal="true" inputmode="decimal"
-                         pattern="^\d+(\.\d{1,2})?$"/>
+                         pattern="^\d+(\.\d{1,2})?$" [readonly]="id"/>
                   <mat-error>This field is required.</mat-error>
                 </mat-form-field>
 
@@ -196,7 +196,7 @@
                 <mat-form-field appearance="outline">
                   <mat-label>Stock Value</mat-label>
                   <input formControlName="quantity" matInput type="number" digitOnly decimal="true" inputmode="decimal"
-                         pattern="^\d+(\.\d{1,2})?$"/>
+                         pattern="^\d+(\.\d{1,2})?$" [readonly]="id"/>
                   <mat-error>This field is required.</mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
@@ -487,7 +487,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Stock Value</mat-label>
                 <input formControlName="variationQuantity" type="number" digitOnly decimal="true" inputmode="decimal"
-                       pattern="^\d+(\.\d{1,2})?$" matInput/>
+                       pattern="^\d+(\.\d{1,2})?$" matInput [readonly]="id"/>
                 <mat-error>This field is required.</mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline">

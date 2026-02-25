@@ -10,15 +10,15 @@
           Cancel
         </button>
         @if (!isLoading) {
-          <button mat-raised-button class="submit-btn" color="primary" type="submit">
-            <mat-icon>check_circle</mat-icon>
-            {{ id ? 'Update Repair' : 'Submit Repair' }}
-          </button>
+        <button mat-raised-button class="submit-btn" color="primary" type="submit">
+          <mat-icon>check_circle</mat-icon>
+          {{ id ? 'Update Repair' : 'Submit Repair' }}
+        </button>
         } @else {
-          <button class="btn-loader" mat-raised-button type="button" color="primary" disabled>
-            <div><span class="loader"></span></div>
-            <div><span class="txt">{{ id ? 'Updating...' : 'Submitting...' }}</span></div>
-          </button>
+        <button class="btn-loader" mat-raised-button type="button" color="primary" disabled>
+          <div><span class="loader"></span></div>
+          <div><span class="txt">{{ id ? 'Updating...' : 'Submitting...' }}</span></div>
+        </button>
         }
       </div>
 
@@ -32,15 +32,8 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="flex-1">
               <mat-label>Repair Date <sup>*</sup></mat-label>
-              <input
-                readonly
-                (click)="picker.open()"
-                formControlName="date"
-                matInput
-                [matDatepicker]="picker"
-                required
-                placeholder="Choose Date"
-              />
+              <input readonly (click)="picker.open()" formControlName="date" matInput [matDatepicker]="picker" required
+                placeholder="Choose Date" />
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
               <mat-error>This field is required</mat-error>
@@ -48,14 +41,8 @@
 
             <mat-form-field appearance="outline" class="flex-1">
               <mat-label>Delivery Date</mat-label>
-              <input
-                readonly
-                (click)="deliveryPicker.open()"
-                formControlName="deliveredDate"
-                matInput
-                [matDatepicker]="deliveryPicker"
-                placeholder="Choose Delivery Date"
-              />
+              <input readonly (click)="deliveryPicker.open()" formControlName="deliveredDate" matInput
+                [matDatepicker]="deliveryPicker" placeholder="Choose Delivery Date" />
               <mat-datepicker-toggle matSuffix [for]="deliveryPicker"></mat-datepicker-toggle>
               <mat-datepicker #deliveryPicker></mat-datepicker>
             </mat-form-field>
@@ -67,29 +54,23 @@
               <mat-select formControlName="brand" placeholder="Choose brand" required (opened)="onBrandSelectOpened()">
                 <mat-option class="search-option">
                   <div class="brand-search-container" (click)="$event.stopPropagation()">
-                    <input 
-                      #brandSearchInput
-                      type="text" 
-                      [formControl]="brandSearchControl" 
-                      placeholder="Search brand..." 
-                      class="brand-search-input"
-                      (click)="$event.stopPropagation()"
-                      (keydown)="$event.stopPropagation()"
-                      (keyup)="$event.stopPropagation()">
+                    <input #brandSearchInput type="text" [formControl]="brandSearchControl"
+                      placeholder="Search brand..." class="brand-search-input" (click)="$event.stopPropagation()"
+                      (keydown)="$event.stopPropagation()" (keyup)="$event.stopPropagation()">
                     <mat-icon class="search-icon">search</mat-icon>
                   </div>
                 </mat-option>
                 <mat-divider></mat-divider>
                 @if (filterBrandData.length === 0) {
-                  <mat-option disabled>
-                    <span>No brand found</span>
-                  </mat-option>
+                <mat-option disabled>
+                  <span>No brand found</span>
+                </mat-option>
                 } @else {
-                  @for (data of filterBrandData; track data._id) {
-                    <mat-option [value]="data._id">
-                      {{ data.name }}
-                    </mat-option>
-                  }
+                @for (data of filterBrandData; track data._id) {
+                <mat-option [value]="data._id">
+                  {{ data.name }}
+                </mat-option>
+                }
                 }
               </mat-select>
               <mat-error>This field is required</mat-error>
@@ -102,36 +83,31 @@
           <div class="form-row">
             <mat-form-field appearance="outline" class="flex-1">
               <mat-label>Model Name <sup>*</sup></mat-label>
-              <mat-select formControlName="modelNo" placeholder="Choose model" required (opened)="onModelSelectOpened()">
+              <mat-select formControlName="modelNo" placeholder="Choose model" required
+                (opened)="onModelSelectOpened()">
                 <mat-option class="search-option">
                   <div class="brand-search-container" (click)="$event.stopPropagation()">
-                    <input 
-                      #modelSearchInput
-                      type="text" 
-                      [formControl]="modelSearchControl" 
-                      placeholder="Search model..." 
-                      class="brand-search-input"
-                      (click)="$event.stopPropagation()"
-                      (keydown)="$event.stopPropagation()"
-                      (keyup)="$event.stopPropagation()">
+                    <input #modelSearchInput type="text" [formControl]="modelSearchControl"
+                      placeholder="Search model..." class="brand-search-input" (click)="$event.stopPropagation()"
+                      (keydown)="$event.stopPropagation()" (keyup)="$event.stopPropagation()">
                     <mat-icon class="search-icon">search</mat-icon>
                   </div>
                 </mat-option>
                 <mat-divider></mat-divider>
                 @if (!dataForm?.value?.brand) {
-                  <mat-option disabled>
-                    <span>Please select a brand first</span>
-                  </mat-option>
+                <mat-option disabled>
+                  <span>Please select a brand first</span>
+                </mat-option>
                 } @else if (filterModelData.length === 0) {
-                  <mat-option disabled>
-                    <span>No model found</span>
-                  </mat-option>
+                <mat-option disabled>
+                  <span>No model found</span>
+                </mat-option>
                 } @else {
-                  @for (data of filterModelData; track data._id) {
-                    <mat-option [value]="data._id">
-                      {{ data.name }}
-                    </mat-option>
-                  }
+                @for (data of filterModelData; track data._id) {
+                <mat-option [value]="data._id">
+                  {{ data.name }}
+                </mat-option>
+                }
                 }
               </mat-select>
               <mat-error>This field is required</mat-error>
@@ -145,6 +121,16 @@
             <mat-form-field appearance="outline" class="flex-1">
               <mat-label>Color</mat-label>
               <input formControlName="color" matInput placeholder="Enter color (optional)" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="flex-1">
+              <mat-label>Technician</mat-label>
+              <mat-select formControlName="technician" placeholder="Select technician">
+                <mat-option [value]="null">None</mat-option>
+                <mat-option *ngFor="let tech of technicians" [value]="tech._id">
+                  {{tech.name}}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
           </div>
         </div>
@@ -168,12 +154,7 @@
             <mat-form-field appearance="outline" class="flex-1">
               <mat-label>Password/Pattern Lock</mat-label>
               <input formControlName="password" matInput type="text" placeholder="Password" />
-              <button 
-                matSuffix 
-                mat-icon-button 
-                type="button"
-                (click)="openPatternLock()"
-                matTooltip="Set Pattern Lock"
+              <button matSuffix mat-icon-button type="button" (click)="openPatternLock()" matTooltip="Set Pattern Lock"
                 class="pattern-btn">
                 <mat-icon>lock</mat-icon>
               </button>
@@ -191,9 +172,9 @@
               <mat-label>Problem/Issue <sup>*</sup></mat-label>
               <mat-select formControlName="problem" placeholder="Choose problem(s)" multiple required>
                 @for (data of filterProblemData; track data._id) {
-                  <mat-option [value]="data._id">
-                    {{ data.name }}
-                  </mat-option>
+                <mat-option [value]="data._id">
+                  {{ data.name }}
+                </mat-option>
                 }
               </mat-select>
               <mat-hint *ngIf="dataForm?.get('problem')?.value?.length > 0">
@@ -225,6 +206,37 @@
           <h3>Customer & Payment Information</h3>
         </div>
         <div class="section-content">
+          <!-- Customer Search Field -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="flex-1">
+              <mat-label>Search Customer</mat-label>
+              <input matInput type="text" [formControl]="customerSearchControl"
+                placeholder="Search by name or phone number" [matAutocomplete]="customerAuto" />
+              <mat-icon matPrefix>search</mat-icon>
+              <button matSuffix mat-icon-button type="button" *ngIf="customerSearchControl.value"
+                (click)="clearCustomerSearch()" matTooltip="Clear search">
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-autocomplete #customerAuto="matAutocomplete" [displayWith]="displayCustomerFn"
+              (optionSelected)="onCustomerSelected($event)">
+              <mat-option *ngIf="isSearchingCustomer" disabled>
+                <span>Searching...</span>
+              </mat-option>
+              <mat-option *ngIf="!isSearchingCustomer && searchedCustomers.length === 0 && customerSearchControl.value"
+                disabled>
+                <span>No customer found</span>
+              </mat-option>
+              <mat-option *ngFor="let customer of searchedCustomers" [value]="customer">
+                <div class="customer-option">
+                  <span class="customer-name">{{ customer.name }}</span>
+                  <span class="customer-phone">{{ customer.phone }}</span>
+                </div>
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+
+          <!-- Customer Information Fields -->
           <div class="form-row">
             <mat-form-field appearance="outline" class="flex-1">
               <mat-label>Customer Name</mat-label>
@@ -254,41 +266,33 @@
 
             <mat-form-field appearance="outline" class="flex-1">
               <mat-label>Repair Amount (Service Charge)</mat-label>
-              <input
-                formControlName="amount"
-                matInput
-                digitOnly
-                pattern="^\d+(\.\d{1,2})?$"
-                [decimal]="true"
-                placeholder="Enter repair/service amount"
-              />
+              <input formControlName="amount" matInput digitOnly pattern="^\d+(\.\d{1,2})?$" [decimal]="true"
+                placeholder="Enter repair/service amount" />
             </mat-form-field>
           </div>
 
           <mat-form-field appearance="outline">
             <mat-label>Note / Description</mat-label>
-            <textarea
-              class="text-area"
-              formControlName="description"
-              matInput
-              rows="4"
-              placeholder="Enter additional notes or description"
-            ></textarea>
+            <textarea class="text-area" formControlName="description" matInput rows="4"
+              placeholder="Enter additional notes or description"></textarea>
           </mat-form-field>
 
           <!-- Amount Summary -->
           <div class="amount-summary" *ngIf="getPartsTotal() > 0 || getRepairAmount() > 0">
             <div class="amount-row">
               <span>Parts Amount:</span>
-              <span class="amount-value">{{ shopInformation?.currency | currencyIcon }}{{ getPartsTotal() | number:'1.2-2' }}</span>
+              <span class="amount-value">{{ shopInformation?.currency | currencyIcon }}{{ getPartsTotal() |
+                number:'1.2-2' }}</span>
             </div>
             <div class="amount-row">
               <span>Repair Amount:</span>
-              <span class="amount-value">{{ shopInformation?.currency | currencyIcon }}{{ getRepairAmount() | number:'1.2-2' }}</span>
+              <span class="amount-value">{{ shopInformation?.currency | currencyIcon }}{{ getRepairAmount() |
+                number:'1.2-2' }}</span>
             </div>
             <div class="amount-row total-row">
               <span><strong>Total Amount:</strong></span>
-              <span class="amount-value total-value"><strong>{{ shopInformation?.currency | currencyIcon }}{{ getTotalAmount() | number:'1.2-2' }}</strong></span>
+              <span class="amount-value total-value"><strong>{{ shopInformation?.currency | currencyIcon }}{{
+                  getTotalAmount() | number:'1.2-2' }}</strong></span>
             </div>
           </div>
         </div>
@@ -306,27 +310,20 @@
           <div class="search-row">
             <mat-form-field appearance="outline" class="product-search-field">
               <mat-label>Search Product</mat-label>
-              <input
-                matInput
-                type="text"
-                [(ngModel)]="productSearchQuery"
-                [ngModelOptions]="{standalone: true}"
+              <input matInput type="text" [(ngModel)]="productSearchQuery" [ngModelOptions]="{standalone: true}"
                 (input)="onProductSearch($any($event.target).value)"
-                (keyup)="onProductSearch($any($event.target).value)"
-                placeholder="Search by product name or SKU"
-              />
+                (keyup)="onProductSearch($any($event.target).value)" placeholder="Search by product name or SKU" />
               <mat-icon matPrefix>search</mat-icon>
             </mat-form-field>
           </div>
           <div class="product-search-results" *ngIf="searchResultsWithVariations.length > 0">
-            <div
-              *ngFor="let item of searchResultsWithVariations"
-              (click)="onSelectSearchItem(item)"
+            <div *ngFor="let item of searchResultsWithVariations" (click)="onSelectSearchItem(item)"
               class="product-search-item">
               <div class="product-item-info">
                 <span class="product-item-name">{{item.displayName}}</span>
                 <span class="product-item-details">
-                  Qty: {{item.stock}} | Price: {{shopInformation?.currency | currencyIcon}}{{item.price | number:'1.2-2'}}
+                  Qty: {{item.stock}} | Price: {{shopInformation?.currency | currencyIcon}}{{item.price |
+                  number:'1.2-2'}}
                   <span class="variation-badge" *ngIf="item.isVariation">Variation</span>
                 </span>
                 <span class="product-item-sku" *ngIf="item.sku">SKU: {{item.sku}}</span>
@@ -369,41 +366,22 @@
                     </td>
                     <td class="quantity-control-cell">
                       <div class="quantity-controls">
-                        <button
-                          type="button"
-                          class="qty-btn qty-decrease"
-                          (click)="decrementPartQuantity(i)"
+                        <button type="button" class="qty-btn qty-decrease" (click)="decrementPartQuantity(i)"
                           [disabled]="part.quantity <= 1">
                           <mat-icon>remove</mat-icon>
                         </button>
-                        <input
-                          digitOnly
-                          [(ngModel)]="part.quantity"
-                          [ngModelOptions]="{standalone: true}"
-                          (ngModelChange)="updatePartQuantity(i, part.quantity)"
-                          type="text"
-                          class="qty-input"
-                          min="1"
-                        />
-                        <button
-                          type="button"
-                          class="qty-btn qty-increase"
-                          (click)="incrementPartQuantity(i)">
+                        <input digitOnly [(ngModel)]="part.quantity" [ngModelOptions]="{standalone: true}"
+                          (ngModelChange)="updatePartQuantity(i, part.quantity)" type="text" class="qty-input"
+                          min="1" />
+                        <button type="button" class="qty-btn qty-increase" (click)="incrementPartQuantity(i)">
                           <mat-icon>add</mat-icon>
                         </button>
                       </div>
                     </td>
                     <td class="price-cell">
-                      <input
-                        type="number"
-                        [(ngModel)]="part.unitPrice"
-                        [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="updatePartPrice(i, part.unitPrice)"
-                        class="price-input"
-                        placeholder="0.00"
-                        min="0"
-                        step="0.01"
-                      />
+                      <input type="number" [(ngModel)]="part.unitPrice" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updatePartPrice(i, part.unitPrice)" class="price-input" placeholder="0.00"
+                        min="0" step="0.01" />
                     </td>
                     <td class="price-cell">
                       <span class="price-value">
@@ -411,11 +389,7 @@
                       </span>
                     </td>
                     <td class="action-cell">
-                      <button
-                        type="button"
-                        mat-icon-button
-                        color="warn"
-                        (click)="removePart(i)"
+                      <button type="button" mat-icon-button color="warn" (click)="removePart(i)"
                         matTooltip="Remove Part">
                         <mat-icon>delete</mat-icon>
                       </button>
@@ -425,7 +399,8 @@
               </table>
             </div>
             <div class="parts-total">
-              <strong>Parts Total: {{shopInformation?.currency | currencyIcon}}{{getPartsTotal() | number:'1.2-2'}}</strong>
+              <strong>Parts Total: {{shopInformation?.currency | currencyIcon}}{{getPartsTotal() |
+                number:'1.2-2'}}</strong>
             </div>
           </div>
         </div>
@@ -438,7 +413,7 @@
     </form> <!-- END! Form -->
 
     @if (isLoading) {
-      <app-page-loader></app-page-loader>
+    <app-page-loader></app-page-loader>
     }
 
   </div>

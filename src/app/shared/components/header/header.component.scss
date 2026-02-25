@@ -1,5 +1,6 @@
 @import "common/header";
-.subscription{
+
+.subscription {
   //background-color: #BAF7D0;
   padding: 5px;
   margin: 5px 0;
@@ -8,14 +9,16 @@
   border-radius: 4px;
   border: 1px solid #C5C5C5;
   background: #FFF;
-  .taka{
+
+  .taka {
     text-align: center;
     font-size: 15px;
     font-weight: 700;
     line-height: 15px;
     color: #1B8F00;
   }
-  .expired{
+
+  .expired {
     text-align: center;
     line-height: 15px;
     font-size: 10px;
@@ -38,21 +41,37 @@ b {
 
 @keyframes fade {
   0% {
-    background-color: rgba(93, 54, 255, 1); /* Full opacity */
+    background-color: rgba(93, 54, 255, 1);
+    /* Full opacity */
   }
+
   50% {
-    background-color: rgba(93, 54, 255, 0.1); /* Low opacity */
+    background-color: rgba(93, 54, 255, 0.1);
+    /* Low opacity */
   }
+
   100% {
-    background-color: rgba(93, 54, 255, 1); /* Full opacity */
+    background-color: rgba(93, 54, 255, 1);
+    /* Full opacity */
   }
 }
 
 @keyframes colorChange {
-  0% { fill: red; }
-  50% { fill: blue; }
-  75% { fill: goldenrod; }
-  100% { fill: green; }
+  0% {
+    fill: red;
+  }
+
+  50% {
+    fill: blue;
+  }
+
+  75% {
+    fill: goldenrod;
+  }
+
+  100% {
+    fill: green;
+  }
 }
 
 .animatedPath {
@@ -63,6 +82,7 @@ b {
   display: flex;
   align-items: center;
   gap: 10px;
+
   span {
     font-size: 16px;
   }
@@ -97,6 +117,7 @@ mat-toolbar {
 
 .repair-icon-container,
 .pos-icon-container,
+.expense-icon-container,
 .calculator-icon-container {
   cursor: pointer;
   display: flex;
@@ -127,7 +148,8 @@ mat-toolbar {
   .notification-icon {
     cursor: pointer;
     position: relative;
-    .count{
+
+    .count {
       position: absolute;
       height: 20px;
       width: 20px;
@@ -150,7 +172,8 @@ mat-toolbar {
     background: white;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    display: none; /* Hide by default */
+    display: none;
+    /* Hide by default */
     z-index: 10;
 
     &.show {
@@ -223,7 +246,7 @@ mat-toolbar {
   }
 }
 
-@media (max-width: 899px){
+@media (max-width: 899px) {
   .notification-icon svg {
     width: 25px;
     height: 25px;
@@ -233,7 +256,7 @@ mat-toolbar {
 @media (max-width: 599px) {
   .notification-design-container .notification-panel {
     right: -186%;
-}
+  }
 
   .notification-design-container .notification-panel {
     width: 354px;
@@ -241,15 +264,16 @@ mat-toolbar {
 
   .notification-design-container .notification-panel .notification-item .second {
     width: 250px;
-}
+  }
 
   .notification-design-container .notification-panel .notification-item p {
     width: 226px
   }
 
 }
+
 @media (max-width: 422px) {
-  .web-link{
+  .web-link {
     display: none;
   }
 }
@@ -262,7 +286,7 @@ mat-toolbar {
 
   .notification-design-container .notification-panel .notification-item .second {
     width: 200px;
-}
+  }
 
   .notification-design-container .notification-panel .notification-item p {
     width: 226px
@@ -270,16 +294,17 @@ mat-toolbar {
 
 }
 
-.unread{
+.unread {
   background: #f4f4f4;
-  .notification-name{
-    .name{
+
+  .notification-name {
+    .name {
       color: #676767;
     }
   }
 }
 
-@media (max-width: 599px){
+@media (max-width: 599px) {
   .subscription {
     padding: 1px !important;
 
@@ -295,10 +320,10 @@ mat-toolbar {
   align-items: center;
 
   img {
-  height: 40px;
- }
+    height: 40px;
+  }
 
-  p{
+  p {
     font-family: 'Globe', serif;
     font-size: 20px;
     text-decoration: none;

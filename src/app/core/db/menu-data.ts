@@ -2,7 +2,7 @@ import { AdminMenu } from '../../interfaces/core/admin-menu.interface';
 import { environment } from '../../../environments/environment';
 
 
-const ALL_MENUS1: AdminMenu[] = [
+const ALL_MENUS: AdminMenu[] = [
   {
     id: 0,
     name: 'Dashboard',
@@ -540,6 +540,27 @@ const ALL_MENUS1: AdminMenu[] = [
             routerLink: 'repair/problem-list',
             icon: 'arrow_right',
           },
+          {
+            id: 5,
+            name: 'Technician Report',
+            hasSubMenu: true,
+            routerLink: 'repair/technician-report',
+            icon: 'arrow_right',
+          },
+          {
+            id: 6,
+            name: 'Technician List',
+            hasSubMenu: true,
+            routerLink: 'repair/technician-list',
+            icon: 'arrow_right',
+          },
+          {
+            id: 7,
+            name: 'Add Technician',
+            hasSubMenu: true,
+            routerLink: 'repair/add-technician',
+            icon: 'arrow_right',
+          },
         ],
       },
       {
@@ -1003,7 +1024,7 @@ const ALL_MENUS1: AdminMenu[] = [
 ];
 
 //Super Counter Menu
-export const ALL_MENUS: AdminMenu[] = [
+export const ALL_MENUS1: AdminMenu[] = [
   {
     id: 0,
     name: 'Dashboard',
@@ -1539,6 +1560,27 @@ export const ALL_MENUS: AdminMenu[] = [
             name: 'Problem',
             hasSubMenu: true,
             routerLink: 'repair/problem-list',
+            icon: 'arrow_right',
+          },
+          {
+            id: 5,
+            name: 'Technician Report',
+            hasSubMenu: true,
+            routerLink: 'repair/technician-report',
+            icon: 'arrow_right',
+          },
+          {
+            id: 6,
+            name: 'Technician List',
+            hasSubMenu: true,
+            routerLink: 'repair/technician-list',
+            icon: 'arrow_right',
+          },
+          {
+            id: 7,
+            name: 'Add Technician',
+            hasSubMenu: true,
+            routerLink: 'repair/add-technician',
             icon: 'arrow_right',
           },
         ],

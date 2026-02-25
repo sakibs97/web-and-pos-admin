@@ -27,45 +27,20 @@
       <div class="search-container">
         <mat-form-field appearance="outline" class="search-field">
           <mat-label>Search Returns</mat-label>
-          <input
-            matInput
-            type="search"
-            #searchInput
-            name="searchTerm"
-            autocomplete="off"
-            ngModel
-            placeholder="Search by return no, purchase no, supplier name/phone..."
-          />
+          <input matInput type="search" #searchInput name="searchTerm" autocomplete="off" ngModel
+            placeholder="Search by return no, purchase no, supplier name/phone..." />
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
       </div>
 
       <!-- Date Filter -->
       <div class="date-filter-container">
-        <mat-form-field
-          class="date-filter-field"
-          appearance="outline"
-          (click)="picker.open()"
-        >
+        <mat-form-field class="date-filter-field" appearance="outline" (click)="picker.open()">
           <mat-label>Date Range</mat-label>
-          <mat-date-range-input
-            [formGroup]="dataFormDateRange"
-            [rangePicker]="picker"
-            [max]="today"
-          >
-            <input
-              matStartDate
-              formControlName="start"
-              placeholder="Start date"
-              readonly
-            />
-            <input
-              matEndDate
-              formControlName="end"
-              placeholder="End date"
-              readonly
-              (dateChange)="endChangeRegDateRange($event)"
-            />
+          <mat-date-range-input [formGroup]="dataFormDateRange" [rangePicker]="picker" [max]="today">
+            <input matStartDate formControlName="start" placeholder="Start date" readonly />
+            <input matEndDate formControlName="end" placeholder="End date" readonly
+              (dateChange)="endChangeRegDateRange($event)" />
           </mat-date-range-input>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-date-range-picker #picker></mat-date-range-picker>
@@ -80,12 +55,8 @@
           <mat-icon>keyboard_arrow_down</mat-icon>
         </button>
         <mat-menu #menuMonth="matMenu">
-          <button
-            *ngFor="let data of months; let i = index"
-            mat-menu-item
-            (click)="filterData(data, i, 'month')"
-            [class.active]="activeFilterMonth === i"
-          >
+          <button *ngFor="let data of months; let i = index" mat-menu-item (click)="filterData(data, i, 'month')"
+            [class.active]="activeFilterMonth === i">
             {{ data?.viewValue }}
           </button>
         </mat-menu>
@@ -117,7 +88,7 @@
     <div class="summary-content">
       <h3 class="summary-label">Total Return Amount</h3>
       <p class="summary-value return-value">
-        {{shopInformation?.currency | currencyIcon}}{{ calculation?.grandTotal ?? 0 | number: '' : 'bn' }}
+        {{shopInformation?.currency | currencyIcon}}{{ calculation?.grandTotal ?? 0 | number: '1.2-2' }}
       </p>
     </div>
   </div>
@@ -131,13 +102,8 @@
       <span>{{selectedIds.length}} item(s) selected</span>
     </div>
     <div class="bulk-actions">
-      <button
-        *ngIf="checkDeletePermission"
-        mat-raised-button
-        color="warn"
-        (click)="openConfirmDialog('delete')"
-        class="delete-btn"
-      >
+      <button *ngIf="checkDeletePermission" mat-raised-button color="warn" (click)="openConfirmDialog('delete')"
+        class="delete-btn">
         <mat-icon>delete</mat-icon>
         <span>Delete Selected</span>
       </button>
@@ -147,12 +113,8 @@
 
 <!-- Returns List -->
 <section class="returns-list-section">
-  <app-no-content
-    *ngIf="!isLoading && !returns.length"
-    [matIcon]="'undo'"
-    title="No Purchase Returns Found!"
-    description="Start by processing your first purchase return"
-  ></app-no-content>
+  <app-no-content *ngIf="!isLoading && !returns.length" [matIcon]="'undo'" title="No Purchase Returns Found!"
+    description="Start by processing your first purchase return"></app-no-content>
 
   <div *ngFor="let group of returns; let i = index" class="returns-group">
     <!-- Group Header -->
@@ -173,11 +135,8 @@
           <thead>
             <tr>
               <th class="checkbox-col">
-                <mat-checkbox
-                  #matCheckbox
-                  (change)="onAllSelectChange($event, group.data, i)"
-                  color="primary"
-                ></mat-checkbox>
+                <mat-checkbox #matCheckbox (change)="onAllSelectChange($event, group.data, i)"
+                  color="primary"></mat-checkbox>
               </th>
               <th class="invoice-col">Return No</th>
               <th class="supplier-col">Supplier</th>
@@ -190,11 +149,8 @@
           <tbody>
             <tr *ngFor="let returnPurchase of group.data; let j = index" class="table-row">
               <td class="checkbox-cell">
-                <mat-checkbox
-                  [(ngModel)]="returnPurchase.select"
-                  (ngModelChange)="onCheckChange($event, j, returnPurchase._id)"
-                  color="primary"
-                ></mat-checkbox>
+                <mat-checkbox [(ngModel)]="returnPurchase.select"
+                  (ngModelChange)="onCheckChange($event, j, returnPurchase._id)" color="primary"></mat-checkbox>
               </td>
               <td class="invoice-cell">
                 <div class="invoice-info">
@@ -227,12 +183,8 @@
               </td>
               <td class="action-cell">
                 <div class="action-buttons">
-                  <button
-                    mat-icon-button
-                    color="warn"
-                    matTooltip="Delete"
-                    (click)="selectedIds = [returnPurchase._id]; openConfirmDialog('delete')"
-                  >
+                  <button mat-icon-button color="warn" matTooltip="Delete"
+                    (click)="selectedIds = [returnPurchase._id]; openConfirmDialog('delete')">
                     <mat-icon>delete</mat-icon>
                   </button>
                 </div>
@@ -264,4 +216,3 @@
 
 <!-- Loading Spinner -->
 <app-page-loader *ngIf="isLoading"></app-page-loader>
-

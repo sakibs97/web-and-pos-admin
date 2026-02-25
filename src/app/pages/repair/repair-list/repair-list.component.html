@@ -2,25 +2,21 @@
   <!-- Header Section -->
   <div class="header">
     <form class="table-search" #searchForm="ngForm">
-      <input type="text"
-             name="searchTerm"
-             autocomplete="off"
-             [(ngModel)]="searchQuery"
-             placeholder="Search by Phone number, Model number...">
+      <input type="text" name="searchTerm" autocomplete="off" [(ngModel)]="searchQuery"
+        placeholder="Search by Phone number, Model number...">
       @if (!searchQuery) {
-        <button type="button">
-          <mat-icon>search</mat-icon>
-        </button>
+      <button type="button">
+        <mat-icon>search</mat-icon>
+      </button>
       } @else {
-        <button type="button" (click)="searchQuery = null; getAllRepair()">
-          <mat-icon>close</mat-icon>
-        </button>
+      <button type="button" (click)="searchQuery = null; getAllRepair()">
+        <mat-icon>close</mat-icon>
+      </button>
       }
     </form>
 
     <div class="right">
-      <a mat-raised-button class="add-product-btn" color="primary"
-         [routerLink]="['/repair/add-repair']">
+      <a mat-raised-button class="add-product-btn" color="primary" [routerLink]="['/repair/add-repair']">
         <mat-icon>add</mat-icon>
         Add New Repair
       </a>
@@ -31,10 +27,7 @@
   <div class="content">
     <!-- Status Summary Section -->
     <div class="status-summary-section">
-      <button 
-        mat-stroked-button 
-        class="status-card"
-        [class.active]="selectedStatus === null"
+      <button mat-stroked-button class="status-card" [class.active]="selectedStatus === null"
         (click)="filterByStatus(null)">
         <mat-icon>clear_all</mat-icon>
         <div class="status-info">
@@ -42,11 +35,8 @@
           <span class="status-count">{{ statusCounts['All'] || 0 }}</span>
         </div>
       </button>
-      
-      <button 
-        mat-stroked-button 
-        class="status-card"
-        [class.active]="selectedStatus === 'Pending'"
+
+      <button mat-stroked-button class="status-card" [class.active]="selectedStatus === 'Pending'"
         (click)="filterByStatus('Pending')">
         <mat-icon>schedule</mat-icon>
         <div class="status-info">
@@ -54,11 +44,8 @@
           <span class="status-count">{{ statusCounts['Pending'] || 0 }}</span>
         </div>
       </button>
-      
-      <button 
-        mat-stroked-button 
-        class="status-card"
-        [class.active]="selectedStatus === 'In Progress'"
+
+      <button mat-stroked-button class="status-card" [class.active]="selectedStatus === 'In Progress'"
         (click)="filterByStatus('In Progress')">
         <mat-icon>build</mat-icon>
         <div class="status-info">
@@ -66,11 +53,8 @@
           <span class="status-count">{{ statusCounts['In Progress'] || 0 }}</span>
         </div>
       </button>
-      
-      <button 
-        mat-stroked-button 
-        class="status-card"
-        [class.active]="selectedStatus === 'Completed'"
+
+      <button mat-stroked-button class="status-card" [class.active]="selectedStatus === 'Completed'"
         (click)="filterByStatus('Completed')">
         <mat-icon>check_circle</mat-icon>
         <div class="status-info">
@@ -78,11 +62,8 @@
           <span class="status-count">{{ statusCounts['Completed'] || 0 }}</span>
         </div>
       </button>
-      
-      <button 
-        mat-stroked-button 
-        class="status-card"
-        [class.active]="selectedStatus === 'Delivered'"
+
+      <button mat-stroked-button class="status-card" [class.active]="selectedStatus === 'Delivered'"
         (click)="filterByStatus('Delivered')">
         <mat-icon>local_shipping</mat-icon>
         <div class="status-info">
@@ -90,11 +71,8 @@
           <span class="status-count">{{ statusCounts['Delivered'] || 0 }}</span>
         </div>
       </button>
-      
-      <button 
-        mat-stroked-button 
-        class="status-card"
-        [class.active]="selectedStatus === 'Not Repairable'"
+
+      <button mat-stroked-button class="status-card" [class.active]="selectedStatus === 'Not Repairable'"
         (click)="filterByStatus('Not Repairable')">
         <mat-icon>block</mat-icon>
         <div class="status-info">
@@ -107,30 +85,12 @@
     <!-- Filter Section -->
     <div class="filter-section">
       <div class="date-filter-container">
-        <mat-form-field
-          class="date-filter-field"
-          appearance="outline"
-          (click)="picker.open()"
-        >
+        <mat-form-field class="date-filter-field" appearance="outline" (click)="picker.open()">
           <mat-label>Date Range</mat-label>
-          <mat-date-range-input
-            [formGroup]="dataFormDateRange"
-            [rangePicker]="picker"
-            [max]="today"
-          >
-            <input
-              matStartDate
-              formControlName="start"
-              placeholder="Start date"
-              readonly
-            />
-            <input
-              matEndDate
-              formControlName="end"
-              placeholder="End date"
-              readonly
-              (dateChange)="endChangeRegDateRange($event)"
-            />
+          <mat-date-range-input [formGroup]="dataFormDateRange" [rangePicker]="picker" [max]="today">
+            <input matStartDate formControlName="start" placeholder="Start date" readonly />
+            <input matEndDate formControlName="end" placeholder="End date" readonly
+              (dateChange)="endChangeRegDateRange($event)" />
           </mat-date-range-input>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-date-range-picker #picker></mat-date-range-picker>
@@ -144,10 +104,10 @@
       </button>
       <mat-menu #menuMonth="matMenu">
         @for (data of months; track $index) {
-          <button mat-menu-item (click)="filterData(data.value, $index, 'month')"
-                  [class.dropdown-active]="activeFilterMonth === $index">
-            {{ data?.viewValue }}
-          </button>
+        <button mat-menu-item (click)="filterData(data.value, $index, 'month')"
+          [class.dropdown-active]="activeFilterMonth === $index">
+          {{ data?.viewValue }}
+        </button>
         }
       </mat-menu>
 
@@ -161,42 +121,61 @@
           <mat-icon>clear_all</mat-icon>
           <span>All Status</span>
         </button>
-        <button mat-menu-item (click)="filterByStatus('Pending')" [class.dropdown-active]="selectedStatus === 'Pending'">
+        <button mat-menu-item (click)="filterByStatus('Pending')"
+          [class.dropdown-active]="selectedStatus === 'Pending'">
           <mat-icon>schedule</mat-icon>
           <span>Pending</span>
         </button>
-        <button mat-menu-item (click)="filterByStatus('In Progress')" [class.dropdown-active]="selectedStatus === 'In Progress'">
+        <button mat-menu-item (click)="filterByStatus('In Progress')"
+          [class.dropdown-active]="selectedStatus === 'In Progress'">
           <mat-icon>build</mat-icon>
           <span>In Progress</span>
         </button>
-        <button mat-menu-item (click)="filterByStatus('Completed')" [class.dropdown-active]="selectedStatus === 'Completed'">
+        <button mat-menu-item (click)="filterByStatus('Completed')"
+          [class.dropdown-active]="selectedStatus === 'Completed'">
           <mat-icon>check_circle</mat-icon>
           <span>Completed</span>
         </button>
-        <button mat-menu-item (click)="filterByStatus('Delivered')" [class.dropdown-active]="selectedStatus === 'Delivered'">
+        <button mat-menu-item (click)="filterByStatus('Delivered')"
+          [class.dropdown-active]="selectedStatus === 'Delivered'">
           <mat-icon>local_shipping</mat-icon>
           <span>Delivered</span>
         </button>
-        <button mat-menu-item (click)="filterByStatus('Not Repairable')" [class.dropdown-active]="selectedStatus === 'Not Repairable'">
+        <button mat-menu-item (click)="filterByStatus('Not Repairable')"
+          [class.dropdown-active]="selectedStatus === 'Not Repairable'">
           <mat-icon>block</mat-icon>
           <span>Not Repairable</span>
         </button>
       </mat-menu>
 
-      <app-export-toolbar
-        [data]="getAllRepairData()"
-        [filename]="'repair-list'"
-        [title]="'Repair List'"
-        [headers]="getExportHeaders()"
-        [columns]="exportColumns"
+      <button mat-raised-button [matMenuTriggerFor]="menuTechnician" class="filter-btn">
+        <mat-icon>person</mat-icon>
+        {{technicians[activeFilterTechnician]?.name || 'Technician'}}
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      <mat-menu #menuTechnician="matMenu">
+        <button mat-menu-item (click)="filterData(null, null, 'technician')"
+          [class.dropdown-active]="activeFilterTechnician === null">
+          All Technicians
+        </button>
+        @for (data of technicians; track $index) {
+        <button mat-menu-item (click)="filterData(data._id, $index, 'technician')"
+          [class.dropdown-active]="activeFilterTechnician === $index">
+          {{ data?.name }}
+        </button>
+        }
+      </mat-menu>
+
+      <app-export-toolbar [data]="getAllRepairData()" [filename]="'repair-list'" [title]="'Repair List'"
+        [headers]="getExportHeaders()" [columns]="exportColumns"
         (columnVisibilityChange)="onColumnVisibilityChange($event)">
       </app-export-toolbar>
 
       @if (!isDefaultFilter && (filter || activeSort || selectedStatus)) {
-        <button mat-stroked-button (click)="onRemoveAllQuery()" class="clear-filter-btn">
-          <mat-icon>filter_alt_off</mat-icon>
-          Clear Filter
-        </button>
+      <button mat-stroked-button (click)="onRemoveAllQuery()" class="clear-filter-btn">
+        <mat-icon>filter_alt_off</mat-icon>
+        Clear Filter
+      </button>
       }
     </div>
 
@@ -219,185 +198,194 @@
 
     <!-- Action Buttons -->
     @if (selectedIds.length) {
-      <div class="action-bar">
-        <div class="action-info">
-          <mat-icon>check_circle</mat-icon>
-          <span>{{ selectedIds.length }} item{{ selectedIds.length > 1 ? 's' : '' }} selected</span>
-        </div>
-        <div class="action-buttons">
-          <button *ngIf="checkDeletePermission" mat-stroked-button color="warn"
-                  (click)="openConfirmDialog('delete')" class="action-btn">
-            <mat-icon>delete</mat-icon>
-            Delete
-          </button>
-          <button mat-raised-button color="primary" [matMenuTriggerFor]="menuChangeStatus" class="action-btn">
-            <mat-icon>swap_horiz</mat-icon>
-            Change Status
-            <mat-icon>keyboard_arrow_down</mat-icon>
-          </button>
-          <mat-menu #menuChangeStatus="matMenu">
-            <button mat-menu-item (click)="openConfirmDialog('edit', {status: 'Pending'})">
-              <mat-icon>schedule</mat-icon>
-              <span>Pending</span>
-            </button>
-            <button mat-menu-item (click)="openConfirmDialog('edit', {status: 'In Progress'})">
-              <mat-icon>build</mat-icon>
-              <span>In Progress</span>
-            </button>
-            <button mat-menu-item (click)="openConfirmDialog('edit', {status: 'Completed'})">
-              <mat-icon>check_circle</mat-icon>
-              <span>Completed</span>
-            </button>
-            <button mat-menu-item (click)="openConfirmDialog('edit', {status: 'Delivered'})">
-              <mat-icon>local_shipping</mat-icon>
-              <span>Delivered</span>
-            </button>
-            <button mat-menu-item (click)="openConfirmDialog('edit', {status: 'Not Repairable'})">
-              <mat-icon>block</mat-icon>
-              <span>Not Repairable</span>
-            </button>
-          </mat-menu>
-        </div>
+    <div class="action-bar">
+      <div class="action-info">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ selectedIds.length }} item{{ selectedIds.length > 1 ? 's' : '' }} selected</span>
       </div>
+      <div class="action-buttons">
+        <button *ngIf="checkDeletePermission" mat-stroked-button color="warn" (click)="openConfirmDialog('delete')"
+          class="action-btn">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+        <button mat-raised-button color="primary" [matMenuTriggerFor]="menuChangeStatus" class="action-btn">
+          <mat-icon>swap_horiz</mat-icon>
+          Change Status
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+        <mat-menu #menuChangeStatus="matMenu">
+          <button mat-menu-item (click)="openConfirmDialog('edit', {status: 'Pending'})">
+            <mat-icon>schedule</mat-icon>
+            <span>Pending</span>
+          </button>
+          <button mat-menu-item (click)="openConfirmDialog('edit', {status: 'In Progress'})">
+            <mat-icon>build</mat-icon>
+            <span>In Progress</span>
+          </button>
+          <button mat-menu-item (click)="openConfirmDialog('edit', {status: 'Completed'})">
+            <mat-icon>check_circle</mat-icon>
+            <span>Completed</span>
+          </button>
+          <button mat-menu-item (click)="openConfirmDialog('edit', {status: 'Delivered'})">
+            <mat-icon>local_shipping</mat-icon>
+            <span>Delivered</span>
+          </button>
+          <button mat-menu-item (click)="openConfirmDialog('edit', {status: 'Not Repairable'})">
+            <mat-icon>block</mat-icon>
+            <span>Not Repairable</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
     }
 
     <!-- No Content -->
     @if (!isLoading && !repairs.length) {
-      <app-no-content [matIcon]="'info'" title="No data Found!"></app-no-content>
+    <app-no-content [matIcon]="'info'" title="No data Found!"></app-no-content>
     }
 
     <!-- Repair Groups -->
     @for (data of repairs; track data._id; let groupIndex = $index) {
-      <div class="repair-group">
-        <div class="group-header">
-          <div class="group-header-left">
-            <mat-icon class="date-icon">calendar_today</mat-icon>
-            <h2>{{ data?._id | date }}</h2>
-          </div>
-          <div class="group-header-right">
-            <span class="item-count">{{ data.data?.length || 0 }} repair{{ (data.data?.length || 0) > 1 ? 's' : '' }}</span>
-          </div>
+    <div class="repair-group">
+      <div class="group-header">
+        <div class="group-header-left">
+          <mat-icon class="date-icon">calendar_today</mat-icon>
+          <h2>{{ data?._id | date }}</h2>
         </div>
-        
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr class="td-border first-heading-row">
-                <th class="t-checkbox">
-                  <mat-checkbox 
-                    (change)="onAllSelectChange($event, data.data, groupIndex)">
-                  </mat-checkbox>
-                </th>
-                <th>Brand</th>
-                <th>Model Number</th>
-                <th>Customer Phone</th>
-                <th>Parts Amount</th>
-                <th>Repair Amount</th>
-                <th>Total Amount</th>
-                <th>Repair Date</th>
-                <th>Delivery Date</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="td-gap"></tr>
-              @for (item of data.data; track item._id; let itemIndex = $index) {
-                <tr class="td-border table-row" [class.row-selected]="item.select">
-                  <td class="t-checkbox">
-                    <mat-checkbox class="t-mat-checkbox"
-                                  [(ngModel)]="item.select"
-                                  (ngModelChange)="onCheckChange($event, groupIndex, itemIndex, item._id)">
-                    </mat-checkbox>
-                  </td>
-                  <td>
-                    <span class="cell-content">{{ item?.brand?.name ?? '-' }}</span>
-                  </td>
-                  <td>
-                    <span class="cell-content">{{ item?.modelNo?.name ?? '-' }}</span>
-                  </td>
-                  <td>
-                    <span class="cell-content phone-number">{{ item?.phoneNo ?? '-' }}</span>
-                  </td>
-                  <td>
-                    <span class="cell-content amount parts-amount">
-                      <strong>{{ shopInformation?.currency | currencyIcon }} {{ getPartsAmount(item) | number : '': 'bn'}}</strong>
-                    </span>
-                  </td>
-                  <td>
-                    <span class="cell-content amount repair-amount">
-                      <strong>{{ shopInformation?.currency | currencyIcon }} {{ getRepairAmount(item) | number : '': 'bn'}}</strong>
-                    </span>
-                  </td>
-                  <td>
-                    <span class="cell-content amount total-amount">
-                      <strong>{{ shopInformation?.currency | currencyIcon }} {{ getRepairTotalAmount(item) | number : '': 'bn'}}</strong>
-                    </span>
-                  </td>
-                  <td>
-                    <div class="date-time-cell">
-                      <span class="date">{{ item?.dateString | date }}</span>
-                      <span class="time">{{ item?.updateTime }}</span>
-                    </div>
-                  </td>
-                  <td>
-                    @if (item?.deliveredDate) {
-                      <div class="date-time-cell">
-                        <span class="date">{{ item?.deliveredDate | date }}</span>
-                        <span class="time">{{ item?.deliveredTime }}</span>
-                      </div>
-                    } @else {
-                      <span class="cell-content">-</span>
-                    }
-                  </td>
-                  <td>
-                    <span class="status-badge" [ngClass]="'status-' + (item?.status?.toLowerCase()?.replace(' ', '-') || 'default')">
-                      {{ item?.status ?? '-' }}
-                    </span>
-                  </td>
-                  <td class="action-drop-button">
-                    <button mat-icon-button [matMenuTriggerFor]="tableMenu" class="action-menu-btn">
-                      <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #tableMenu="matMenu">
-                      <button (click)="printRepairInvoice(item)" mat-menu-item>
-                        <mat-icon>print</mat-icon>
-                        <span>Print Invoice</span>
-                      </button>
-                      <button [routerLink]="['/repair/edit-repair/', item._id]" mat-menu-item>
-                        <mat-icon>edit</mat-icon>
-                        <span>Edit</span>
-                      </button>
-                    </mat-menu>
-                  </td>
-                </tr>
-                <tr class="td-gap"></tr>
-              }
-              <tr class="td-border total-row">
-                <td></td>
-                <td colspan="3" class="total-label">
-                  <strong>Total ({{shopInformation?.currency | currencyIcon}})</strong>
-                </td>
-                <td class="total-amount">
-                  <strong>{{ shopInformation?.currency | currencyIcon }} {{ getGroupPartsTotal(data.data) | number : "" : "bn" }}</strong>
-                </td>
-                <td class="total-amount">
-                  <strong>{{ shopInformation?.currency | currencyIcon }} {{ getGroupRepairTotal(data.data) | number : "" : "bn" }}</strong>
-                </td>
-                <td class="total-amount">
-                  <strong>{{ shopInformation?.currency | currencyIcon }} {{ getGroupPartsTotal(data.data) + getGroupRepairTotal(data.data) | number : "" : "bn" }}</strong>
-                </td>
-                <td colspan="3"></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="group-header-right">
+          <span class="item-count">{{ data.data?.length || 0 }} repair{{ (data.data?.length || 0) > 1 ? 's' : ''
+            }}</span>
         </div>
       </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr class="td-border first-heading-row">
+              <th class="t-checkbox">
+                <mat-checkbox (change)="onAllSelectChange($event, data.data, groupIndex)">
+                </mat-checkbox>
+              </th>
+              <th>Brand</th>
+              <th>Model Number</th>
+              <th>Customer Phone</th>
+              <th>Technician</th>
+              <th>Parts Amount</th>
+              <th>Repair Amount</th>
+              <th>Total Amount</th>
+              <th>Repair Date</th>
+              <th>Delivery Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="td-gap"></tr>
+            @for (item of data.data; track item._id; let itemIndex = $index) {
+            <tr class="td-border table-row" [class.row-selected]="item.select">
+              <td class="t-checkbox">
+                <mat-checkbox class="t-mat-checkbox" [(ngModel)]="item.select"
+                  (ngModelChange)="onCheckChange($event, groupIndex, itemIndex, item._id)">
+                </mat-checkbox>
+              </td>
+              <td>
+                <span class="cell-content">{{ item?.brand?.name ?? '-' }}</span>
+              </td>
+              <td>
+                <span class="cell-content">{{ item?.modelNo?.name ?? '-' }}</span>
+              </td>
+              <td>
+                <span class="cell-content phone-number">{{ item?.phoneNo ?? '-' }}</span>
+              </td>
+              <td>
+                <span class="cell-content">{{ item?.technician?.name ?? '-' }}</span>
+              </td>
+              <td>
+                <span class="cell-content amount parts-amount">
+                  <strong>{{ shopInformation?.currency | currencyIcon }} {{ getPartsAmount(item) | number : '':
+                    'bn'}}</strong>
+                </span>
+              </td>
+              <td>
+                <span class="cell-content amount repair-amount">
+                  <strong>{{ shopInformation?.currency | currencyIcon }} {{ getRepairAmount(item) | number : '':
+                    'bn'}}</strong>
+                </span>
+              </td>
+              <td>
+                <span class="cell-content amount total-amount">
+                  <strong>{{ shopInformation?.currency | currencyIcon }} {{ getRepairTotalAmount(item) | number : '':
+                    'bn'}}</strong>
+                </span>
+              </td>
+              <td>
+                <div class="date-time-cell">
+                  <span class="date">{{ item?.dateString | date }}</span>
+                  <span class="time">{{ item?.updateTime }}</span>
+                </div>
+              </td>
+              <td>
+                @if (item?.deliveredDate) {
+                <div class="date-time-cell">
+                  <span class="date">{{ item?.deliveredDate | date }}</span>
+                  <span class="time">{{ item?.deliveredTime }}</span>
+                </div>
+                } @else {
+                <span class="cell-content">-</span>
+                }
+              </td>
+              <td>
+                <span class="status-badge"
+                  [ngClass]="'status-' + (item?.status?.toLowerCase()?.replace(' ', '-') || 'default')">
+                  {{ item?.status ?? '-' }}
+                </span>
+              </td>
+              <td class="action-drop-button">
+                <button mat-icon-button [matMenuTriggerFor]="tableMenu" class="action-menu-btn">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #tableMenu="matMenu">
+                  <button (click)="printRepairInvoice(item)" mat-menu-item>
+                    <mat-icon>print</mat-icon>
+                    <span>Print Invoice</span>
+                  </button>
+                  <button [routerLink]="['/repair/edit-repair/', item._id]" mat-menu-item>
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </tr>
+            <tr class="td-gap"></tr>
+            }
+            <tr class="td-border total-row">
+              <td></td>
+              <td colspan="4" class="total-label">
+                <strong>Total ({{shopInformation?.currency | currencyIcon}})</strong>
+              </td>
+              <td class="total-amount">
+                <strong>{{ shopInformation?.currency | currencyIcon }} {{ getGroupPartsTotal(data.data) | number :
+                  "1.2-2" }}</strong>
+              </td>
+              <td class="total-amount">
+                <strong>{{ shopInformation?.currency | currencyIcon }} {{ getGroupRepairTotal(data.data) | number :
+                  "1.2-2" }}</strong>
+              </td>
+              <td class="total-amount">
+                <strong>{{ shopInformation?.currency | currencyIcon }} {{ getGroupPartsTotal(data.data) +
+                  getGroupRepairTotal(data.data) | number : "" : "bn" }}</strong>
+              </td>
+              <td colspan="3"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
     }
   </div>
 </div>
 
 @if (isLoading) {
-  <app-page-loader></app-page-loader>
+<app-page-loader></app-page-loader>
 }
-

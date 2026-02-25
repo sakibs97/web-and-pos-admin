@@ -1,18 +1,18 @@
 import { FileTypes } from '../../enum/file-types.enum';
-import {Select} from '../../interfaces/core/select';
+import { Select } from '../../interfaces/core/select';
 
 
 export const defaultUploadImage = '/assets/images/avatar/image-upload.jpg';
 
 export const DATA_BOOLEAN: Select[] = [
-  {value: true, viewValue: 'Yes'},
-  {value: false, viewValue: 'No'},
+  { value: true, viewValue: 'Yes' },
+  { value: false, viewValue: 'No' },
 ];
 
 export const VENDOR_ROLES: Select[] = [
-  {value: 'admin', viewValue: 'Admin'},
-  {value: 'manager', viewValue: 'Manager'},
-  {value: 'editor', viewValue: 'Editor'},
+  { value: 'admin', viewValue: 'Admin' },
+  { value: 'manager', viewValue: 'Manager' },
+  { value: 'editor', viewValue: 'Editor' },
 ];
 
 export const PAGES: Select[] = [
@@ -51,70 +51,70 @@ export const PAGES: Select[] = [
 
 
 export const PERMISSIONS: Select[] = [
-  {value: 'add', viewValue: 'Add'},
-  {value: 'edit', viewValue: 'Edit'},
-  {value: 'delete', viewValue: 'Delete'}
+  { value: 'add', viewValue: 'Add' },
+  { value: 'edit', viewValue: 'Edit' },
+  { value: 'delete', viewValue: 'Delete' }
 ];
 
 export const ADMIN_ROLES: Select[] = [
-  {value: 'super_admin', viewValue: 'Admin'},
-  {value: 'admin', viewValue: 'Manager'},
-  {value: 'editor', viewValue: 'User'},
+  { value: 'super_admin', viewValue: 'Admin' },
+  { value: 'admin', viewValue: 'Manager' },
+  { value: 'editor', viewValue: 'User' },
 ];
 
 export const SMS_PROVIDERS: Select[] = [
-  {value: 'Bulk SMS BD', viewValue: 'Bulk SMS BD', country:'Bangladesh'},
-  {value: 'iSMS Plus SSL Wireless', viewValue: 'iSMS Plus SSL Wireless', country:'Bangladesh'},
-  {value: 'Smsq BD', viewValue: 'Smsq BD', country:'Bangladesh'},
-  {value: 'Revesms', viewValue: 'Revesms', country:'Bangladesh'},
-  {value: 'Elitbuzz', viewValue: 'Elitbuzz', country:'Bangladesh'},
-  {value: 'Twilio', viewValue: 'Twilio', country:'international'},
-  {value: 'SMS.TO', viewValue: 'SMS.TO', country:'international'},
+  { value: 'Bulk SMS BD', viewValue: 'Bulk SMS BD', country: 'Bangladesh' },
+  { value: 'iSMS Plus SSL Wireless', viewValue: 'iSMS Plus SSL Wireless', country: 'Bangladesh' },
+  { value: 'Smsq BD', viewValue: 'Smsq BD', country: 'Bangladesh' },
+  { value: 'Revesms', viewValue: 'Revesms', country: 'Bangladesh' },
+  { value: 'Elitbuzz', viewValue: 'Elitbuzz', country: 'Bangladesh' },
+  { value: 'Twilio', viewValue: 'Twilio', country: 'international' },
+  { value: 'SMS.TO', viewValue: 'SMS.TO', country: 'international' },
 ];
 
 
 export const COURIER_PROVIDERS: Select[] = [
-  {value: 'Steadfast Courier', viewValue: 'Steadfast Courier'},
-  {value: 'Pathao Courier', viewValue: 'Pathao Courier'},
+  { value: 'Steadfast Courier', viewValue: 'Steadfast Courier' },
+  { value: 'Pathao Courier', viewValue: 'Pathao Courier' },
   // {value: 'REDX', viewValue: 'REDX'},
 
 ];
 
 export const CURRENCIES: Select[] = [
-  { value: '৳',   viewValue: 'Bangladesh', code: 'BDT', countryCode: '880' },
-  { value: '$',   viewValue: 'USA',        code: 'USD', countryCode: '1' },
-  { value: '€',   viewValue: 'Europe',     code: 'EUR', countryCode: '' }, // No single country code
-  { value: '$',   viewValue: 'Singapore',  code: 'SGD', countryCode: '65' },
-  { value: 'AED', viewValue: 'Dubai',      code: 'AED', countryCode: '971' },
-  { value: '£',   viewValue: 'UK',         code: 'GBP', countryCode: '44' }
+  { value: '৳', viewValue: 'Bangladesh', code: 'BDT', countryCode: '880' },
+  { value: '$', viewValue: 'USA', code: 'USD', countryCode: '1' },
+  { value: '€', viewValue: 'Europe', code: 'EUR', countryCode: '' }, // No single country code
+  { value: '$', viewValue: 'Singapore', code: 'SGD', countryCode: '65' },
+  { value: 'AED', viewValue: 'Dubai', code: 'AED', countryCode: '971' },
+  { value: '£', viewValue: 'UK', code: 'GBP', countryCode: '44' }
 ];
 
 
 export const COUNTRIES: Select[] = [
   { value: 'BD', viewValue: 'Bangladesh', code: 'BD', countryCode: '880' },
-  { value: 'US', viewValue: 'USA',        code: 'US', countryCode: '1' },
-  { value: 'CA', viewValue: 'Canada',     code: 'CA', countryCode: '1' },
-  { value: 'SG', viewValue: 'Singapore',  code: 'SG', countryCode: '65' },
-  { value: 'AE', viewValue: 'Dubai',      code: 'AE', countryCode: '971' },
-  { value: 'UK', viewValue: 'England',    code: 'UK', countryCode: '44' }
+  { value: 'US', viewValue: 'USA', code: 'US', countryCode: '1' },
+  { value: 'CA', viewValue: 'Canada', code: 'CA', countryCode: '1' },
+  { value: 'SG', viewValue: 'Singapore', code: 'SG', countryCode: '65' },
+  { value: 'AE', viewValue: 'Dubai', code: 'AE', countryCode: '971' },
+  { value: 'UK', viewValue: 'England', code: 'UK', countryCode: '44' }
 ];
 
 export const PAYMENT_PROVIDERS: Select[] = [
-  {value: 'Bkash', viewValue: 'Bkash',country:'Bangladesh'},
-  {value: 'Nagad', viewValue: 'Nagad',country:'Bangladesh'},
-  {value: 'Rocket', viewValue: 'Rocket',country:'Bangladesh'},
-  {value: 'SSl Commerz', viewValue: 'SSl Commerz',country:'Bangladesh'},
-  {value: 'Binance', viewValue: 'Binance',country:'Bangladesh'},
-  {value: 'Stripe', viewValue: 'Stripe',country:'International'},
+  { value: 'Bkash', viewValue: 'Bkash', country: 'Bangladesh' },
+  { value: 'Nagad', viewValue: 'Nagad', country: 'Bangladesh' },
+  { value: 'Rocket', viewValue: 'Rocket', country: 'Bangladesh' },
+  { value: 'SSl Commerz', viewValue: 'SSl Commerz', country: 'Bangladesh' },
+  { value: 'Binance', viewValue: 'Binance', country: 'Bangladesh' },
+  { value: 'Stripe', viewValue: 'Stripe', country: 'International' },
 ];
 
 export const PAYMENT_METHODS: Select[] = [
-  {value: 'Bkash', viewValue: 'Bkash'},
-  {value: 'Nagad', viewValue: 'Nagad'},
-  {value: 'Rocket', viewValue: 'Rocket'},
-  {value: 'SSL', viewValue: 'SSL'},
-  {value: 'Card', viewValue: 'Card'},
-  {value: 'Binance', viewValue: 'Binance'},
+  { value: 'Bkash', viewValue: 'Bkash' },
+  { value: 'Nagad', viewValue: 'Nagad' },
+  { value: 'Rocket', viewValue: 'Rocket' },
+  { value: 'SSL', viewValue: 'SSL' },
+  { value: 'Card', viewValue: 'Card' },
+  { value: 'Binance', viewValue: 'Binance' },
 ];
 
 export const PAYMENT_PROVIDERS_TYPES: any[] = [
@@ -241,127 +241,127 @@ export const PACKAGE_TYPES: Select[] = [
 ];
 
 export const DATA_STATUS: Select[] = [
-  {value: 'publish', viewValue: 'Publish'},
-  {value: 'draft', viewValue: 'Draft'},
+  { value: 'publish', viewValue: 'Publish' },
+  { value: 'draft', viewValue: 'Draft' },
 ];
 
 export const DATA_STATUS1: Select[] = [
-  {value: 'approve', viewValue: 'Approve'},
-  {value: 'pending', viewValue: 'Pending'},
+  { value: 'approve', viewValue: 'Approve' },
+  { value: 'pending', viewValue: 'Pending' },
 ];
 
 
-export const  PAYMENT_STATUS: Select[] = [
-  { value: 'unpaid', viewValue: 'Unpaid'},
-  { value: 'paid', viewValue: 'Paid'},
+export const PAYMENT_STATUS: Select[] = [
+  { value: 'unpaid', viewValue: 'Unpaid' },
+  { value: 'paid', viewValue: 'Paid' },
 ];
 
 export const PAYMENT_TYPES: Select[] = [
-  { value: 'cash', viewValue: 'Cash'},
-  { value: 'card', viewValue: 'Card'},
-  { value: 'bkash', viewValue: 'Bkash'},
-  { value: 'nagad', viewValue: 'Nagad'},
-  { value: 'rocket', viewValue: 'Rocket'},
-  { value: 'due', viewValue: 'Due'},
-  { value: 'mixed', viewValue: 'Mixed Payment'},
+  { value: 'cash', viewValue: 'Cash' },
+  { value: 'card', viewValue: 'Card' },
+  { value: 'bkash', viewValue: 'Bkash' },
+  { value: 'nagad', viewValue: 'Nagad' },
+  { value: 'rocket', viewValue: 'Rocket' },
+  { value: 'due', viewValue: 'Due' },
+  { value: 'mixed', viewValue: 'Mixed Payment' },
 ];
 
 export const ORDER_STATUS: Select[] = [
-  { value: 'pending', viewValue: 'Pending'},
-  { value: 'confirmed', viewValue: 'Confirm'},
-  { value: 'on_hold', viewValue: 'On Hold'},
-  { value: 'processing', viewValue: 'Processing'},
-  { value: 'shipped', viewValue: 'Shipping'},
+  { value: 'pending', viewValue: 'Pending' },
+  { value: 'confirmed', viewValue: 'Confirm' },
+  { value: 'on_hold', viewValue: 'On Hold' },
+  { value: 'processing', viewValue: 'Processing' },
+  { value: 'shipped', viewValue: 'Shipping' },
   { value: 'sent to courier', viewValue: 'Sent to Courier' },
   { value: 'print', viewValue: 'Print' },
-  { value: 'delivered', viewValue: 'Delivered'},
-  { value: 'cancelled', viewValue: 'Cancel'},
-  { value: 'returned', viewValue: 'Return'},
-  { value: 'refunded', viewValue: 'Refund'},
-  { value: 'returned receive', viewValue: 'Returned Receive'},
+  { value: 'delivered', viewValue: 'Delivered' },
+  { value: 'cancelled', viewValue: 'Cancel' },
+  { value: 'returned', viewValue: 'Return' },
+  { value: 'refunded', viewValue: 'Refund' },
+  { value: 'returned receive', viewValue: 'Returned Receive' },
 ];
 
 
 export const URL_TYPES: Select[] = [
-  {value: 'internal', viewValue: 'Internal'},
-  {value: 'external', viewValue: 'External'},
+  { value: 'internal', viewValue: 'Internal' },
+  { value: 'external', viewValue: 'External' },
 ];
 
 export const MAX_UPLOAD: number = 3;
 export const MAX_POPUP_UPLOAD: number = 1;
 
 export const BANNER_TYPE: Select[] = [
-  {value: 'home-page-top-banner', viewValue: 'Home Page Top Banner'},
-  {value: 'home-page-top-banner-one-beside-carousel', viewValue: 'Home Page Top Banner One Beside Carousel (Desktop (244px * 170px)'},
-  {value: 'home-page-top-banner-two-beside-carousel', viewValue: 'Home Page Top Banner Two Beside Carousel (Desktop (244px * 170px)'},
-  {value: 'banner-one', viewValue: 'Banner One'},
-  {value: 'banner-two', viewValue: 'Banner Two'},
-  {value: 'banner-three', viewValue: 'Banner Three'},
+  { value: 'home-page-top-banner', viewValue: 'Home Page Top Banner' },
+  { value: 'home-page-top-banner-one-beside-carousel', viewValue: 'Home Page Top Banner One Beside Carousel (Desktop (244px * 170px)' },
+  { value: 'home-page-top-banner-two-beside-carousel', viewValue: 'Home Page Top Banner Two Beside Carousel (Desktop (244px * 170px)' },
+  { value: 'banner-one', viewValue: 'Banner One' },
+  { value: 'banner-two', viewValue: 'Banner Two' },
+  { value: 'banner-three', viewValue: 'Banner Three' },
 ];
 
 export const TagBannerType: Select[] = [
-  {value: 'horizontal', viewValue: 'Horizontal'},
-  {value: 'vertical', viewValue: 'Vertical'},
+  { value: 'horizontal', viewValue: 'Horizontal' },
+  { value: 'vertical', viewValue: 'Vertical' },
 ];
 
 export const SEO_PAGE_TYPE: Select[] = [
-  {value: 'home-page', viewValue: 'Home Page'},
-  {value: 'product-list-page', viewValue: 'Product List Page'},
-  {value: 'category-page', viewValue: 'Category Page'},
-  {value: 'login-page', viewValue: 'Login Page'},
-  {value: 'registration-page', viewValue: 'Registration Page'},
-  {value: 'landing-page', viewValue: 'Landing Page'},
+  { value: 'home-page', viewValue: 'Home Page' },
+  { value: 'product-list-page', viewValue: 'Product List Page' },
+  { value: 'category-page', viewValue: 'Category Page' },
+  { value: 'login-page', viewValue: 'Login Page' },
+  { value: 'registration-page', viewValue: 'Registration Page' },
+  { value: 'landing-page', viewValue: 'Landing Page' },
 ];
 
 export const ShowType: Select[] = [
-  {value: 'image', viewValue: 'Image'},
-  {value: 'video', viewValue: 'Video'},
+  { value: 'image', viewValue: 'Image' },
+  { value: 'video', viewValue: 'Video' },
 ];
 
 export const DATA_STATUS_2: Select[] = [
-  {value: 'publish', viewValue: 'Active'},
-  {value: 'draft', viewValue: 'Inactive'},
-  {value: 'running', viewValue: 'Running'},
+  { value: 'publish', viewValue: 'Active' },
+  { value: 'draft', viewValue: 'Inactive' },
+  { value: 'running', viewValue: 'Running' },
 ];
 
 export const REPLY_STATUS: Select[] = [
-  {value: 'Mail Sent', viewValue: 'Mail Sent'},
-  {value: 'Negotiation', viewValue: 'Negotiation'},
-  {value: 'Positive', viewValue: 'Positive'},
-  {value: 'Negative', viewValue: 'Negative'},
-  {value: 'Others', viewValue: 'Others'},
-  {value: 'Wrong Email', viewValue: 'Wrong Email'},
-  {value: 'Late Respond', viewValue: 'Late Respond'},
+  { value: 'Mail Sent', viewValue: 'Mail Sent' },
+  { value: 'Negotiation', viewValue: 'Negotiation' },
+  { value: 'Positive', viewValue: 'Positive' },
+  { value: 'Negative', viewValue: 'Negative' },
+  { value: 'Others', viewValue: 'Others' },
+  { value: 'Wrong Email', viewValue: 'Wrong Email' },
+  { value: 'Late Respond', viewValue: 'Late Respond' },
 ];
 
 
 export const MONTHS: Select[] = [
-  {value: 1, viewValue: 'January'},
-  {value: 2, viewValue: 'February'},
-  {value: 3, viewValue: 'March'},
-  {value: 4, viewValue: 'April'},
-  {value: 5, viewValue: 'May'},
-  {value: 6, viewValue: 'June'},
-  {value: 7, viewValue: 'July'},
-  {value: 8, viewValue: 'August'},
-  {value: 9, viewValue: 'September'},
-  {value: 10, viewValue: 'October'},
-  {value: 11, viewValue: 'November'},
-  {value: 12, viewValue: 'December'},
+  { value: 1, viewValue: 'January' },
+  { value: 2, viewValue: 'February' },
+  { value: 3, viewValue: 'March' },
+  { value: 4, viewValue: 'April' },
+  { value: 5, viewValue: 'May' },
+  { value: 6, viewValue: 'June' },
+  { value: 7, viewValue: 'July' },
+  { value: 8, viewValue: 'August' },
+  { value: 9, viewValue: 'September' },
+  { value: 10, viewValue: 'October' },
+  { value: 11, viewValue: 'November' },
+  { value: 12, viewValue: 'December' },
 ];
 
 
 
 export const YEARS: Select[] = [
-  {value: 2024, viewValue: '2024'},
-  {value: 2023, viewValue: '2023'},
-  {value: 2022, viewValue: '2022'},
+  { value: 2024, viewValue: '2024' },
+  { value: 2023, viewValue: '2023' },
+  { value: 2022, viewValue: '2022' },
 ];
 
 export const GENDERS: Select[] = [
-  {value: 'male', viewValue: 'Male'},
-  {value: 'female', viewValue: 'Female'},
-  {value: 'others', viewValue: 'Others'},
+  { value: 'male', viewValue: 'Male' },
+  { value: 'female', viewValue: 'Female' },
+  { value: 'others', viewValue: 'Others' },
 ];
 
 export const THEME_CATEGORIES = [
@@ -385,45 +385,45 @@ export const THEME_SUB_CATEGORIES = [
 ]
 
 export const FILE_TYPES: Select[] = [
-  {value: FileTypes.IMAGE, viewValue: 'Image'},
-  {value: FileTypes.VIDEO, viewValue: 'Video'},
-  {value: FileTypes.PDF, viewValue: 'Pdf'}
+  { value: FileTypes.IMAGE, viewValue: 'Image' },
+  { value: FileTypes.VIDEO, viewValue: 'Video' },
+  { value: FileTypes.PDF, viewValue: 'Pdf' }
 ];
 
 
 export const TABLE_TAB_DATA: Select[] = [
-  {viewValue: "All Data", value: 'all'},
-  {viewValue: "Publish", value: 'publish'},
-  {viewValue: "Draft", value: 'draft'},
-  {viewValue: "Trash", value: 'trash'},
+  { viewValue: "All Data", value: 'all' },
+  { viewValue: "Publish", value: 'publish' },
+  { viewValue: "Draft", value: 'draft' },
+  { viewValue: "Trash", value: 'trash' },
 ];
 
 export const TABLE_TAB_DATA1: Select[] = [
-  {viewValue: "All Data", value: 'all'},
-  {value: 'approve', viewValue: 'Approve'},
-  {value: 'pending', viewValue: 'Pending'},
-  {viewValue: "Trash", value: 'trash'},
+  { viewValue: "All Data", value: 'all' },
+  { value: 'approve', viewValue: 'Approve' },
+  { value: 'pending', viewValue: 'Pending' },
+  { viewValue: "Trash", value: 'trash' },
 ];
 
 export const TABLE_TAB_OTHERS: Select[] = [
-  {viewValue: "All Data", value: 'all'},
-  {viewValue: "Trash", value: 'trash'},
+  { viewValue: "All Data", value: 'all' },
+  { viewValue: "Trash", value: 'trash' },
 ];
 
 export const TABLE_TAB_ORDER_DATA: Select[] = [
-  { value: 'all', viewValue: 'All Data'},
-  { value: 'pending', viewValue: 'Pending'},
-  { value: 'confirmed', viewValue: 'Confirm'},
-  { value: 'on_hold', viewValue: 'On Hold'},
-  { value: 'processing', viewValue: 'Processing'},
-  { value: 'shipped', viewValue: 'Shipped'},
-  { value: 'sent to courier', viewValue: 'Sent to Courier'},
-  { value: 'delivered', viewValue: 'Delivered'},
-  { value: 'cancelled', viewValue: 'Cancelled'},
-  { value: 'returned', viewValue: 'Return'},
-  { value: 'refunded', viewValue: 'Refund'},
-  { value: 'returned receive', viewValue: 'Returned Receive'},
-  { value: 'trash', viewValue: 'Trash'},
+  { value: 'all', viewValue: 'All Data' },
+  { value: 'pending', viewValue: 'Pending' },
+  { value: 'confirmed', viewValue: 'Confirm' },
+  { value: 'on_hold', viewValue: 'On Hold' },
+  { value: 'processing', viewValue: 'Processing' },
+  { value: 'shipped', viewValue: 'Shipped' },
+  { value: 'sent to courier', viewValue: 'Sent to Courier' },
+  { value: 'delivered', viewValue: 'Delivered' },
+  { value: 'cancelled', viewValue: 'Cancelled' },
+  { value: 'returned', viewValue: 'Return' },
+  { value: 'refunded', viewValue: 'Refund' },
+  { value: 'returned receive', viewValue: 'Returned Receive' },
+  { value: 'trash', viewValue: 'Trash' },
 ];
 
 
@@ -431,22 +431,22 @@ export const DELIVERY_TYPES: Select[] = [
   {
     value: 'regular',
     viewValue: 'Regular Delivery',
-    country:'Bangladesh'
+    country: 'Bangladesh'
   },
   {
     value: 'express',
     viewValue: 'Express Delivery',
-    country:'Bangladesh'
+    country: 'Bangladesh'
   },
   {
     value: 'regular',
     viewValue: 'Standard Delivery',
-    country:'Singapore'
+    country: 'Singapore'
   },
   {
     value: 'express',
     viewValue: 'Same-day Delivery',
-    country:'Singapore'
+    country: 'Singapore'
   },
   {
     value: 'free',

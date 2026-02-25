@@ -759,9 +759,10 @@ export class SaleListComponent implements OnInit, OnDestroy {
         const qty = p.soldQuantity || 0;
         const price = (p.salePrice || 0).toFixed(2);
         const total = ((p.salePrice || 0) * qty).toFixed(2);
+        const imei = p.imei ? `<div style="font-size: 10px; color: #666; margin-top: 2px;">IMEI/SN: ${p.imei}</div>` : '';
         return `
         <tr>
-          <td>${productName}</td>
+          <td>${productName}${imei}</td>
           <td>${qty}</td>
           <td>${currencySymbol}${price}</td>
           <td>${currencySymbol}${total}</td>
@@ -771,8 +772,9 @@ export class SaleListComponent implements OnInit, OnDestroy {
 
     // Format totals
     const subTotal = (sale?.subTotal || 0);
-    const discountAmount = sale?.discountAmount || sale?.discount || 0;
-    const discount = discountAmount > 0 ? discountAmount : '0';
+    const discountVal = (sale?.discount || 0);
+    const discount = discountVal > 0 ? discountVal.toFixed(2) : '0.00';
+    const discountAmount = discountVal;
     const vatAmount = (sale?.vatAmount || 0);
     const grandTotal = (sale?.total || 0);
     const totalAmount = sale?.total || 0;
@@ -870,7 +872,9 @@ export class SaleListComponent implements OnInit, OnDestroy {
       max-width: 210mm;
       margin: 0 auto;
       background: #fff;
-      color: #333;
+      color: #000 !important; /* Force black text for printing */
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
       line-height: 1.4;
       font-size: 11px;
     }
@@ -879,35 +883,41 @@ export class SaleListComponent implements OnInit, OnDestroy {
       padding: 15px;
     }
     .invoice-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      text-align: center;
       margin-bottom: 12px;
       padding-bottom: 10px;
       border-bottom: 2px solid #4CAF50;
     }
     .shop-info {
-      flex: 1;
+      margin: 0 auto;
+      display: inline-block;
+      text-align: center;
     }
     .shop-logo-container {
-      margin-bottom: 5px;
+      margin: 0 auto 5px auto;
+      display: flex;
+      justify-content: center;
     }
     .shop-logo {
-      max-width: 60px;
+      max-width: 100px;
       max-height: 60px;
-      display: ${settings.showShopLogo && (shopInfo as any)?.logo ? 'block' : 'none'};
+      display: ${settings.showShopLogo && (shopInfo as any)?.logoPrimary ? 'block' : 'none'};
+      margin: 0 auto;
     }
     .shop-name {
       font-size: 18px;
       font-weight: bold;
-      color: #2c3e50;
+      color: #000 !important;
       margin-bottom: 4px;
-      display: ${(settings.showShopLogo && (shopInfo as any)?.logo) ? 'none' : (settings.showShopName !== false ? 'block' : 'none')};
+      display: ${(settings.showShopLogo && (shopInfo as any)?.logoPrimary) ? 'none' : (settings.showShopName !== false ? 'block' : 'none')};
     }
     .shop-details {
-      color: #666;
-      font-size: 10px;
-      line-height: 1.3;
+      color: #000 !important;
+      font-size: 12px;
+      line-height: 1.4;
+      text-align: center;
+      margin-top: 8px;
+      font-weight: 500;
     }
     .shop-address {
       display: ${settings.showShopAddress !== false ? 'block' : 'none'};
@@ -926,44 +936,52 @@ export class SaleListComponent implements OnInit, OnDestroy {
       margin-bottom: 2px;
     }
     .invoice-title {
-      text-align: right;
-      flex: 1;
+      text-align: center;
+      margin-top: 5px;
     }
     .invoice-title h1 {
       font-size: 24px;
-      color: #4CAF50;
+      color: #000 !important;
       margin-bottom: 5px;
-      font-weight: 700;
+      font-weight: 900;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
     .invoice-title .invoice-number {
       font-size: 12px;
-      color: #666;
+      color: #000 !important;
+      font-weight: 500;
       display: ${settings.showInvoiceNumber !== false ? 'block' : 'none'};
     }
     .invoice-meta {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin: 20px 0;
       padding: 10px;
-      background: #f8f9fa;
+      background: #f8f9fa !important;
+      border: 1px solid #ddd !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
       border-radius: 4px;
-      font-size: 10px;
+      font-size: 12px;
     }
     .invoice-meta-section {
       flex: 1;
     }
     .invoice-meta-section h3 {
-      font-size: 11px;
-      color: #4CAF50;
-      margin-bottom: 6px;
+      font-size: 14px;
+      color: #000 !important;
+      margin-bottom: 8px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      font-weight: 600;
+      font-weight: 700;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 4px;
     }
     .invoice-meta-section p {
-      margin: 3px 0;
-      color: #333;
-      font-size: 10px;
+      margin: 4px 0;
     }
     .invoice-meta-section strong {
       color: #2c3e50;
@@ -973,29 +991,39 @@ export class SaleListComponent implements OnInit, OnDestroy {
     .products-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 10px 0;
+      margin: 15px 0;
       background: #fff;
       display: ${settings.showProductTable !== false ? 'table' : 'none'};
-      font-size: 10px;
+      font-size: 12px;
+      border: 1px solid #ddd;
     }
-    .products-table thead {
-      background: #4CAF50;
-      color: #fff;
-    }
-    .products-table th {
-      padding: 6px 8px;
+    .products-table thead th {
+      background: #f5f5f5 !important;
+      color: #000 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      padding: 8px 10px;
       text-align: left;
-      font-weight: 600;
-      font-size: 10px;
-      text-transform: uppercase;
+      font-weight: 700; /* Bolder text */
+      font-size: 13px;  /* Slightly larger */
+      border: 1px solid #ddd;
     }
-    .products-table td {
-      padding: 5px 8px;
-      border-bottom: 1px solid #e0e0e0;
-      font-size: 10px;
+    .products-table tbody td {
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+      font-size: 12px;
+      color: #000 !important; /* Force black text */
+      font-weight: 500; /* Slightly bolder */
     }
-    .products-table tbody tr:last-child td {
-      border-bottom: none;
+    .products-table tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    /* Force all text in table to be black */
+    .products-table * {
+      color: #000 !important;
+    }
+    .products-table tbody tr:hover {
+      background-color: #f1f1f1;
     }
     .text-right {
       text-align: right;
@@ -1004,10 +1032,11 @@ export class SaleListComponent implements OnInit, OnDestroy {
       text-align: center;
     }
     .totals-section {
-      margin-top: 10px;
+      margin-top: 20px;
       display: flex;
       justify-content: flex-end;
       display: ${settings.showTotals !== false ? 'flex' : 'none'};
+      font-size: 13px;
     }
     .totals-box {
       width: 280px;
@@ -1021,7 +1050,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
       justify-content: space-between;
       padding: 4px 0;
       border-bottom: 1px solid #e0e0e0;
-      font-size: 11px;
+      margin: 6px 0;
     }
     .total-row:last-child {
       border-bottom: none;
@@ -1036,11 +1065,11 @@ export class SaleListComponent implements OnInit, OnDestroy {
     }
     .grand-total {
       font-size: 14px;
-      font-weight: 700;
+      font-weight: bold;
       color: #4CAF50;
       padding-top: 6px;
-      margin-top: 4px;
-      border-top: 2px solid #4CAF50;
+      margin-top: 8px;
+      border-top: 1px solid #333;
     }
     .grand-total .total-value {
       color: #4CAF50;
@@ -1049,17 +1078,22 @@ export class SaleListComponent implements OnInit, OnDestroy {
     .payment-section {
       margin-top: 10px;
       padding: 10px;
-      background: #e8f5e9;
+      background: #f0f0f0 !important;
+      border: 1px solid #ddd !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
       border-radius: 4px;
-      border-left: 3px solid #4CAF50;
+      border-left: 3px solid #000 !important;
       display: ${settings.showPaymentInfo !== false ? 'block' : 'none'};
       font-size: 10px;
     }
     .payment-section h3 {
       font-size: 11px;
-      color: #2c3e50;
+      color: #000 !important;
       margin-bottom: 6px;
-      font-weight: 600;
+      font-weight: 700;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
     .payment-info {
       display: flex;
@@ -1085,20 +1119,24 @@ export class SaleListComponent implements OnInit, OnDestroy {
     .footer-section {
       margin-top: 15px;
       padding-top: 10px;
-      border-top: 1px solid #e0e0e0;
+      border-top: 1px solid #000 !important;
       text-align: center;
-      color: #666;
+      color: #000 !important;
       font-size: 9px;
       display: ${settings.footerText ? 'block' : 'none'};
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
     .footer-section p {
       margin: 3px 0;
     }
     .thank-you {
       font-size: 12px;
-      color: #4CAF50;
-      font-weight: 600;
+      color: #000 !important;
+      font-weight: 700;
       margin-bottom: 5px;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
     .signature-section {
       margin-top: 20px;
@@ -1116,7 +1154,7 @@ export class SaleListComponent implements OnInit, OnDestroy {
     }
     .signature-label {
       font-size: 10px;
-      color: #666;
+      color: #000 !important;
       font-weight: 600;
     }
     ${customCss}
@@ -1126,25 +1164,22 @@ export class SaleListComponent implements OnInit, OnDestroy {
   <div class="invoice-container" style="page-break-inside: avoid !important; break-inside: avoid !important;">
     <!-- Header -->
     <div class="invoice-header">
-      <div class="shop-info">
-        ${settings.showShopLogo && (shopInfo as any)?.logo ? `
-        <div class="shop-logo-container">
-          <img src="${(shopInfo as any).logo}" alt="Logo" class="shop-logo">
-        </div>
-        ` : ''}
-        ${(!settings.showShopLogo || !(shopInfo as any)?.logo) && settings.showShopName !== false ? `<div class="shop-name">${shopName}</div>` : ''}
-        <div class="shop-details">
-          ${settings.showShopAddress !== false ? `<div class="shop-address">${shopAddress}</div>` : ''}
-          ${settings.showShopPhone !== false ? `<div class="shop-phone">${shopPhone}</div>` : ''}
-          ${shopEmail ? `<div class="shop-email">${shopEmail}</div>` : ''}
-          ${shopWebsite ? `<div class="shop-website">${shopWebsite}</div>` : ''}
-        </div>
+    <div class="shop-info">
+      ${settings.showShopLogo && (shopInfo as any)?.logoPrimary ? `
+      <div class="shop-logo-container">
+        <img src="${(shopInfo as any).logoPrimary}" alt="Logo" class="shop-logo">
       </div>
-      <div class="invoice-title">
-        <h1>INVOICE</h1>
-        ${settings.showInvoiceNumber !== false ? `<div class="invoice-number">#${invoiceNo}</div>` : ''}
+      ` : ''}
+      ${(!settings.showShopLogo || !(shopInfo as any)?.logoPrimary) && settings.showShopName !== false ? `<div class="shop-name">${shopName}</div>` : ''}
+      <div class="shop-details">
+        ${settings.showShopAddress !== false ? `<div class="shop-address">${shopAddress}</div>` : ''}
+        ${settings.showShopPhone !== false ? `<div class="shop-phone">${shopPhone}</div>` : ''}
+        ${shopEmail ? `<div class="shop-email">${shopEmail}</div>` : ''}
+        ${shopWebsite ? `<div class="shop-website">${shopWebsite}</div>` : ''}
       </div>
     </div>
+    
+  </div>
 
     <!-- Invoice Meta Information -->
     <div class="invoice-meta">
@@ -1260,7 +1295,6 @@ export class SaleListComponent implements OnInit, OnDestroy {
     <!-- Footer -->
     ${settings.footerText ? `
     <div class="footer-section">
-      <div class="thank-you">Thank You for Your Business!</div>
       <p>${settings.footerText}</p>
       ${settings.showReturnPolicy !== false && settings.returnPolicyText ? `
       <p style="margin-top: 15px; font-size: 12px; color: #999;">
@@ -1691,6 +1725,22 @@ export class SaleListComponent implements OnInit, OnDestroy {
   getGroupReturnTotal(sales: Sale[]): number {
     return sales.reduce((sum, sale) => {
       return sum + (sale?.totalReturnedAmount || sale?.returnTotal || 0);
+    }, 0);
+  }
+
+  /**
+   * Calculate Daily Grand Total
+   */
+  getDailyGrandTotal(): number {
+    if (!this.sales || !this.sales.length) return 0;
+
+    const today = new Date().toISOString().split('T')[0];
+    const todaySales = this.sales.find(group => group._id === today);
+
+    if (!todaySales || !todaySales.data || !todaySales.data.length) return 0;
+
+    return todaySales.data.reduce((total, sale) => {
+      return total + (sale?.total || 0);
     }, 0);
   }
 

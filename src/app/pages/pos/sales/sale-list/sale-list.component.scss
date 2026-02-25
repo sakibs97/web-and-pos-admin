@@ -182,52 +182,77 @@
 // Summary Section
 .summary-section {
   margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
 }
 
 .summary-card {
   background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
   border-radius: 16px;
-  padding: 32px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
+  padding: 24px;
   box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
   color: #ffffff;
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+  }
 
   .summary-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 80px;
-    height: 80px;
+    width: 56px;
+    height: 56px;
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    margin-right: 20px;
+    flex-shrink: 0;
 
     mat-icon {
-      font-size: 48px;
-      width: 48px;
-      height: 48px;
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
       color: #ffffff;
     }
   }
 
   .summary-content {
     flex: 1;
+    min-width: 0;
 
     .summary-label {
-      margin: 0 0 8px 0;
-      font-size: 16px;
+      margin: 0 0 6px 0;
+      font-size: 14px;
       font-weight: 500;
       opacity: 0.9;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .summary-value {
       margin: 0;
-      font-size: 36px;
+      font-size: 28px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
+  }
+}
+
+.today-sales {
+  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%) !important;
+  box-shadow: 0 4px 20px rgba(33, 150, 243, 0.3) !important;
+
+  &:hover {
+    box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4) !important;
   }
 }
 
