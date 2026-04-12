@@ -627,6 +627,12 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
     mData.parts = partsData;
     mData.partsAmount = this.getPartsTotal();
 
+    if (this.saleId && partsData.length > 0) {
+      mData.saleId = this.saleId;
+    } else if (partsData.length === 0) {
+      mData.saleId = null;
+    }
+
     if (this.id) {
       this.updateRepairById(mData);
     } else {
@@ -698,7 +704,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
             setTimeout(() => {
               this.formElement.resetForm();
               this.router.navigate(['/repair/repair-list']).then();
-            }, 200);
+            }, 1000);
           } else {
             this.uiService.message(res.message || 'Failed to add repair', 'warn');
           }
@@ -730,7 +736,7 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
             this.reloadService.needRefreshData$();
             setTimeout(() => {
               this.router.navigate(['/repair/repair-list']).then();
-            }, 200);
+            }, 1000);
           } else {
             this.uiService.message(res.message || 'Failed to update repair', 'warn');
           }
@@ -1242,10 +1248,17 @@ export class AddRepairComponent extends adminBaseMixin(Component) implements OnI
             console.log('Sale updated for repair parts');
           } else {
             console.error('Failed to update sale for repair:', res.message);
+            // If the sale was not found, create a new one
+            if (res.message === 'Sale not found') {
+               this.createSaleForRepair(saleData, (saleData as any).repairId || this.id);
+            }
           }
         },
         error: (error) => {
           console.error('Error updating sale for repair:', error);
+          if (error && error.status === 404) {
+             this.createSaleForRepair(saleData, (saleData as any).repairId || this.id);
+          }
         }
       });
     this.subscriptions.push(subscription);
